@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project name="gc-mods dist builder" default="default" basedir=".">
+	
+	<!-- get version -->
+	<loadfile property="app.version" srcFile="../version.txt">
+		<filterchain>
+			<headfilter lines="1" skip="0" />
+			<deletecharacters chars="\n" />
+		</filterchain>
+	</loadfile>
+	
+	<!-- get release notes -->
+	<loadfile property="app.release" srcFile="../release.txt">
+		<filterchain>
+			<headfilter lines="1" skip="0" />
+			<deletecharacters chars="\n" />
+		</filterchain>
+	</loadfile>	
+	
+	<!-- get timestamp -->
+	<tstamp>
+		<format property="date.year" pattern="yyyy" />
+		<format property="date.day" pattern="yyyy-MM-dd" />
+		<format property="date.time" pattern="yyyy-MM-dd hh-mm-ss" />
+	</tstamp>
+
+	<property name="build.dir" value="." description="build files" />
+	<property name="src.dir" value="../src" description="build files" />
+	<property name="build.merged" value="${build.dir}/merged"
+		description="/merged target" />
+	<property name="build.minified" value="${build.dir}/minified"
+		description="/minified target" />		
+	<property name="build.file" value="anfits-gc-mods-${app.version}.user.js"
+		description="target script filename" />
+	<property name="build.css" value="merged.css" description="merged css filename" />
+
+	<!-- required by yui compressor task -->
+	<path id="yuicompressor.classpath">
+		<fileset dir="${build.dir}/lib">
+			<include name="yuiAnt.jar" />
+			<include name="yuicompressor-2.4.2.jar" />
+		</fileset>
+	</path>
+
+
+	<!-- manager -->
+	<target name="default">
+		<antcall target="init" />
+		<antcall target="merge-all" />
+		<antcall target="minify-all" />
+		<antcall target="clean" />
+	</target>
+
+	<!-- setup build environment -->
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build.merged}" />
+		<mkdir dir="${build.minified}" />
+	</target>
+
+
+	<!-- merge javascript and css files -->
+	<target name="merge-all">
+
+		<concat destfile="${build.merged}/${build.file}">
+			<filelist dir="${src.dir}">
+				<file name="lib/jquery-1.6.3.js" />
+				<file name="lib/jquery-json-2.2.js" />
+				<file name="lib/jquery-tmpl-1.0.0pre.js" />	
+				<file name="lib/console.js" />	
+				<file name="lib/greasemonkey-compatibility.js" />	
+				<file name="constants.js" />				
+				<file name="utils.js" />				
+				<file name="propertydomnode.js" />
+				<file name="property.js" />
+				<file name="modcontrol.js" />	
+				<file name="mod/automatedcapsulelab.js" />	
+				<file name="mod/battlesmarkup.js" />	
+				<file name="mod/chathighlighter.js" />
+				<file name="mod/clicktocontinue.js" />		
+				<file name="mod/clusterbuilder.js" />	
+				<file name="mod/credits.js" />
+				<file name="mod/disbandertweaks.js" />	
+				<file name="mod/extramenu.js" />
+				<file name="mod/fedchat.js" />
+				<file name="mod/fedpms.js" />	
+				<file name="mod/forumkillfile.js" />
+				<file name="mod/infratweak.js" />	
+				<file name="mod/keybindings.js" />
+				<file name="mod/markettweaks.js" />		
+				<file name="mod/pagetitles.js" />	
+				<file name="mod/planetplunderer.js" />
+				<file name="mod/presetbuilder.js" />
+				<file name="mod/rankingtweaks.js" />
+				<file name="mod/shipbuilder.js" />		
+				<file name="mod/tabbedpms.js" />		
+				<file name="mod/turnticker.js" />		
+				<file name="mod/commoncss.js" />		
+				<file name="init.js" />	
+			</filelist>
+		</concat>
+		<concat destfile="${build.merged}/${build.css}">
+			<fileset dir="${src.dir}">
+				<include name="lib/**.css" />
+				<include name="mod/**.css" />
+				<include name="**.css" />
+			</fileset>			
+		</concat>
+	</target>
+
+	<!-- minify javascript and css files -->
+	<target name="minify-all" description="Minifiy sets of files">
+
+		<taskdef name="yuicompress"
+			classname="com.yahoo.platform.yui.compressor.YUICompressTask">
+			<classpath>
+				<path refid="yuicompressor.classpath" />
+			</classpath>
+		</taskdef>
+		
+		<!-- minify javascript with some linebreaks -->
+		<yuicompress linebreak="400" warn="false" munge="yes"
+			preserveallsemicolons="true" outputfolder="${build.minified}">
+			<fileset dir="${build.merged}">
+				<include name="*.js" />
+			</fileset>
+		</yuicompress>
+		
+		<!-- minify css with no linebreaks -->
+		<yuicompress warn="false" munge="no"
+			preserveallsemicolons="true" outputfolder="${build.minified}">
+			<fileset dir="${build.merged}">
+				<include name="${build.css}" />
+			</fileset>
+		</yuicompress>
+	</target>
+
+	<!-- replace variables, merge into a single file -->
+	<target name="clean">
+	
+		<concat destfile="${build.dir}/${build.file}">
+			<filelist dir="${src.dir}">
+				<file name="header.txt" />
+			</filelist>
+			<filelist dir="${build.minified}">
+				<file name="${build.file}" />
+			</filelist>
+		</concat>
+
+		<replace file="${build.minified}/${build.css}" token='"' value='\"' />
+		
+		<loadfile property="css" srcFile="${build.minified}/${build.css}">
+			<filterchain>
+				<headfilter lines="1" skip="0" />
+				<deletecharacters chars="\n" />
+			</filterchain>
+		</loadfile>
+
+		<replace file="${build.dir}/${build.file}" token="%VERSION%" value="${app.version}" />
+		<replace file="${build.dir}/${build.file}" token="%RELEASE%" value="${app.release}" />
+		<replace file="${build.dir}/${build.file}" token="%DATE.YEAR%" value="${date.year}" />
+		<replace file="${build.dir}/${build.file}" token="%DATE.DAY%" value="${date.day}" />
+		<replace file="${build.dir}/${build.file}" token="%CSS%" value="${css}" />
+
+		<move file="${build.dir}/${build.file}" toDir="../dist" />
+
+		<delete dir="${build.merged}" />
+		<delete dir="${build.minified}" />
+		<delete file="${build.dir}/${build.file}" />
+	</target>
+</project>
