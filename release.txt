@@ -1,0 +1,1 @@
+Full rewrite, enjoy. Experimental support for Google Chrome.

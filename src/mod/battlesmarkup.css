@@ -1,0 +1,36 @@
+.a-battlesmarkup-ship
+{
+  width:383px!important;
+  list-style:none;
+  padding-left:5px;
+  margin:5px;
+}
+
+.a-battlesmarkup-ship-lost
+{
+  width:60px!important;
+  color:#faa;
+}
+
+.a-battlesmarkup-ship-amount
+{
+  width:60px!important;
+}
+
+.a-battlesmarkup-ship-name
+{
+  width:202px!important;
+}
+
+.a-battlesmarkup-ship-remaining
+{
+  width:60px!important;
+  color:#afa;
+}
+
+ul.a-battlesmarkup-ship > li
+{
+  display:inline;
+  float:left;
+  width:50px;
+}

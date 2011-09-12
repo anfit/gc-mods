@@ -1,0 +1,16 @@
+#a-logappender
+{
+  float:left;
+  left:10px;
+  overflow:hidden;
+  width:100%;
+}
+
+#a-logappender-wrap
+{
+  bottom:0;
+  left:0;
+  overflow:auto;
+  position:fixed;
+  width:380px;
+}

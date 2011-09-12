@@ -1,0 +1,24 @@
+.a-property
+{
+  background-color:#000;
+  border:1px solid #FF0;
+  filter:alpha(opacity=85);
+  height:38px;
+  opacity:.85;
+  position:fixed;
+  margin:2px;
+  padding:2px;
+}
+
+.a-property-close
+{
+  background-color:#FFF;
+  float:right;
+  font-size:9px;
+}
+
+.a-property-restore
+{
+  background-color:#FFF;
+  font-size:9px;
+}

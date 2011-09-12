@@ -1,0 +1,39 @@
+#a-presetbuilder-wrap
+{
+  position:fixed;
+  width:300px;
+}
+
+#a-presetbuilder-save-infobox
+{
+  background-color:#000;
+  background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAK8AAACvABQqw0mAAAACF0RVh0U29mdHdhcmUATWFjcm9tZWRpYSBGaXJld29ya3MgMy4w72kx8AAAAQNJREFUeJzt0TENACEAwMDnpWAF96hiRgEd7hQ06Vhz7I+M/3UAN0NiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIkxJMaQGENiDIk52jsB+O+6+asAAAAASUVORK5CYII=);
+  border:1px solid #C46200;
+  color:#FFF;
+  display:block;
+  filter:alpha(opacity=85);
+  font-size:xx-small;
+  left:5px;
+  opacity:.85;
+  position:fixed;
+  text-align:left;
+  top:5px;
+  width:252px;
+  padding:4px;
+}
+
+#a-presetbuilder-totals-body td {
+	border-top:1px solid #C46200;
+}
+
+#a-presetbuilder-saves td
+{
+  text-align:center;
+  width:10%;
+}
+
+.a-shipbuilder-actionsrow
+{
+  font-size:xx-small;
+  height:25px;
+}

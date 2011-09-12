@@ -1,0 +1,28 @@
+
+.a-rankingtweaks-bloodwar-ally
+{
+  color:#0f0;
+}
+
+.a-rankingtweaks-bloodwar-enemy
+{
+  color:red;
+}
+
+.a-rankingtweaks-bloodwar-neutral
+{
+  color:#00f;
+}
+
+.a-rankingtweaks-fedtag
+{
+  font-size:x-small;
+  padding-left:3px;
+}
+
+.a-rankingtweaks-statustag
+{
+  font-size:x-small;
+  font-style:italic;
+  padding-left:3px;
+}
