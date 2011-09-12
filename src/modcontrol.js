@@ -190,7 +190,7 @@ ModControl = function () {
 	if (this.timestamp - 86400000 > parseFloat(this.getValue('a-last-update-check'))) {
 		this.xhr({
 			method: 'GET',
-			url: app.modsServer + 'gm/?action=version',
+			url: app.modsServer + '?action=version',
 			onFailure: function (response) {
 				console.error("[Mod control] XHR query to " + app.modsServer +" failed");
 			},
@@ -198,7 +198,7 @@ ModControl = function () {
 				var version = $.trim(response);
 				if (version != app.version){
 					if (confirm('There is an update available for Anfit\'s GC Mods ('+version+') available.\nWould you like to go to the install page now?')){
-						GM_openInTab(app.modsServer + 'gm/');
+						GM_openInTab(app.modsServer);
 					}
 				}
 				gc.setValue('a-last-update-check', gc.timestamp);
