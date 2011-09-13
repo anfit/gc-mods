@@ -2,6 +2,12 @@
  * Global object containing global properties and objects
  */
 (function(){
+	/*
+	 * TODO At present gc is a magic global variable used by mods and by non-constructor 
+	 * methods of ModControl alike to refer to the instance of ModControl. 
+	 * gc is a singleton, so it should be rewritten as such, possibly merging it 
+	 * with the app global singleton
+	 */
 	//create mod control and run on-init logic
 	gc = new ModControl();
 	//break execution in control failed to load
