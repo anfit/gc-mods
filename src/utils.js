@@ -10,7 +10,13 @@ app.util.sortByPowerDesc = function (a, b) {
 	return ((a.power > b.power) ? -1 : ((a.power < b.power) ? 1 : 0));
 };
 /**
+ * Enables dragging within Greasemonkey (the core jQuery dragging does not work)
  * @param node
+ * 
+ * @event dragStop at document
+ * @param {String} targetId id of the dragged node
+ * @param {Number} top distance from top in pixels
+ * @param {Number} left distance from left in pixels
  */
 app.util.startDragging = function (e) {
 	dragObj = {
@@ -47,14 +53,19 @@ app.util.startDragging = function (e) {
 		if (top > 0 && left > 0 && bottom + 5 < window.innerHeight && right + 5 < window.innerWidth) {
 			dragObj.elNode.style.left = left + "px";
 			dragObj.elNode.style.top = top + "px";
-			gc.setValue(targetId + '-top', top);
-			gc.setValue(targetId + '-left', left);
 		}
 	}
 
 	function dragStop(e) {
+		var x = e.clientX + window.scrollX;
+		var y = e.clientY + window.scrollY;
+		var top;
+		var left;
+		top = dragObj.elStartTop + y - dragObj.cursorStartY;
+		left = dragObj.elStartLeft + x - dragObj.cursorStartX;		
 		$(document).unbind("mousemove." + targetId, dragGo);
 		$(document).unbind("mouseup." + targetId, dragStop);
+		$(document).trigger('dragStop', [targetId, top, left]);
 	}
 	$(document).bind("mousemove." + targetId, dragGo);
 	$(document).bind("mouseup." + targetId, dragStop);
