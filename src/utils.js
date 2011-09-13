@@ -10,12 +10,6 @@ app.util.sortByPowerDesc = function (a, b) {
 	return ((a.power > b.power) ? -1 : ((a.power < b.power) ? 1 : 0));
 };
 /**
- * @param string
- */
-app.util.cleanBeforeSend = function (string) {
-	return string.replace('+', 'xyzplus', 'g').replace('&', 'xyzand', 'g');
-};
-/**
  * @param node
  */
 app.util.startDragging = function (e) {
@@ -77,18 +71,6 @@ app.util.countInArray = function (value, array) {
 		}
 	}
 	return c;
-};
-/**
- * @param number
- */
-app.util.getRandomString = function (length) {
-	chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-	result = [];
-	for (var i = 0; i < length; i++) {
-		c = Math.floor(Math.random() * 62);
-		result.push(chars.charAt(c));
-	}
-	return result.join();
 };
 /**
  * @param number
