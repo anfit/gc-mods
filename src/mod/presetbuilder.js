@@ -46,7 +46,6 @@ app.mod.presetbuilder = {
 		$('#a-presetbuilder-wrap').css('left', typeof gc.getValue('a-presetbuilder-wrap-left') == "undefined" ? 0 : gc.getValue('a-presetbuilder-wrap-left'));
 		$('#a-presetbuilder-wrap').mousedown(app.util.startDragging);
 		$(document).bind('dragStop',function(e, targetId, top, left){
-			console.log(arguments);
 			gc.setValue(targetId + '-top', top);
 			gc.setValue(targetId + '-left', left);		
 		});
