@@ -409,7 +409,7 @@ app.mod.automatedcapsulelab = {
 		if (gc.getValue('AGC_chainReactor')) {
 			$("#a-automatedcapsulelab-leftpanel-wrap").addClass("automated");
 			if ($("#a-automatedcapsulelab-rightpanel-body").text().match("Not enought")) {
-				alert("Cannot fuse any more of the selected artifact, run out of ingredients");
+				console.error("Cannot fuse any more of the selected artifact, run out of ingredients");
 			} else {
 				window.setTimeout(function () {
 					$("input[type='submit']:first")[0].click();
