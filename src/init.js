@@ -31,6 +31,7 @@
 		app.mod.fedpms,	
 		app.mod.forumkillfile,
 		app.mod.infratweak,	
+		app.mod.researchtweak,
 		app.mod.keybindings,
 		app.mod.markettweaks,		
 		app.mod.pagetitles,	
