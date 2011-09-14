@@ -386,7 +386,7 @@ app.mod.automatedcapsulelab = {
 		//on global keypress
 		window.addEventListener("keypress", function (event) {
 			for (var i = event.target; i != null; i = i.parentNode) {
-				if (i.nodeName == "TEXTAREA" || i.nodeName == "INPUT" || i.nodeName == "BUTTON") {
+				if (i.nodeName === "TEXTAREA" || i.nodeName === "INPUT" || i.nodeName === "BUTTON") {
 					return;
 				}
 			}

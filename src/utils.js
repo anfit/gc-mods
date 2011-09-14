@@ -19,14 +19,14 @@ app.util.sortByPowerDesc = function (a, b) {
  * @param {Number} left distance from left in pixels
  */
 app.util.startDragging = function (e) {
-	dragObj = {
+	var dragObj = {
 		zIndex: 0
 	};
 	dragObj.elNode = e.target;
-	if (dragObj.elNode.nodeType == 3) {
+	if (dragObj.elNode.nodeType === 3) {
 		dragObj.elNode = dragObj.elNode.parentNode;
 	}
-	if (dragObj.elNode.nodeName == 'INPUT' || dragObj.elNode.nodeName == 'SPAN') {
+	if (dragObj.elNode.nodeName === 'INPUT' || dragObj.elNode.nodeName === 'SPAN') {
 		return;
 	}
 	while (!dragObj.elNode.className.match('draggable')) {

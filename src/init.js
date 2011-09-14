@@ -1,7 +1,7 @@
 /**!
  * Global object containing global properties and objects
  */
-(function(){
+(function () {
 	/*
 	 * TODO At present gc is a magic global variable used by mods and by non-constructor 
 	 * methods of ModControl alike to refer to the instance of ModControl. 
@@ -9,11 +9,11 @@
 	 * with the app global singleton
 	 */
 	//create mod control and run on-init logic
-	gc = new ModControl();
+	var gc = new ModControl();
 	//break execution in control failed to load
-	if (gc.loaded == false) {
+	if (gc.loaded === false) {
 		return;
-	};
+	}
 	//append css
 	$("head:first").append("<style type=\"text/css\">%CSS%</style>");
 	

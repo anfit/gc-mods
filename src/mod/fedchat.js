@@ -26,10 +26,10 @@ app.mod.fedchat = {
 	 */
 	plugin: function () {
 		var chatPanel = $("table.bodybox[width='105'] tbody tr td:first");
-		if (!gc.getValue('a-fedchat-lastupdate') || gc.getValue('a-fedchat-lastupdate') == 0) {
+		if (!gc.getValue('a-fedchat-lastupdate') || !gc.getValue('a-fedchat-lastupdate')) {
 			gc.setValue('a-fedchat-lastupdate', gc.timestamp);
 		}
-		if (gc.timestamp - 600000 > parseFloat(gc.getValue('a-fedchat-lastupdate')) || gc.getValue('fedchat.html') == '') {
+		if (gc.timestamp - 600000 > parseFloat(gc.getValue('a-fedchat-lastupdate')) || !gc.getValue('fedchat.html')) {
 			gc.xhr({
 				method: 'GET',
 				url: app.gameServer + 'i.cfm?f=fed_forum',
@@ -52,8 +52,8 @@ app.mod.fedchat = {
 		} else {
 			chatPanel.html(gc.getValue('fedchat.html'));
 		}
-		chatPanel.attr("title","Doubleclick to switch to fedchat");
-		chatPanel.dblclick(function(){
+		chatPanel.attr("title", "Doubleclick to switch to fedchat");
+		chatPanel.dblclick(function () {
 			document.location.href = "http://gc.gamestotal.com/i.cfm?f=fed_forum";
 		});
 		

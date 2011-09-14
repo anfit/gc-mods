@@ -8,7 +8,7 @@
  */
 // ie support relies on user agent. if ua is spoofed, it will crash
 if ($.browser.msie) {
-	if ((typeof PRO_setValue) != "undefined") {		
+	if ((typeof PRO_setValue) !== "undefined") {		
 		this.GM_getValue = function (key, def) {
 			return PRO_getValue(key) || def;
 		};
@@ -16,7 +16,7 @@ if ($.browser.msie) {
 			return PRO_setValue(key, value);
 		};
 		this.GM_deleteValue = function (key) {
-			return PRO_deleteValue(name);
+			return PRO_deleteValue(key);
 		};
 		this.GM_listValues = function () {
 			return PRO_listValues();

@@ -40,7 +40,7 @@ app.mod.markettweaks = {
 		//on click
 		topOffer.click(function (e) {
 			$("input[name='amount']").val($("td:eq(1)", this).text().replace(/^\s*|,|\s*$/g, ''));
-			if (e.ctrlKey == true) {
+			if (e.ctrlKey === true) {
 				$("input[name='buyflag']")[0].click();
 			}
 		});

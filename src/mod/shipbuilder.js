@@ -173,7 +173,7 @@ app.mod.shipbuilder = {
 					ship.disband = stacks[sid].disband;
 					existing = stacks[sid].existing * 1;
 				}
-				if ((amount + existing) == 0) {
+				if (!(amount + existing)) {
 					delete stacks[sid];
 				} else {
 					stacks[sid] = ship;
@@ -279,29 +279,30 @@ app.mod.shipbuilder = {
 		$(".a-shipbuilder-save").dblclick(function () {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
-			if (value && value != '[]') {
+			if (value && value !== '[]') {
 				gc.setValue(id + "-value", '');
 				gc.setValue(id + "-name", '');
 				$(this).html('&nbsp;');
 			}
 		});
 		$(".a-shipbuilder-save").click(function () {
+			var i;
 			var id = $(this).attr('id');
 			var save = [];
 			var saveJson = gc.getValue(id + "-value");
-			if (saveJson && saveJson != '[]') {
+			if (saveJson && saveJson !== '[]') {
 				save = $.secureEvalJSON(saveJson);
 				if (!save) {
 					save = [];
 				}
-				for (var i = 0; i < save.length; i++) {
+				for (i = 0; i < save.length; i++) {
 					var el = $("#a-shipbuilder-ship-" + save[i].id + " td.a-shipbuilder-input").next();
 					changeAmount(el, function (v) {
 						return save[i].amount;
 					});
 				}
 			} else {
-				for (var i = 0; i < stacks.length; i++) {
+				for (i = 0; i < stacks.length; i++) {
 					if (stacks[i] && stacks[i].amount) {
 						save.push({
 							id: i,
@@ -327,7 +328,7 @@ app.mod.shipbuilder = {
 		function (e) {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
-			if (value && value != '[]') {
+			if (value && value !== '[]') {
 				$(this).text('paste');
 				var saveJson = gc.getValue(id + "-value");
 				var save = $.secureEvalJSON(saveJson);
@@ -351,7 +352,7 @@ app.mod.shipbuilder = {
 		}, function () {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
-			if (value && value != '[]') {
+			if (value && value !== '[]') {
 				var label = gc.getValue(id + "-name");
 				$(this).text(label);
 				$("#a-shipbuilder-save-infobox tr").remove();
@@ -387,7 +388,7 @@ app.mod.shipbuilder = {
 						onSuccess: function (response) {
 							//unsafeWindow.console.log(response);
 							var msg = $("td:contains('You bought ')", response).contents().filter(function () {
-								return this.nodeType == 3 && this.textContent.match('You bought');
+								return this.nodeType === 3 && this.textContent.match('You bought');
 							});
 							console.log('[Ship builder] ' + msg.text());
 							gc.turns.subtract(this.extra.turns);
@@ -422,8 +423,9 @@ app.mod.shipbuilder = {
 					url: 'i.cfm?f=com_disband',
 					method: 'GET',
 					onSuccess: function (response) {
+						var i;
 						//clear archaiv data
-						for (var i = 0; i < stacks.length; i++) {
+						for (i = 0; i < stacks.length; i++) {
 							if (stacks[i]) {
 								stacks[i].existing = 0;
 							}
@@ -436,8 +438,8 @@ app.mod.shipbuilder = {
 							var name = $.trim(el.parent().prev().prev().text());
 							var existing = el.parent().next().text().replace(/[^\.\d]/g, '');
 							var id = 0;
-							for (var i = 0; i < allShips.length; i++) {
-								if (allShips[i] && allShips[i].name == name) {
+							for (i = 0; i < allShips.length; i++) {
+								if (allShips[i] && allShips[i].name === name) {
 									id = i;
 									break;
 								}
@@ -466,7 +468,7 @@ app.mod.shipbuilder = {
 							stacks[id].scanner = ship.scanner * (amount + existing);
 						});
 						//delete disbanded stacks
-						for (var i = 0; i < stacks.length; i++) {
+						for (i = 0; i < stacks.length; i++) {
 							if (stacks[i] && (!stacks[i].amount && !stacks[i].existing)) {
 								delete stacks[i];
 							}

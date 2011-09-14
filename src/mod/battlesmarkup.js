@@ -29,18 +29,18 @@ app.mod.battlesmarkup = {
 		var lastBreakLine;
 		cells.each(function () {
 			$(this).contents().each(function () {
-				if (this.nodeType == 3 && this.textContent.match(regexp)) {
-					if (buf == 0) {
+				if (this.nodeType === 3 && this.textContent.match(regexp)) {
+					if (buf === 0) {
 						buf = 1;
 					} else {
 						$(lastBreakLine).remove();
 					}
 					$(this).replaceWith(this.textContent.replace(regexp, template));
-				} else if (this.nodeType == 3) {
-					if (buf == 1) {
+				} else if (this.nodeType === 3) {
+					if (buf === 1) {
 						buf = 0;
 					}
-				} else if (this.nodeName == 'BR') {
+				} else if (this.nodeName === 'BR') {
 					lastBreakLine = this;
 				}
 			});

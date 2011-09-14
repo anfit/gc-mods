@@ -215,14 +215,13 @@ app.mod.pagetitles = {
 			regexp: "com_market_use"
 		}];
 		//default value for local tags is ''
-		local = '';
+		var local = '';
 		//ships are handled separately
 		if (gc.location.match(/com_ship2/)) {
 			local = 'Build: ';
-			cells = $("td[width='40%']:first");
+			var cells = $("td[width='40%']:first");
 			if (cells.length) {
-				shipname = $.trim(cells.text());;
-				name = shipname;
+				name = $.trim(cells.text());
 			} else {
 				name = 'Build';
 			}

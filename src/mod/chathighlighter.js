@@ -32,9 +32,9 @@ app.mod.chathighlighter = {
 	plugin: function () {
 		function highlightInner($el, phrase, colour) {
 			$el.contents().each(function () {
-				if (this.nodeType == 3 && $(this).text().match(phrase)) { // Text only, matching
+				if (this.nodeType === 3 && $(this).text().match(phrase)) { // Text only, matching
 					$(this).replaceWith($(this).text().replace(phrase, '<span style="color: #' + colour + '">' + phrase + '</span>', 'g'));
-				} else if (this.nodeType == 3) { // Text only
+				} else if (this.nodeType === 3) { // Text only
 					//ignore
 				} else if ($(this).text().match(phrase)) { // Child element
 					highlightInner($(this), phrase, colour);
@@ -51,7 +51,7 @@ app.mod.chathighlighter = {
 					var parts = setttings[i].split(";");
 					var phrase = parts[0];
 					var colour = parts[1];
-					if ((colour.length != 6 && colour.length != 3) || colour.replace(/\D/g, '') == "") {
+					if ((colour.length !== 6 && colour.length !== 3) || colour.replace(/\D/g, '') === "") {
 						console.error("[Chat highlighter] Setting '" + setttings[i] + "' is incorrect. The assigned colour value is incorrect.");
 						continue;
 					}

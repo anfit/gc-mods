@@ -32,7 +32,7 @@ Property = function (config) {
 			e.stopPropagation();
 			left = $(this).position().left - ($(this).outerWidth()) / 2;
 			top = $(this).position().top + $(this).outerHeight();
-			id = config.id;
+			var id = config.id;
 			max = prop.max;
 			min = prop.min;
 			$("body").append('<table id="change-property-' + id + '" class="a-property" style="top: ' + top + '; left: ' + left + ';"><tr><td><b>Limits for ' + id + ':</b></td><td><button id="close-' + id + '" class="a-property-close">x</input></td></tr><tr><td>max:</td><td><input type="text" id="max-' + id + '" value="' + max + '"></td></tr><tr><td>min:</td><td><input type="text" id="min-' + id + '" value="' + min + '"/></td></tr><tr><td colspan="2"><button id="restore-default-' + id + '"  class="a-property-restore">restore default values</button></td></tr></table>');

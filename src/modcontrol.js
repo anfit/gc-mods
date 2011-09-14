@@ -5,8 +5,7 @@ ModControl = function () {
 	/**
 	 * description
 	 */
-	this.propertiesAreAvailable;
-	this.location = document.location.href.replace(/.*\//, '').replace(/&\d\d\d\d&/, '');
+	this.location = document.location.href.replace(new RegExp(".*\/"), '').replace(/&\d\d\d\d&/, '');
 	this.timestamp = (new Date()).getTime().toString();
 	this.initDate = new Date();
 	this.server;
@@ -24,11 +23,12 @@ ModControl = function () {
 	 * establish user credentials
 	 */
 	var serverName;
+	var boxes;
 	if (this.propertiesAreAvailable && this.isNewest()) {
 		
 		
 		boxes = $.makeArray($("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox"));
-		cashBox = $(boxes[0]);
+		var cashBox = $(boxes[0]);
 		propertyBoxes = cashBox.siblings();
 		serverName = $(propertyBoxes[7]).text().replace(/\W/g, '');
 		$(propertyBoxes[7]).attr('id', 'a-server-name');
@@ -39,34 +39,31 @@ ModControl = function () {
 		this.setGlobalValue('userName', this.userName);
 		
 		//set server
-		for (var i = 0; i< app.servers.length; i++){
-			if (app.servers[i].name === serverName){
+		for (var i = 0; i < app.servers.length; i++) {
+			if (app.servers[i].name === serverName) {
 				this.server = app.servers[i];
 				break;
 			}
 		}
+		if ($("img[src*='logo_gc1']").length) {
+			this.isPaid = false;
+		}
+		else if ($("img[src*='logo_gc2']").length) {
+			this.isPaid = true;
+		}
+		else {
+			this.isPaid = this.getValue('isPaid') ? true : false;
+		}
+		this.setValue('isPaid', this.isPaid);
 		
-		this.isPaid = undefined;
-		imgs = $.makeArray($("img[src]"));
-		for (var i = 0; i < imgs.length; i++) {
-			if ($(imgs[i]).attr('src').match("logo_gc1")) {
-				this.isPaid = false;
-			} else if ($(imgs[i]).attr('src').match("logo_gc2")) {
-				this.isPaid = true;
-			}
-		}
-		if (this.isPaid === undefined) {
-			this.isPaid = this.getValue('isPaid') == "true" ? true : false;
-		}
-		this.setValue('isPaid', this.isPaid ? "true" : "false");
-		if (this.isPaid){
+		if (this.isPaid) {
 			this.server.turnRate = this.server.turnRate *  0.85;
 			this.server.turnHold = this.server.turnHold *  1.5;
 		}
 		
 		
-		var boxes = $.makeArray($("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox"));
-		var propertyBoxes = $(boxes[0]).siblings();
+		//var boxes = $.makeArray($("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox"));
+		//var propertyBoxes = $(boxes[0]).siblings();
 		this.cash = new Property({
 			parent: this,
 			id: 'cash',
@@ -111,14 +108,14 @@ ModControl = function () {
 		this.antiReload = this.getValue('antiReload');
 		
 		//set server
-		for (var i = 0; i< app.servers.length; i++){
-			if (app.servers[i].name === serverName){
+		for (var i = 0; i < app.servers.length; i++) {
+			if (app.servers[i].name === serverName) {
 				this.server = app.servers[i];
 				break;
 			}
 		}
 		
-		this.isPaid = this.getValue('isPaid') == "true" ? true : false;
+		this.isPaid = this.getValue('isPaid');
 		if (this.isPaid){
 			this.server.turnRate = this.server.turnRate *  0.85;
 			this.server.turnHold = this.server.turnHold *  1.5;
@@ -151,7 +148,7 @@ ModControl = function () {
 		});
 	}
 	
-	if (!this.server){
+	if (!this.server) {
 		this.loaded = false;
 		return;
 	} else {
@@ -161,7 +158,7 @@ ModControl = function () {
 	/*
 	 * establish properties
 	 */
-	if (this.server.name == 'Dm') {
+	if (this.server.name === 'Dm') {
 		app.gameServer += 'dm/';
 	}
 
@@ -171,7 +168,7 @@ ModControl = function () {
 	}
 	
 	//message on after update installed
-	if (this.getValue('a-last-successful-update') != app.version) {
+	if (this.getValue('a-last-successful-update') !== app.version) {
 		console.log("Anfit GC Mods " + app.version + ": " + app.releaseNotes);
 		var self = this;
 		this.xhr({
@@ -196,8 +193,8 @@ ModControl = function () {
 			},
 			onSuccess: function (response) {
 				var version = $.trim(response);
-				if (version != app.version){
-					if (confirm('There is an update available for Anfit\'s GC Mods ('+version+') available.\nWould you like to go to the install page now?')){
+				if (version !== app.version) {
+					if (confirm('There is an update available for Anfit\'s GC Mods (' + version + ') available.\nWould you like to go to the install page now?')) {
 						GM_openInTab(app.modsServer);
 					}
 				}

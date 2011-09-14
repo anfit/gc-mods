@@ -42,16 +42,14 @@ app.mod.presetbuilder = {
 				allShips = [];
 			}
 		}
-		$('#a-presetbuilder-wrap').css('top', typeof gc.getValue('a-presetbuilder-wrap-top') == "undefined" ? 108 : gc.getValue('a-presetbuilder-wrap-top'));
-		$('#a-presetbuilder-wrap').css('left', typeof gc.getValue('a-presetbuilder-wrap-left') == "undefined" ? 0 : gc.getValue('a-presetbuilder-wrap-left'));
+		$('#a-presetbuilder-wrap').css('top', typeof gc.getValue('a-presetbuilder-wrap-top') === "undefined" ? 108 : gc.getValue('a-presetbuilder-wrap-top'));
+		$('#a-presetbuilder-wrap').css('left', typeof gc.getValue('a-presetbuilder-wrap-left') === "undefined" ? 0 : gc.getValue('a-presetbuilder-wrap-left'));
 		$('#a-presetbuilder-wrap').mousedown(app.util.startDragging);
-		$(document).bind('dragStop',function(e, targetId, top, left){
+		$(document).bind('dragStop', function (e, targetId, top, left) {
 			gc.setValue(targetId + '-top', top);
 			gc.setValue(targetId + '-left', left);		
 		});
 		
-		gc.setValue(targetId + '-top', top);
-		gc.setValue(targetId + '-left', left);		
 		$(".a-presetbuilder-save").each(function () {
 			var id = $(this).attr('id');
 			var label = gc.getValue(id + "-name");
@@ -63,7 +61,7 @@ app.mod.presetbuilder = {
 			var id = $(this).attr('id');
 			var save = [];
 			var saveJson = gc.getValue(id + "-value");
-			if (saveJson && saveJson != '[]') {
+			if (saveJson && saveJson !== '[]') {
 				save = $.secureEvalJSON(saveJson);
 				if (!save) {
 					save = [];
@@ -75,7 +73,7 @@ app.mod.presetbuilder = {
 						successCondition: "td:contains('You bought ')",
 						onSuccess: function (response) {
 							var msg = $("td:contains('You bought ')", response).contents().filter(function () {
-								return this.nodeType == 3 && this.textContent.match('You bought');
+								return this.nodeType === 3 && this.textContent.match('You bought');
 							});
 							console.log('[Preset builder] ' + msg.text());
 						},
@@ -93,7 +91,7 @@ app.mod.presetbuilder = {
 		function (e) {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
-			if (value && value != '[]') {
+			if (value && value !== '[]') {
 				$(this).text('build');
 				var saveJson = gc.getValue(id + "-value");
 				var save = $.secureEvalJSON(saveJson);
@@ -125,7 +123,7 @@ app.mod.presetbuilder = {
 		}, function () {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
-			if (value && value != '[]') {
+			if (value && value !== '[]') {
 				var label = gc.getValue(id + "-name");
 				$(this).text(label);
 				$("#a-presetbuilder-save-infobox tr").remove();

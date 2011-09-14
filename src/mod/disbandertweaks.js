@@ -1,7 +1,7 @@
 /**
  * disbander tweaks
  */
-app.mod.disbandertweaks ={
+app.mod.disbandertweaks = {
 	id: 'a-disbandertweaks',
 	defaultValue: true,
 	title: 'Fleet disbander tweaks',
@@ -30,7 +30,7 @@ app.mod.disbandertweaks ={
 		$("table.bodybox[width='550'] td:first").append('<div>Anfit\'s tweaks:<ul><li>All you have to do is type in the input fields.</li><li>Quick disband (-10/-50) idea by VorteX...</li></ul></div>');
 		var table = $("table.table_back[width='500'] table");
 		var rows = $("tr", table);
-		if (rows && rows.length == 1) {
+		if (rows && rows.length === 1) {
 			return;
 		}
 		//table headers

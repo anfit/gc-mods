@@ -73,10 +73,12 @@ app.mod.rankingtweaks = {
 	onAfterRender: function () {
 		//special mods for this page...
 		var mystatus = $('#a-rankingtweaks-statuses-mystatus');
-		if (mystatus.length) mystatus.change(function (e) {
-			var status = $(this).val();
-			//TODO post to gc.mmanir.net, check authentication, etc
-		});
+		if (mystatus.length) { 
+			mystatus.change(function (e) {
+				var status = $(this).val();
+				//TODO post to gc.mmanir.net, check authentication, etc
+			});
+		}
 		var forceUpdate = $('#a-rankingtweaks-statuses-forceupdate');
 		if (forceUpdate.length) {
 			//forceUpdate.attr('type', 'submit');
@@ -104,6 +106,7 @@ app.mod.rankingtweaks = {
 	 * @cfg plugin function the main functionality of the mod
 	 */
 	plugin: function () {
+		var all;
 		if (!gc.getValue('a-rankingtweaks-statuses-list')) {
 			gc.setValue('a-rankingtweaks-statuses-list', '\n');
 		}
@@ -137,7 +140,7 @@ app.mod.rankingtweaks = {
 			var fedNode = $("div.a-rankingtweaks-fedtag", nameCell);
 			//status
 			if (gc.getValue('a-rankingtweaks-statuses')) {
-				if ($.inArray(name, nicks) != -1 && tags[nicks.indexOf(name)]) {
+				if ($.inArray(name, nicks) !== -1 && tags[nicks.indexOf(name)]) {
 					var status = tags[nicks.indexOf(name)];
 					statusNode.text(status).removeClass("a-hidden");
 				}
@@ -146,19 +149,19 @@ app.mod.rankingtweaks = {
 			if (gc.getValue('a-rankingtweaks-fedtags')) {
 				//planter
 
-				function setFedTag(fed) {
+				var setFedTag = function (fed) {
 					fedNode.text(fed).removeClass("a-hidden");
 					if (gc.getValue('a-rankingtweaks-bloodwar')) {
 						//add blood war support
-						if ($.inArray(fed, enemies) != -1) {
+						if ($.inArray(fed, enemies) !== -1) {
 							fedNode.addClass("a-rankingtweaks-bloodwar-enemy");
-						} else if ($.inArray(fed, allies) != -1) {
+						} else if ($.inArray(fed, allies) !== -1) {
 							fedNode.addClass("a-rankingtweaks-bloodwar-ally");
-						} else if ($.inArray(fed, neutrals) != -1) {
+						} else if ($.inArray(fed, neutrals) !== -1) {
 							fedNode.addClass("a-rankingtweaks-bloodwar-neutral");
 						}
 					}
-				}
+				};
 				//getter event
 				raceCell.dblclick(function (e) {
 					//GET fed and assign it						

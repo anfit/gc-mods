@@ -34,7 +34,7 @@ app.mod.turnticker = {
 			delay = (lastPropertyCheck - initDate) % gc.server.turnRate;
 			value = parseFloat(turns.getValue());
 			//user check
-			if (gc.userName == gc.getGlobalValue('userName')) {
+			if (gc.userName === gc.getGlobalValue('userName')) {
 				$("#a-server-name").removeClass('a-bodybox-red').addClass('bodybox');
 			} else {
 				$("#a-server-name").removeClass('bodybox').addClass('a-bodybox-red');
@@ -62,7 +62,7 @@ app.mod.turnticker = {
 		//this function will launch itself once per second, to check if there shouldn't be an update, or two...
 		window.setInterval(function () {
 			if (
-			gc.isNewest() == false && gc.userName == gc.getGlobalValue('userName')) {
+			gc.isNewest() === false && gc.userName === gc.getGlobalValue('userName')) {
 				gc.turns.load();
 				gc.power.load();
 				gc.food.load();

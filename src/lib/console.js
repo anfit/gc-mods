@@ -6,16 +6,15 @@
  * This document is licensed as free software under the terms of the
  * MIT License: http://www.opensource.org/licenses/mit-license.php
  */
-var console = (function() {
-	
+var console = (function () {
 	//log appender
 	$("body").append('<div id="a-logappender-wrap"><div class="body"><div id="a-logappender"></div></div>');
-	
 	/**
 	 * @param {Collection} collection array or arguments 
 	 * @param {String} separator
 	 */
-	function join (collection, separator) {
+
+	function join(collection, separator) {
 		if (collection.join) {
 			return collection.join(separator);
 		}
@@ -27,23 +26,22 @@ var console = (function() {
 			}
 		}
 		return string;
-	};	
-	
+	}
 	/**
 	 * @param {Collection} messages
 	 * @param {Number} timeout in ms
 	 * @param {String} level lowercase log, error, warn, info or debug
 	 */
-	function log(messages, timeout, level){
+
+	function log(messages, timeout, level) {
 		var entry = join(messages, ', ');
-		var entryDom = level != 'log' ? $('<div>['+level+'] ' + entry + '</ div>')  : $('<div> ' + entry + '</ div>');
+		var entryDom = level !== 'log' ? $('<div>[' + level + '] ' + entry + '</ div>') : $('<div> ' + entry + '</ div>');
 		$('#a-logappender').prepend(entryDom);
 		entryDom.fadeOut(timeout);
 		if (unsafeWindow.console && jQuery.browser.mozilla) {
 			unsafeWindow.console[level].apply(this, messages);
 		}
-	};
-
+	}
 	var console = {
 		/**
 		 *	@cfg {String} DEBUG > INFO > WARN > ERROR
@@ -51,11 +49,11 @@ var console = (function() {
 		level: 'INFO',
 		//always
 		log: function () {
-			log(arguments,5000,'log');
+			log(arguments, 5000, 'log');
 		},
 		//always
 		error: function () {
-			log(arguments,11000,'error');
+			log(arguments, 11000, 'error');
 		},
 		//always, unless level error
 		warn: function () {
@@ -63,15 +61,15 @@ var console = (function() {
 			if (console.level === 'ERROR') {
 				return;
 			}
-			log(arguments,9000,'warn');
-		}, 
+			log(arguments, 9000, 'warn');
+		},
 		//always, unless level error or warn
 		info: function () {
 			//ignore if logger level is too low
 			if (console.level === 'WARN' || console.level === 'ERROR') {
 				return;
 			}
-			log(arguments,7000,'info');
+			log(arguments, 7000, 'info');
 		},
 		//always, unless level error or warn or ingo
 		debug: function () {
@@ -79,10 +77,9 @@ var console = (function() {
 			if (console.level === 'WARN' || console.level === 'INFO' || console.level === 'ERROR') {
 				return;
 			}
-			log(arguments,5000,'debug');
+			log(arguments, 5000, 'debug');
 		}
 	};
-
-// Expose console to the global object
+	// Expose console to the global object
 	return console;
 })();

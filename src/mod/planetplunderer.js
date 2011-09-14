@@ -18,7 +18,7 @@ app.mod.planetplunderer = {
 			return false;
 		}
 		//unpaid accounts only
-		if (!gc.isPaid == 0) {
+		if (!gc.isPaid === 0) {
 			return false;
 		}
 		if (gc.location.match(/f=com_col$/)) {

@@ -35,25 +35,24 @@ app.mod.extramenu = {
 	 */
 	plugin: function () {
 		var links = [];
-		if (gc.empireName == 'Anfit'){
+		//fuck yeah :P
+		if (gc.empireName === 'Anfit') {
 			links.push({
-				url: 'i.cfm?&'+ gc.getValue('antiReload') + '&f=com_col_find&colid=20085661&tid=23',
+				url: 'i.cfm?&' + gc.getValue('antiReload') + '&f=com_col_find&colid=20085661&tid=23',
 				name: 'U.Spaz'
 			});
 		}
-		//					
-		//			
 		//user links
 		if (gc.getValue('a-extramenu-list')) {
 			var userLinks = gc.getValue('a-extramenu-list').replace(/antireload/g, gc.getValue('antiReload')).split("\n");
 			for (var i = 0; i < userLinks.length; i++) {
 				var parts = userLinks[i].split(";");
-				if (parts.length == 2) {
+				if (parts.length === 2) {
 					links.push({
 						url: parts[0],
 						name: parts[1]
 					});
-				} else if (parts.length == 1) {
+				} else if (parts.length === 1) {
 					links.push({
 						url: parts[0],
 						name: '[unnamed link]'

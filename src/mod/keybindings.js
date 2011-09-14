@@ -40,11 +40,11 @@ app.mod.keybindings = {
 				var parts = keys[i].split(";");
 				var key = parts[1];
 				var link = parts[0];
-				if (parts.length != 2 || key.length != 1) {
+				if (parts.length !== 2 || key.length !== 1) {
 					console.error("[Key bindings] config line " + keys[i] + " is wrong...");
 					continue;
 				}
-				if (String.fromCharCode(event.which) == key) {
+				if (String.fromCharCode(event.which) === key) {
 					document.location.href = link;
 				}
 			}
