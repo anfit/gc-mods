@@ -240,12 +240,13 @@ app.mod.automatedcapsulelab = {
 			}
 		};
 		ArtifactList.prototype.resetFusable = function () {
+			var i;
 			//delete old values
-			for (var i = 0; i < this.items.length; i++) {
+			for (i = 0; i < this.items.length; i++) {
 				delete this.items[i].fusable;
 			}
 			//for each artifact
-			for (var i = 0; i < this.items.length; i++) {
+			for (i = 0; i < this.items.length; i++) {
 				var artifact = this.items[i];
 				//ignore if it has no id
 				if (artifact.id == 0) {
@@ -268,11 +269,12 @@ app.mod.automatedcapsulelab = {
 				}
 			}
 		};
-		var artiesList;
+		var artifactList;
 		//var arties.waitingList;
 		var leftPanelWrap;
 		var leftPanelBody;
 		var rightPanelBody;
+		var i;
 		/**
 		 *
 		 */
@@ -334,7 +336,7 @@ app.mod.automatedcapsulelab = {
 			}
 		}
 		var artifactList = new ArtifactList(gc.getValue('a-automatedcapsulelab-definitions'));
-		for (var i = 0; i < stocks.length; i++) {
+		for (i = 0; i < stocks.length; i++) {
 			artifactList.setStock(stocks[i].id, stocks[i].stock);
 		}
 		artifactList.resetFusable();
@@ -345,7 +347,7 @@ app.mod.automatedcapsulelab = {
 			var fusedArtifact = artifactList.get(previousArtifactId);
 			artifactList.onAfterSuccessfulFuse(fusedArtifact);
 			var stock = [];
-			for (var i = 0; i < artifactList.items.length; i++) {
+			for (i = 0; i < artifactList.items.length; i++) {
 				stock.push({
 					id: artifactList.items[i].id,
 					stock: artifactList.items[i].stock

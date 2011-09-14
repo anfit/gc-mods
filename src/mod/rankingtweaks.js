@@ -173,22 +173,22 @@ app.mod.rankingtweaks = {
 							var fed = $.trim($("table.table_back[width='280'] table td:contains('Federation')", response).next().contents().first().text());
 							setFedTag(fed);
 							//save
-							GM_setValue(gc.server.name + '.player.' + name + '.fed', fed);
-							GM_setValue(gc.server.name + '.player.' + name + '.lastcheck', (new Date()).toString());
+							gc.setValue('player.' + name + '.fed', fed);
+							gc.setValue('player.' + name + '.lastcheck', (new Date()).toString());
 						}
 					});
 				});
 				raceCell.addClass("a-button");
 				raceCell.attr("title", "Double click to show federation");
 				//on show all anyway
-				if (gc.getValue('a-rankingtweaks-fedtags-showall') && GM_getValue(gc.server.name + '.player.' + name + '.fed')) {
+				if (gc.getValue('a-rankingtweaks-fedtags-showall') && gc.getValue('player.' + name + '.fed')) {
 					//ok, there is something to show and user chose to show it, but we'll show only fresh tags, all right?
 					var aSingleDay = 86400000;
 					var now = new Date();
-					var lastFedTagUpdate = GM_getValue(gc.server.name + '.player.' + name + '.lastcheck') ? new Date(GM_getValue(gc.server.name + '.player.' + name + '.lastcheck')) : new Date(0);
+					var lastFedTagUpdate = gc.getValue('player.' + name + '.lastcheck') ? new Date(gc.getValue('player.' + name + '.lastcheck')) : new Date(0);
 					//show only fresh ones, ha!
 					if (now - lastFedTagUpdate < aSingleDay * 7) {
-						var fed = GM_getValue(gc.server.name + '.player.' + name + '.fed');
+						var fed = gc.getValue('player.' + name + '.fed');
 						setFedTag(fed);
 					}
 				}
@@ -196,14 +196,14 @@ app.mod.rankingtweaks = {
 			//labels
 			if (gc.getValue('a-rankingtweaks-labels')) {
 				row.append('<td class="a-rankingtweaks-label" >&nbsp;</td>');
-				var label = GM_getValue(gc.server.name + '.player.' + name + '.label');
+				var label = gc.getValue('player.' + name + '.label');
 				var labelCell = $("td.a-rankingtweaks-label", row);
 				labelCell.text(label);
 				labelCell.dblclick(function (e) {
 					var existingValue = label ? label : "";
 					var newLabel = prompt('Label this empire', existingValue);
 					if (newLabel || newLabel === "") {
-						GM_setValue(gc.server.name + '.player.' + name + '.label', newLabel);
+						gc.setValue('player.' + name + '.label', newLabel);
 						$("td.a-rankingtweaks-label", row).text(newLabel);
 					}
 				});

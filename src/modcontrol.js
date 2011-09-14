@@ -8,7 +8,6 @@ ModControl = function () {
 	this.location = document.location.href.replace(new RegExp(".*\/"), '').replace(/&\d\d\d\d&/, '');
 	this.timestamp = (new Date()).getTime().toString();
 	this.initDate = new Date();
-	this.server;
 	/*
 	 * establish page type
 	 */
@@ -29,7 +28,7 @@ ModControl = function () {
 		
 		boxes = $.makeArray($("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox"));
 		var cashBox = $(boxes[0]);
-		propertyBoxes = cashBox.siblings();
+		var propertyBoxes = cashBox.siblings();
 		serverName = $(propertyBoxes[7]).text().replace(/\W/g, '');
 		$(propertyBoxes[7]).attr('id', 'a-server-name');
 		this.empireName = $(propertyBoxes[9]).text().replace(/\W/g, '');
@@ -108,7 +107,7 @@ ModControl = function () {
 		this.antiReload = this.getValue('antiReload');
 		
 		//set server
-		for (var i = 0; i < app.servers.length; i++) {
+		for (i = 0; i < app.servers.length; i++) {
 			if (app.servers[i].name === serverName) {
 				this.server = app.servers[i];
 				break;
@@ -116,7 +115,7 @@ ModControl = function () {
 		}
 		
 		this.isPaid = this.getValue('isPaid');
-		if (this.isPaid){
+		if (this.isPaid) {
 			this.server.turnRate = this.server.turnRate *  0.85;
 			this.server.turnHold = this.server.turnHold *  1.5;
 		}	
@@ -181,7 +180,7 @@ ModControl = function () {
 	}
 	
 	//message on new update available
-	if (!this.getValue('a-last-update-check') || this.getValue('a-last-update-check') == 0) {
+	if (!this.getValue('a-last-update-check')) {
 		this.setValue('a-last-update-check', this.timestamp);
 	}
 	if (this.timestamp - 86400000 > parseFloat(this.getValue('a-last-update-check'))) {
@@ -189,7 +188,7 @@ ModControl = function () {
 			method: 'GET',
 			url: app.modsServer + '?action=version',
 			onFailure: function (response) {
-				console.error("[Mod control] XHR query to " + app.modsServer +" failed");
+				console.error("[Mod control] XHR query to " + app.modsServer + " failed");
 			},
 			onSuccess: function (response) {
 				var version = $.trim(response);
@@ -249,7 +248,7 @@ ModControl.prototype.setValue = function (key, value) {
  * @return {Boolean} true if this page is the last page to be opened. 
  */
 ModControl.prototype.isNewest = function () {
-	if (typeof this.getGlobalValue('a-last-property-check') != "undefined") {
+	if (this.getGlobalValue('a-last-property-check')) {
 		return this.initDate - new Date(this.getGlobalValue('a-last-property-check')) > 0 ? true : false;
 	} else {
 		return true;
@@ -260,7 +259,7 @@ ModControl.prototype.isNewest = function () {
  * @return {Date} time the most recent gc page was opened 
  */
 ModControl.prototype.lastPropertyCheck = function () {
-	if (typeof this.getValue('a-last-property-check') != "undefined") {
+	if (this.getValue('a-last-property-check')) {
 		return new Date(this.getValue('a-last-property-check'));
 	} else {
 		return new Date();
@@ -279,7 +278,7 @@ ModControl.prototype.runMods = function (mods) {
 	var checkBoxMarkup = '<li class="a-mod-item-checkbox"><ul class="a-mod-item-parts"><li class="a-mod-item-parts-submit"><input id="${id}" type="checkbox" /></li><li class="a-mod-item-parts-body">${description}</li></ul></li>';
 	
 	if (gc.location.match(/i.cfm.f.option($|#.*)/)) {
-		$("table.bodybox[width='550'] > tbody > tr > td").attr('id', 'a-options-wrap').append('<div id="a-about"><div><b>Welcome, ' + gc.empireName + '!</b></div><div class="a-separator"/><div>Thank you for trying Anfit\'s Mods for Spacefed GC v.'+app.version+'. All mods are listed below with short explanations. Also, some of the mods require additional configuration they can be switched on.<div class="a-separator"/><div>My mods cannot affect gameplay, they are just UI (User Interface) tweaks, to make this game slightly more playable.</div><div class="a-separator"/><div>To enable more advanced tweaks which interact with other players please enter your gc.mmanir.net authentication token.</div><div class="a-separator"/><div><i>What? Authentication token? What is it? Why?</i></div><div class="a-separator"/><div>Some more advanced mods share data between players. You always know when and how. The best example of this are status tags: you set your status text, all other users of Anfit\'s Mods can see it in the ranking lists, you can see theirs.</div><div>This is possible only through another server located at gc.mmanir.net (one I\'m hosting). To authenticate with this server you have to: </div><div><ol><li>Create an account and login at <a href="http://gc.mmanir.net" target="blank">gc.mmanir.net</a>.</li><li>Retrieve an authentication token (it\'s provided just after login page).</li><li>Copy the authentication token here.</li></ol></div><div><b>Enter your authentication token here</b>: <input id="a-authentication-token" type="text" size="32" /></div><div class="a-separator"/><div>If you have problems, questions or ideas while using Anfit\'s GC Mods contact me (<a href="http://gc.mmanir.net/">Anfit</a>) at <a href="mailto:jan.chimiak@gmail.com?subject=[GC Mods]">jan.chimiak@gmail.com</a> or send me a <a href="javascript:cmsgu(\'i.cfm?popup=msguser&uid=213512\');">private message</a> at GC/normal.</div><div>');
+		$("table.bodybox[width='550'] > tbody > tr > td").attr('id', 'a-options-wrap').append('<div id="a-about"><div><b>Welcome, ' + gc.empireName + '!</b></div><div class="a-separator"/><div>Thank you for trying Anfit\'s Mods for Spacefed GC v.' + app.version + '. All mods are listed below with short explanations. Also, some of the mods require additional configuration they can be switched on.<div class="a-separator"/><div>My mods cannot affect gameplay, they are just UI (User Interface) tweaks, to make this game slightly more playable.</div><div class="a-separator"/><div>To enable more advanced tweaks which interact with other players please enter your gc.mmanir.net authentication token.</div><div class="a-separator"/><div><i>What? Authentication token? What is it? Why?</i></div><div class="a-separator"/><div>Some more advanced mods share data between players. You always know when and how. The best example of this are status tags: you set your status text, all other users of Anfit\'s Mods can see it in the ranking lists, you can see theirs.</div><div>This is possible only through another server located at gc.mmanir.net (one I\'m hosting). To authenticate with this server you have to: </div><div><ol><li>Create an account and login at <a href="http://gc.mmanir.net" target="blank">gc.mmanir.net</a>.</li><li>Retrieve an authentication token (it\'s provided just after login page).</li><li>Copy the authentication token here.</li></ol></div><div><b>Enter your authentication token here</b>: <input id="a-authentication-token" type="text" size="32" /></div><div class="a-separator"/><div>If you have problems, questions or ideas while using Anfit\'s GC Mods contact me (<a href="http://gc.mmanir.net/">Anfit</a>) at <a href="mailto:jan.chimiak@gmail.com?subject=[GC Mods]">jan.chimiak@gmail.com</a> or send me a <a href="javascript:cmsgu(\'i.cfm?popup=msguser&uid=213512\');">private message</a> at GC/normal.</div><div>');
 		var token = gc.getValue('a-authentication-token');
 		if (!token) {
 			token = '';

@@ -30,13 +30,13 @@ if ($.browser.msie) {
 	}
 }
 //webkit (chrome) support relies on user agent. if ua is spoofed, it will crash
-else if($.browser.webkit) {
+else if ($.browser.webkit) {
 	if (!this.GM_getValue || (this.GM_getValue.toString && this.GM_getValue.toString().indexOf("not supported") > -1)) {
 		this.GM_getValue = function (key, def) {
 			return localStorage[key] || def;
 		};
 		this.GM_setValue = function (key, value) {
-			return localStorage[key] = value;
+			return (localStorage[key] = value);
 		};
 		this.GM_deleteValue = function (key) {
 			return delete localStorage[key];
