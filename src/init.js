@@ -9,7 +9,7 @@
 	 * with the app global singleton
 	 */
 	//create mod control and run on-init logic
-	var gc = new ModControl();
+	gc = new ModControl();
 	//break execution in control failed to load
 	if (gc.loaded === false) {
 		return;
