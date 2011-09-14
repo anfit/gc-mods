@@ -2,7 +2,7 @@
  * Manages interface between Property and its DOM node 
  * @param el {Object} target dom node
  */
-PropertyDomNode = function (el, max, min) {
+var PropertyDomNode = function (el, max, min) {
 	this.el = el;
 	this.max = max;
 	this.min = min;
@@ -14,7 +14,7 @@ PropertyDomNode = function (el, max, min) {
  */
 PropertyDomNode.prototype.setValue = function (value) {
 	if (this.connected === true) {
-		this.el.innerHTML = this.prefix + app.util.formatCurrency(value) + this.suffix;
+		this.el.html(this.prefix + app.util.formatCurrency(value) + this.suffix);
 		this.refreshEl();
 	}
 };
@@ -24,7 +24,7 @@ PropertyDomNode.prototype.setValue = function (value) {
  */
 PropertyDomNode.prototype.getValue = function () {
 	if (this.connected === true) {
-		return parseFloat(this.el.textContent.replace(/[^\d^-]/g, ''));
+		return parseFloat(this.el.text().replace(/[^\d^-]/g, ''));
 	}
 	return undefined;
 };
@@ -50,13 +50,13 @@ PropertyDomNode.prototype.refreshEl = function () {
 	if (this.connected === true) {
 		value = this.getValue();
 		if (value > this.max || value < this.min) {
-			$(this.el).removeClass('bodybox', 'a-bodybox-yellow').addClass('a-bodybox-red');
+			this.el.removeClass('bodybox', 'a-bodybox-yellow').addClass('a-bodybox-red');
 		} else if (value === this.max) {
-			$(this.el).removeClass('bodybox', 'a-bodybox-red').addClass('a-bodybox-yellow');
+			this.el.removeClass('bodybox', 'a-bodybox-red').addClass('a-bodybox-yellow');
 		} else {
-			$(this.el).removeClass('a-bodybox-yellow');
-			$(this.el).removeClass('a-bodybox-red');
-			$(this.el).addClass('bodybox');
+			this.el.removeClass('a-bodybox-yellow');
+			this.el.removeClass('a-bodybox-red');
+			this.el.addClass('bodybox');
 		}
 	}
 };
@@ -66,8 +66,8 @@ PropertyDomNode.prototype.refreshEl = function () {
 PropertyDomNode.prototype.connect = function () {
 	if (this.el !== undefined) {
 		this.connected = true;
-		this.prefix = new String(this.el.innerHTML.replace(/-{0,1}\d.*/, ''));
-		this.suffix = new String(this.el.innerHTML.replace(/.*\d/, ''));
+		this.prefix = this.el.html().replace(/-{0,1}\d.*/, '');
+		this.suffix = this.el.html().replace(/.*\d/, '');
 		this.refreshEl();
 	}
 };

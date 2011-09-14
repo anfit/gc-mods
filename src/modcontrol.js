@@ -1,7 +1,7 @@
 /**
  * Core component
  */
-ModControl = function () {
+var ModControl = function () {
 	/**
 	 * description
 	 */
@@ -23,27 +23,35 @@ ModControl = function () {
 	 */
 	var serverName;
 	var boxes;
+	
+	
 	if (this.propertiesAreAvailable && this.isNewest()) {
 		
+		var b = $("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox");
+		var cashNode = b.eq(0);
+		var foodNode = b.eq(1);
+		var powerNode = b.eq(2);
+		var turnNode = b.eq(3);
+		var serverNode = b.eq(4);
+		var empireNode = b.eq(5);	
 		
-		boxes = $.makeArray($("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox"));
-		var cashBox = $(boxes[0]);
-		var propertyBoxes = cashBox.siblings();
-		serverName = $(propertyBoxes[7]).text().replace(/\W/g, '');
-		$(propertyBoxes[7]).attr('id', 'a-server-name');
-		this.empireName = $(propertyBoxes[9]).text().replace(/\W/g, '');
+		//server, empire, user
+		serverName = serverNode.attr('id', 'a-server-name').text().replace(/\W/g, '');
+		this.empireName = $.trim(empireNode.text());
 		this.userName = serverName + '.' + this.empireName;
-		this.setGlobalValue('serverName', serverName);
+
 		this.setGlobalValue('empireName', this.empireName);
 		this.setGlobalValue('userName', this.userName);
 		
-		//set server
+		//server
 		for (var i = 0; i < app.servers.length; i++) {
 			if (app.servers[i].name === serverName) {
 				this.server = app.servers[i];
 				break;
 			}
 		}
+		
+		//paid
 		if ($("img[src*='logo_gc1']").length) {
 			this.isPaid = false;
 		}
@@ -60,41 +68,41 @@ ModControl = function () {
 			this.server.turnHold = this.server.turnHold *  1.5;
 		}
 		
-		
-		//var boxes = $.makeArray($("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox"));
-		//var propertyBoxes = $(boxes[0]).siblings();
 		this.cash = new Property({
 			parent: this,
 			id: 'cash',
-			dom: boxes[0],
+			dom: cashNode,
 			max: 999999999999,
 			min: 0
 		});
 		this.food = new Property({
 			parent: this,
 			id: 'food',
-			dom: propertyBoxes[1],
+			dom: foodNode,
 			max: 2000000000,
 			min: 0
 		});
 		this.power = new Property({
 			parent: this,
 			id: 'power',
-			dom: propertyBoxes[3],
+			dom: powerNode,
 			max: 1199999999,
 			min: 0
 		});
 		this.turns = new Property({
 			parent: this,
 			id: 'turns',
-			dom: propertyBoxes[5],
+			dom: turnNode,
 			max: this.server.turnHold,
 			min: 0
 		});
+		
 		this.antiReload = $("#a-privatemessages a").attr('href').replace(/.*\&(\d*)\&.*/, "$1");
 		
 		
 		this.setValue('antiReload', this.antiReload);
+		
+		
 		this.setGlobalValue('a-last-property-check', (new Date()).toString());
 		this.setValue('a-last-property-check', (new Date()).toString());
 		
@@ -162,8 +170,8 @@ ModControl = function () {
 	}
 
 	if (this.propertiesAreAvailable) {
-		this.food.dom.parentNode.removeAttribute('onmouseover');
-		this.food.dom.parentNode.removeAttribute('onclick');
+		this.food.dom.parent().removeAttr('onmouseover');
+		this.food.dom.parent().removeAttr('onclick');
 	}
 	
 	//message on after update installed
@@ -249,21 +257,18 @@ ModControl.prototype.setValue = function (key, value) {
  */
 ModControl.prototype.isNewest = function () {
 	if (this.getGlobalValue('a-last-property-check')) {
-		return this.initDate - new Date(this.getGlobalValue('a-last-property-check')) > 0 ? true : false;
-	} else {
-		return true;
+		return this.initDate - new Date(this.getGlobalValue('a-last-property-check')) > 0;
 	}
+	return true;
 };
 /**
- * Similar to isNewest, but gets the date object of the last check instead of the boolean
- * @return {Date} time the most recent gc page was opened 
+ * @return {Date} time the most recent gc page was opened or now
  */
 ModControl.prototype.lastPropertyCheck = function () {
 	if (this.getValue('a-last-property-check')) {
 		return new Date(this.getValue('a-last-property-check'));
-	} else {
-		return new Date();
 	}
+	return new Date();
 };
 
 /**

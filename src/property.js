@@ -11,7 +11,7 @@ Property = function (config) {
 	this.max = this.parent.getValue(this.id + ".max") ? this.parent.getValue(this.id + ".max") : defaultMax;
 	this.min = this.parent.getValue(this.id + ".min") ? this.parent.getValue(this.id + ".min") : defaultMin;
 	this.domDao = new PropertyDomNode(config.dom, this.max, this.min);
-	if (config.dom !== undefined) {
+	if (config.dom) {
 		this.dom = config.dom;
 	}
 	if (this.parent.isNewest()) {
