@@ -44,14 +44,16 @@ app.mod.tabbedpms = {
 				}
 				document.title = newTitle;
 				if (gc.getValue('a-tabbedpms-autoopen')) {
-					newPms.each(function () {
-						var newpmlink = $(this).first().parent().siblings().eq(3).children().first().attr("href");
-						if (newPms.length > 1) {
+					if (newPms.length > 1) {
+						newPms.each(function () {
+							var newpmlink = $(this).first().parent().siblings().eq(3).children().first().attr("href");
 							GM_openInTab(app.gameServer + newpmlink);
-						} else {
-							document.location.href = app.gameServer + newpmlink;
-						}
-					});
+						});
+					}
+					else {
+						var newpmlink = newPms.first().parent().siblings().eq(3).children().first().attr("href");
+						document.location.href = app.gameServer + newpmlink;
+					}
 				}
 			}
 		}
