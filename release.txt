@@ -1,1 +1,1 @@
-Full rewrite, enjoy. Experimental support for Google Chrome.
+A new message system + minor bugs and fixes.
