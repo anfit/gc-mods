@@ -312,6 +312,36 @@ ModControl.prototype.forceDefaultSettings = function () {
 };
 
 /**
+ * Show a message box on top of the gc pages
+ * @param {String} title
+ * @param {String} message
+ * @param {String} id optional, if user may have a change to remove a message permanently
+ */
+ModControl.prototype.showMessage = function (title, message, id) {
+	if (id) {
+		id = id.replace(/\W/g, '');
+	}
+	var gc = this;
+	
+	if (!id || this.getValue(id) !== false) {
+		$("body").prepend('<div class="a-info-wrap"><div class="a-info" id="' + id + '"><b>' + title + '</b><br />' + message + '</div></div>').click(function (e) {
+			var target = $(e.target), id = target.attr('id'), offset = target.offset(),
+	        imgLeft = e.pageX - offset.left,
+	        imgTop = e.pageY - offset.top;
+			//a very rough approximation
+			if (target.hasClass("a-info") && 770 < imgLeft && imgLeft < 796 && 0 < imgTop && imgTop < 16) {
+				target.parent().fadeOut("slow", function () { 
+					$(this).remove(); 
+					if (id) {
+						gc.setValue(id, false);
+					}
+				});
+			}
+		});	
+	}
+};
+
+/**
  * Launch all mods
  */
 ModControl.prototype.runMods = function () {
