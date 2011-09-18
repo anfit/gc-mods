@@ -1,7 +1,17 @@
 /**
  * Core component
  */
-var ModControl = function () {
+var ModControl = function (config) {
+	
+	//config
+	if (!config || !config.mods) {
+		console.error("No mods passed in config");
+		return;
+	}
+	this.mods = config.mods;
+	
+	this.forceDefaultSettings();
+	
 	/**
 	 * description
 	 */
@@ -209,7 +219,6 @@ var ModControl = function () {
 			}
 		});
 	}
-	
 };
 /**
  * Global getter. should be avoided, as globals scope different servers and accounts
@@ -272,10 +281,40 @@ ModControl.prototype.lastPropertyCheck = function () {
 };
 
 /**
- * Launch all mods
- * @param {Array} mods object with mod config
+ * Go through all mods defined and set default settings if they are missing
  */
-ModControl.prototype.runMods = function (mods) {
+ModControl.prototype.forceDefaultSettings = function () {
+	
+	var gc = this;
+	//default settings
+	$.each(this.mods, function (index, mod) {
+		if (mod.defaultValue !== undefined && gc.getValue(mod.id) === undefined) {
+			gc.setValue(mod.id, mod.defaultValue);
+		}
+		
+		if (!mod.items) {
+			return;
+		}
+		
+		$.each(mod.items, function (index, item) {
+			
+			//no id, no value
+			if (item.id) {
+				//default setting
+				if (item.defaultValue !== undefined && gc.getValue(item.id) === undefined) {
+					gc.setValue(item.id, item.defaultValue);
+				}
+				//set value
+				item.value = gc.getValue(item.id);
+			}
+		});		
+	});
+};
+
+/**
+ * Launch all mods
+ */
+ModControl.prototype.runMods = function () {
 	var modMarkup = '<li class="a-mod" id="${id}"><div class="a-mod-line" ><ul><li class="a-mod-submit"><input type=checkbox id="${id}-checkbox" /></li><li class="a-mod-name"><a name=${id}></a><b>${title}</b><br /></li></div></ul><div class="a-mod-line" ><i>${description}</i></div><div><ul class="a-mod-item" /></div></li>';
 	var listMarkup = '<li class="a-mod-item-list"><ul class="a-mod-item-parts"><li class="a-mod-item-parts-body">${description}<br /><textarea id="${id}" cols="70">${value}</textarea></li></ul></li>';
 	var inputMarkup = '<li class="a-mod-item-input"><ul class="a-mod-item-parts"><li class="a-mod-item-parts-body"><span class="a-mod-item-input-desc">${description}</span><span class="a-mod-item-input-submit"><input id="${id}" value="${value}" /></span></li></ul></li>';
@@ -299,15 +338,12 @@ ModControl.prototype.runMods = function (mods) {
 			//validity check
 		});
 	}
-	$.each(mods, function (index, mod) {
+	$.each(this.mods, function (index, mod) {
 		//create an options entry
 		if (mod && gc.location.match(/i.cfm.f.option($|#.*)/)) {
 			//add
 			$.tmpl(modMarkup, mod).appendTo("#a-options-wrap");
-			//default setting
-			if (mod.defaultValue !== undefined && gc.getValue(mod.id) === undefined) {
-				gc.setValue(mod.id, mod.defaultValue);
-			}
+
 			//set value
 			$('#' + mod.id + '-checkbox').prop("checked", gc.getValue(mod.id));
 			var itemsWrapper = $("#" + mod.id + " ul.a-mod-item");
@@ -315,16 +351,11 @@ ModControl.prototype.runMods = function (mods) {
 			mod.items && $.each(mod.items, function (index, item) {
 				//no id, no value
 				if (item.id) {
-					//default setting
-					if (item.defaultValue !== undefined && gc.getValue(item.id) === undefined) {
-						gc.setValue(item.id, item.defaultValue);
-					}
 					//set value
 					item.value = gc.getValue(item.id);
 				}
 				switch (item.type) {
-				case 'list':
-					{
+				case 'list': {
 						//add
 						$.tmpl(listMarkup, item).appendTo(itemsWrapper);
 						//hitch events
@@ -333,14 +364,12 @@ ModControl.prototype.runMods = function (mods) {
 						});
 						break;
 					}
-				case 'info':
-					{
+				case 'info': {
 						//add
 						$.tmpl(infoMarkup, item).appendTo(itemsWrapper);
 						break;
 					}
-				case 'input':
-					{
+				case 'input': {
 						//add
 						$.tmpl(inputMarkup, item).appendTo(itemsWrapper);
 						//hitch events
