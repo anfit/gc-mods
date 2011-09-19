@@ -32,7 +32,7 @@ app.mod.presetbuilder = {
 	 * @cfg plugin function the main functionality of the mod
 	 */
 	plugin: function () {
-		$("body").append('<div id="a-presetbuilder-wrap" class="draggable" title="Edit these presets from the Build Ships page">Presets: <br/><table class="a-table" width="100%" id="a-presetbuilder-saves"><tbody><tr class="table_row2"><td id="a-ship-save-a" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-b" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-c" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-d" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-e" class="a-presetbuilder-save a-button">&nbsp;</td></tr><tr class="table_row2"><td id="a-ship-save-f" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-g" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-h" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-i" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-j" class="a-presetbuilder-save a-button">&nbsp;</td></tr></tbody></table></div><div id="a-presetbuilder-save-infobox" style="display: none;"><table width="100%"><tbody><tr></tr></tbody></table></div>');
+		$("body").append('<div id="a-presetbuilder-wrap" class="draggable" title="These presets can be edited from the Build Ships page"><b>Presets: </b><br/><table class="a-table" width="100%" id="a-presetbuilder-saves"><tbody><tr class="table_row2"><td id="a-ship-save-a" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-b" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-c" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-d" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-e" class="a-presetbuilder-save a-button">&nbsp;</td></tr><tr class="table_row2"><td id="a-ship-save-f" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-g" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-h" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-i" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-j" class="a-presetbuilder-save a-button">&nbsp;</td></tr></tbody></table></div><div id="a-presetbuilder-save-infobox" style="display: none;"><table width="100%"><tbody><tr></tr></tbody></table></div>');
 		//get all ships. note: the ships array is indexed by shipid, which means that entries are nullable;
 		var allShipsJson = gc.getValue('a-allships');
 		var allShips = [];
@@ -42,6 +42,19 @@ app.mod.presetbuilder = {
 				allShips = [];
 			}
 		}
+		
+		//help on usage
+		var usageHelpTitle = 'How to use the preset builder';
+		var usageHelpMessage = 'Preset builder allows to build many different ships at once, fast. You have to define a preset first in the ship builder. Afterwards you can just click on an item in the preset list to build it, if you have the resources and turns of course.';
+		gc.showMessage(usageHelpTitle, usageHelpMessage, 'a-presetbuilder-usagehelp');
+		var pageTitle = $("#a-presetbuilder-wrap b:contains('Presets')");
+		pageTitle.append('<img src="i/help.gif" title="' + usageHelpTitle + '" />').click(function () {
+			if (!$("#a-presetbuilder-usagehelp").length) {
+				gc.showMessage(usageHelpTitle, usageHelpMessage);
+			}
+		});
+		
+		
 		$('#a-presetbuilder-wrap').css('top', typeof gc.getValue('a-presetbuilder-wrap-top') === "undefined" ? 108 : gc.getValue('a-presetbuilder-wrap-top'));
 		$('#a-presetbuilder-wrap').css('left', typeof gc.getValue('a-presetbuilder-wrap-left') === "undefined" ? 0 : gc.getValue('a-presetbuilder-wrap-left'));
 		$('#a-presetbuilder-wrap').mousedown(app.util.startDragging);
@@ -87,7 +100,6 @@ app.mod.presetbuilder = {
 			}
 		});
 		$(".a-presetbuilder-save").hover(
-
 		function (e) {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
