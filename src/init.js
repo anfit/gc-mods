@@ -30,6 +30,7 @@
 			app.mod.planetplunderer,
 			app.mod.presetbuilder,
 			app.mod.rankingtweaks,
+			app.mod.newbieranking,
 			app.mod.shipbuilder,		
 			app.mod.tabbedpms,		
 			app.mod.turnticker,		
