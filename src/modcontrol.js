@@ -324,12 +324,17 @@ ModControl.prototype.showMessage = function (title, message, id) {
 	var gc = this;
 	
 	if (!id || this.getValue(id) !== false) {
-		$("body").prepend('<div class="a-info-wrap"><div class="a-info" id="' + id + '"><b>' + title + '</b><br />' + message + '</div></div>').click(function (e) {
+		var messageBox = $("body").prepend(
+			'<div class="a-info-wrap">' +
+				'<div class="a-info-title" id="' + id + '">' + title + '</div>' +
+				'<div class="a-info" >' + message + '</div>' +
+			'</div>');
+		$(".a-info-title", messageBox).click(function (e) {
 			var target = $(e.target), id = target.attr('id'), offset = target.offset(),
 	        imgLeft = e.pageX - offset.left,
 	        imgTop = e.pageY - offset.top;
 			//a very rough approximation
-			if (target.hasClass("a-info") && 770 < imgLeft && imgLeft < 796 && 0 < imgTop && imgTop < 16) {
+			if (target.hasClass("a-info-title") && 770 < imgLeft && imgLeft < 796 && 0 < imgTop && imgTop < 16) {
 				target.parent().fadeOut("slow", function () { 
 					$(this).remove(); 
 					if (id) {

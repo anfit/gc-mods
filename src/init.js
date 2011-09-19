@@ -42,7 +42,6 @@
 	}
 	//append css
 	$("head:first").append("<style type=\"text/css\">%CSS%</style>");
-	
 	//run mods
 	gc.runMods();
 })();
