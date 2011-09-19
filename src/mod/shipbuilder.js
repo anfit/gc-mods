@@ -74,6 +74,7 @@ app.mod.shipbuilder = {
 			ship.range = range;
 			ship.power = power;
 			allShips[id] = ship;
+			
 			shipsAvailable.push(ship);
 			//console.log(ship);
 		});
@@ -109,6 +110,8 @@ app.mod.shipbuilder = {
 			ship.minerals.rutile = $.trim($("td:contains('Rutile')", tables).next().next().text().replace(/[^\.\d]/g, '')) * 1;
 			ship.minerals.composite = $.trim($("td:contains('Composite')", tables).next().next().text().replace(/[^\.\d]/g, '')) * 1;
 			ship.minerals.strafezOrganism = $.trim($("td:contains('Strafez Organism')", tables).next().next().text().replace(/[^\.\d]/g, '')) * 1;
+			
+			allShips[id] = ship;
 		}
 
 		gc.setValue("a-allships", $.toJSON(allShips));
