@@ -9,6 +9,14 @@ app.mod.turnticker = {
 	items: [{
 		type: 'info',
 		text: 'It should also spot that you have logged onto another game speed in another tab and notify you (server gets marked with red).'
+	}, {
+		type: 'checkbox',
+		id: 'a-turnticker-showturns',
+		description: 'Show turns in tab titles'
+	}, {
+		type: 'checkbox',
+		id: 'a-turnticker-showmaxedturns',
+		description: 'Show maxed-out turns in tab titles'
 	}],
 	/**
 	 * @cfg filter function a function which returns true only when this mod can be launched
@@ -28,6 +36,10 @@ app.mod.turnticker = {
 	plugin: function () {
 		var initDate = new Date().valueOf() * 1;
 		var turns = gc.turns;
+		var pageTitle = document.title;
+		if (gc.getValue('a-turnticker-showturns')) {
+			document.title = turns.getValue() + ' ' + pageTitle;
+		}
 		window.setInterval(function () {
 			var delay, value, lastPropertyCheck;
 			lastPropertyCheck = parseFloat(gc.lastPropertyCheck().valueOf());
@@ -46,23 +58,33 @@ app.mod.turnticker = {
 			if (delay < 0) {
 				value++;
 				turns.setValue(value);
+				if (gc.getValue('a-turnticker-showturns')) {
+					document.title = value + ' ' + pageTitle;
+				}
 				if (value < gc.turns.max) {
 					window.setTimeout(function () {
 						value++;
 						turns.setValue(value);
+						if (gc.getValue('a-turnticker-showturns')) {
+							document.title = value + ' ' + pageTitle;
+						}
 					}, (gc.server.turnRate + (-1 * delay)));
 				}
 			} else {
 				window.setTimeout(function () {
 					value++;
 					turns.setValue(value);
+					if (gc.getValue('a-turnticker-showturns')) {
+						document.title = value + ' ' + pageTitle;
+					}
 				}, delay);
 			}
 		}, gc.server.turnRate);
+		
+		var blink = true;
 		//this function will launch itself once per second, to check if there shouldn't be an update, or two...
 		window.setInterval(function () {
-			if (
-			gc.isNewest() === false && gc.userName === gc.getGlobalValue('userName')) {
+			if (gc.isNewest() === false && gc.userName === gc.getGlobalValue('userName')) {
 				gc.turns.load();
 				gc.power.load();
 				gc.food.load();
@@ -85,6 +107,19 @@ app.mod.turnticker = {
 						this.setAttribute('onclick', value.replace(/&\d\d\d\d&/, '&' + gc.getValue('antiReload') + '&'));
 					}
 				});
+				
+				
+			}
+			
+			if (gc.getValue('a-turnticker-showmaxedturns') && parseFloat(gc.turns.getValue()) === gc.turns.max) {
+				if (blink) {
+					document.title = gc.turns.getValue() + ' ' + pageTitle;
+					blink = false;
+				}
+				else {
+					document.title = (new String(gc.turns.getValue())).replace(/./g, '_') + ' ' + pageTitle;
+					blink = true;
+				}
 			}
 		}, 1000);
 	}
