@@ -79,22 +79,27 @@ app.mod.presetbuilder = {
 				if (!save) {
 					save = [];
 				}
+				
+				var onSuccess =  function (response) {
+					var msg = $("td:contains('You bought ')", response).contents().filter(function () {
+						return this.nodeType === 3 && this.textContent.match('You bought');
+					});
+					console.log('[Preset builder] ' + msg.text());
+				};
+				
+				var onFailure = function (response) {
+					var name = $("b:contains('SHIPS')", response).text();
+					var msg = $("font[color='red'] > b", response).text();
+					console.error('[Preset builder] ' + name + ': ' + msg);
+				};
+				
 				for (var i = 0; i < save.length; i++) {
 					gc.xhr({
 						url: 'i.cfm?&f=com_ship2&shiptype=' + save[i].id,
 						data: 'amount=' + save[i].amount,
 						successCondition: "td:contains('You bought ')",
-						onSuccess: function (response) {
-							var msg = $("td:contains('You bought ')", response).contents().filter(function () {
-								return this.nodeType === 3 && this.textContent.match('You bought');
-							});
-							console.log('[Preset builder] ' + msg.text());
-						},
-						onFailure: function (response) {
-							var name = $("b:contains('SHIPS')", response).text();
-							var msg = $("font[color='red'] > b", response).text();
-							console.error('[Preset builder] ' + name + ': ' + msg);
-						}
+						onSuccess: onSuccess,
+						onFailure: onFailure 
 					});
 				}
 			}

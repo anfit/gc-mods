@@ -117,7 +117,8 @@ app.mod.turnticker = {
 					blink = false;
 				}
 				else {
-					document.title = (new String(gc.turns.getValue())).replace(/./g, '_') + ' ' + pageTitle;
+					//String copy
+					document.title = (gc.turns.getValue() + '').replace(/./g, '_') + ' ' + pageTitle;
 					blink = true;
 				}
 			}

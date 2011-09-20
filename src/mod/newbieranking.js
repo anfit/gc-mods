@@ -31,6 +31,6 @@ app.mod.newbieranking = {
 	 * @cfg plugin function the main functionality of the mod
 	 */
 	plugin: function () {
-		$("a[href$='rank2']").attr('href','i.cfm?f=rank2&nx=' + gc.getValue('a-newbieranking-threshold'));
+		$("a[href$='rank2']").attr('href', 'i.cfm?f=rank2&nx=' + gc.getValue('a-newbieranking-threshold'));
 	}
 };

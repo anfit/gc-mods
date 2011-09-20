@@ -44,8 +44,7 @@ app.util.startDragging = function (e) {
 	function dragGo(e) {
 		var x = e.clientX + window.scrollX;
 		var y = e.clientY + window.scrollY;
-		var top;
-		var left;
+		var top, left, bottom, right;
 		top = dragObj.elStartTop + y - dragObj.cursorStartY;
 		left = dragObj.elStartLeft + x - dragObj.cursorStartX;
 		bottom = dragObj.elStartBottom + y - dragObj.cursorStartY;
