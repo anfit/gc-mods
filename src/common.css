@@ -29,14 +29,14 @@
   border-width:0 0 1px 1px;
 }
 
-.a-table td
+.a-table td, .a-table th
 {
   border-width:1px 1px 0 0;
   margin:0;
   padding:1px;
 }
 
-.a-table,.a-table td
+.a-table,.a-table td, .a-table th
 {
   border-color:gray;
   border-style:solid;
