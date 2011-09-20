@@ -61,7 +61,7 @@ app.mod.automatedcapsulelab = {
 				}
 				//remove old, if it exists
 				for (var i = 0; i < stocks.length; i++) {
-					if (stocks[i].id == id) {
+					if (stocks[i].id === id) {
 						console.log(stocks[i]);
 						stocks.splice(i, 1);
 						break;
@@ -83,40 +83,67 @@ app.mod.automatedcapsulelab = {
 		//warning for new empires about unresearched capsule lab
 		gc.showMessage('Unresearched capsule lab warning', 'Please note, that if you entered this page from a link in the extra menu of Anfit\'s GC mods, but had not researched Capsule Lab, then investing turns here will not gain you anything...', 'a-automatedcapsulelab-warning');
 		
+		/**
+		 * @param config
+		 * @returns
+		 */
+		var Ingredient = function (config) {
+			if (config.id !== undefined) {
+				this.id = config.id;
+			}
+			if (config.amount !== undefined) {
+				this.amount = config.amount;
+			}
+		};
 		
+		/**
+		 * @returns {Boolean}
+		 */
+		Ingredient.prototype.validate = function () {
+			if (this.id === undefined) {
+				return false;
+			}
+			if (this.amount === undefined) {
+				return false;
+			}
+			return true;
+		};
+	
+		/**
+		 * @param config
+		 * @returns
+		 */
 		var Artifact = function (config) {
-				this.id;
-				this.name;
-				this.type;
-				this.stock;
-				this.effect;
-				this.fusable;
+			this.ingredients = [];
+			if (config.id !== undefined) {
+				this.id = config.id;
+			}
+			if (config.name !== undefined) {
+				this.name = config.name;
+			}
+			if (config.type !== undefined) {
+				this.type = config.type;
+			}
+			if (config.stock !== undefined) {
+				this.stock = config.stock;
+			}
+			if (config.effect !== undefined) {
+				this.effect = config.effect;
+			}
+			if (config.ingredients !== undefined) {
 				this.ingredients = [];
-				if (config.id !== undefined) {
-					this.id = config.id;
-				}
-				if (config.name !== undefined) {
-					this.name = config.name;
-				}
-				if (config.type !== undefined) {
-					this.type = config.type;
-				}
-				if (config.stock !== undefined) {
-					this.stock = config.stock;
-				}
-				if (config.effect !== undefined) {
-					this.effect = config.effect;
-				}
-				if (config.ingredients !== undefined) {
-					this.ingredients = [];
-					for (var i = 0; i < config.ingredients.length; i++) {
-						var ingredient = new Ingredient(config.ingredients[i]);
-						if (ingredient.validate() === true) {
-							this.ingredients.push(ingredient);
-						}
+				for (var i = 0; i < config.ingredients.length; i++) {
+					var ingredient = new Ingredient(config.ingredients[i]);
+					if (ingredient.validate() === true) {
+						this.ingredients.push(ingredient);
 					}
 				}
-			};
+			}
+		};
+		
+		/**
+		 * @returns {Boolean}
+		 */
 		Artifact.prototype.validate = function () {
 			if (this.id === undefined) {
 				return false;
@@ -129,34 +156,25 @@ app.mod.automatedcapsulelab = {
 			}
 			return true;
 		};
-		var Ingredient = function (config) {
-				this.id;
-				this.amount;
-				if (config.id !== undefined) {
-					this.id = config.id;
-				}
-				if (config.amount !== undefined) {
-					this.amount = config.amount;
-				}
-			};
-		Ingredient.prototype.validate = function () {
-			if (this.id === undefined) {
-				return false;
-			}
-			if (this.amount === undefined) {
-				return false;
-			}
-			return true;
-		};
+		
+		/**
+		 * @param config
+		 * @returns
+		 */
 		var ArtifactList = function (config) {
-				this.clear();
-				this.parseJson($.secureEvalJSON(config));
-			};
+			this.clear();
+			this.parseJson($.secureEvalJSON(config));
+		};
+		
 		ArtifactList.prototype.clear = function () {
 			this.items = [];
 			this.keys = {};
 			this.results = {};
 		};
+
+		/**
+		 * @param config
+		 */
 		ArtifactList.prototype.parseJson = function (config) {
 			var key = 0;
 			if (config.items !== undefined) {
@@ -177,6 +195,11 @@ app.mod.automatedcapsulelab = {
 				}
 			}
 		};
+		
+		/**
+		 * @param id
+		 * @returns
+		 */
 		ArtifactList.prototype.get = function (id) {
 			var key = this.keys['a_' + id];
 			if (key === undefined) {
@@ -184,6 +207,11 @@ app.mod.automatedcapsulelab = {
 			}
 			return this.items[key];
 		};
+		
+		/**
+		 * @param id
+		 * @returns
+		 */
 		ArtifactList.prototype.getResults = function (id) {
 			var results = this.results['a_' + id];
 			if (results === undefined) {
@@ -199,20 +227,24 @@ app.mod.automatedcapsulelab = {
 			}
 			return resultArtifacts;
 		};
+		
+		/**
+		 * @param artifact
+		 */
 		ArtifactList.prototype.onAfterSuccessfulFuse = function (artifact) {
 			//check if necessary ingredients are in stock
 			for (var i = 0; i < this.items.length; i++) {
 				//ignore null stock
-				if (this.items[i].id == "0") {
+				if (this.items[i].id === 0) {
 					continue;
 				}
 				//add new artie
-				if (this.items[i].id == artifact.id) {
+				if (this.items[i].id === artifact.id) {
 					this.items[i].stock++;
 				}
 				//remove ingredients
 				for (var j = 0; j < artifact.ingredients.length; j++) {
-					if (this.items[i].id == artifact.ingredients[j].id) {
+					if (this.items[i].id === artifact.ingredients[j].id) {
 						this.items[i].stock = this.items[i].stock - artifact.ingredients[j].amount;
 						break;
 					}
@@ -221,6 +253,9 @@ app.mod.automatedcapsulelab = {
 			//save stock to browser cache
 			this.resetFusable();
 		};
+		
+		/**
+		 */
 		ArtifactList.prototype.toString = function () {
 			var keys = this.keys;
 			var results = this.results;
@@ -231,8 +266,13 @@ app.mod.automatedcapsulelab = {
 			this.results = results;
 			return string;
 		};
+		
+		/**
+		 * @param id
+		 * @param stock
+		 */
 		ArtifactList.prototype.setStock = function (id, stock) {
-			if (id == 0) {
+			if (id === 0) {
 				console.debug("ArtifactList.setStock: Zero artifact is not allowed");
 				return;
 			}
@@ -244,6 +284,10 @@ app.mod.automatedcapsulelab = {
 				return;
 			}
 		};
+		
+		/**
+		 * 
+		 */
 		ArtifactList.prototype.resetFusable = function () {
 			var i;
 			//delete old values
@@ -254,7 +298,7 @@ app.mod.automatedcapsulelab = {
 			for (i = 0; i < this.items.length; i++) {
 				var artifact = this.items[i];
 				//ignore if it has no id
-				if (artifact.id == 0) {
+				if (artifact.id === 0) {
 					continue;
 				}
 				var results = this.getResults(artifact.id);
@@ -340,7 +384,8 @@ app.mod.automatedcapsulelab = {
 				stocks = [];
 			}
 		}
-		var artifactList = new ArtifactList(gc.getValue('a-automatedcapsulelab-definitions'));
+		
+		artifactList = new ArtifactList(gc.getValue('a-automatedcapsulelab-definitions'));
 		for (i = 0; i < stocks.length; i++) {
 			artifactList.setStock(stocks[i].id, stocks[i].stock);
 		}
@@ -392,12 +437,12 @@ app.mod.automatedcapsulelab = {
 		});
 		//on global keypress
 		window.addEventListener("keypress", function (event) {
-			for (var i = event.target; i != null; i = i.parentNode) {
+			for (var i = event.target; i; i = i.parentNode) {
 				if (i.nodeName === "TEXTAREA" || i.nodeName === "INPUT" || i.nodeName === "BUTTON") {
 					return;
 				}
 			}
-			if (String.fromCharCode(event.which) == "q") {
+			if (String.fromCharCode(event.which) === "q") {
 				if (!gc.getValue('AGC_chainReactor')) {
 					gc.setValue('AGC_chainReactor', 1);
 					$("#a-automatedcapsulelab-leftpanel-wrap").addClass("automated");
