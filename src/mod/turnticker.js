@@ -56,14 +56,14 @@ app.mod.turnticker = {
 				return;
 			}
 			if (delay < 0) {
-				value++;
+				value = value + 1;
 				turns.setValue(value);
 				if (gc.getValue('a-turnticker-showturns')) {
 					document.title = value + ' ' + pageTitle;
 				}
 				if (value < gc.turns.max) {
 					window.setTimeout(function () {
-						value++;
+						value = value + 1;
 						turns.setValue(value);
 						if (gc.getValue('a-turnticker-showturns')) {
 							document.title = value + ' ' + pageTitle;
@@ -72,7 +72,7 @@ app.mod.turnticker = {
 				}
 			} else {
 				window.setTimeout(function () {
-					value++;
+					value = value + 1;
 					turns.setValue(value);
 					if (gc.getValue('a-turnticker-showturns')) {
 						document.title = value + ' ' + pageTitle;

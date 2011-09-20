@@ -43,7 +43,7 @@ app.mod.chathighlighter = {
 		}
 		var setttings = gc.getValue('a-chathighlighter-list') ? gc.getValue('a-chathighlighter-list').split("\n") : [];
 		var highlight = function () {
-				for (var i = 0; i < setttings.length; i++) {
+				for (var i = 0; i < setttings.length; i = i + 1) {
 					if (!setttings[i].match(';')) {
 						console.error("[Chat highlighter] Setting '" + setttings[i] + "' is incorrect. There should be a semicolon in it.");
 						continue;

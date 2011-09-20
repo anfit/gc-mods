@@ -45,7 +45,7 @@ app.mod.extramenu = {
 		//user links
 		if (gc.getValue('a-extramenu-list')) {
 			var userLinks = gc.getValue('a-extramenu-list').replace(/antireload/g, gc.getValue('antiReload')).split("\n");
-			for (var i = 0; i < userLinks.length; i++) {
+			for (var i = 0; i < userLinks.length; i = i + 1) {
 				var parts = userLinks[i].split(";");
 				if (parts.length === 2) {
 					links.push({

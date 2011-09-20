@@ -229,7 +229,7 @@ app.mod.pagetitles = {
 			if (gc.location.match(/com_market2/)) {
 				local = 'Market: ';
 			}
-			for (var i = 0; i < pages.length; i++) {
+			for (var i = 0; i < pages.length; i = i + 1) {
 				if (gc.location.match(new RegExp(pages[i].regexp))) {
 					name = pages[i].title;
 					break;

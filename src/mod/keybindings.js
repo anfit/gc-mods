@@ -36,7 +36,7 @@ app.mod.keybindings = {
 				return;
 			}
 			var keys = gc.getValue('a-keybindings-list').replace(/antireload/g, gc.getValue('antiReload')).split("\n");
-			for (var i = 0; i < keys.length; i++) {
+			for (var i = 0; i < keys.length; i = i + 1) {
 				var parts = keys[i].split(";");
 				var key = parts[1];
 				var link = parts[0];

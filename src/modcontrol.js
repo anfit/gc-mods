@@ -54,7 +54,7 @@ var ModControl = function (config) {
 		this.setGlobalValue('userName', this.userName);
 		
 		//server
-		for (var i = 0; i < app.servers.length; i++) {
+		for (var i = 0; i < app.servers.length; i = i + 1) {
 			if (app.servers[i].name === serverName) {
 				this.server = app.servers[i];
 				break;
@@ -125,7 +125,7 @@ var ModControl = function (config) {
 		this.antiReload = this.getValue('antiReload');
 		
 		//set server
-		for (i = 0; i < app.servers.length; i++) {
+		for (i = 0; i < app.servers.length; i = i + 1) {
 			if (app.servers[i].name === serverName) {
 				this.server = app.servers[i];
 				break;

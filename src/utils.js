@@ -75,9 +75,9 @@ app.util.startDragging = function (e) {
  */
 app.util.countInArray = function (value, array) {
 	var c = 0;
-	for (var i = 0; i < array.length; i++) {
+	for (var i = 0; i < array.length; i = i + 1) {
 		if (array[i] === value) {
-			c++;
+			c = c + 1;
 		}
 	}
 	return c;
@@ -87,7 +87,7 @@ app.util.countInArray = function (value, array) {
  */
 app.util.formatCurrency = function (value) {
 	var string = value + '';
-	for (var i = 0; i < Math.round(string.length / 3 - 0.5); i++) {
+	for (var i = 0; i < Math.round(string.length / 3 - 0.5); i = i + 1) {
 		string = string.replace(/(\d)(\d{3})($|,)/g, '$1,$2$3');
 	}
 	return string;

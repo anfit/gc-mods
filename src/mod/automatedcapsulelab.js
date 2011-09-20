@@ -60,7 +60,7 @@ app.mod.automatedcapsulelab = {
 					}
 				}
 				//remove old, if it exists
-				for (var i = 0; i < stocks.length; i++) {
+				for (var i = 0; i < stocks.length; i = i + 1) {
 					if (stocks[i].id === id) {
 						console.log(stocks[i]);
 						stocks.splice(i, 1);
@@ -132,7 +132,7 @@ app.mod.automatedcapsulelab = {
 			}
 			if (config.ingredients !== undefined) {
 				this.ingredients = [];
-				for (var i = 0; i < config.ingredients.length; i++) {
+				for (var i = 0; i < config.ingredients.length; i = i + 1) {
 					var ingredient = new Ingredient(config.ingredients[i]);
 					if (ingredient.validate() === true) {
 						this.ingredients.push(ingredient);
@@ -178,19 +178,19 @@ app.mod.automatedcapsulelab = {
 		ArtifactList.prototype.parseJson = function (config) {
 			var key = 0;
 			if (config.items !== undefined) {
-				for (var i = 0; i < config.items.length; i++) {
+				for (var i = 0; i < config.items.length; i = i + 1) {
 					var artifact = new Artifact(config.items[i]);
 					if (artifact.validate() === true) {
 						this.items.push(artifact);
 						this.keys['a_' + artifact.id] = key;
-						for (var j = 0; j < artifact.ingredients.length; j++) {
+						for (var j = 0; j < artifact.ingredients.length; j = j + 1) {
 							var resultKeys = this.results['a_' + artifact.ingredients[j].id];
 							if (resultKeys === undefined) {
 								this.results['a_' + artifact.ingredients[j].id] = [];
 							}
 							this.results['a_' + artifact.ingredients[j].id].push(key);
 						}
-						key++;
+						key = key + 1;
 					}
 				}
 			}
@@ -218,7 +218,7 @@ app.mod.automatedcapsulelab = {
 				return undefined;
 			}
 			var resultArtifacts = [];
-			for (var i = 0; i < results.length; i++) {
+			for (var i = 0; i < results.length; i = i + 1) {
 				var key = results[i];
 				var artifact = this.items[key];
 				if (artifact) {
@@ -233,17 +233,17 @@ app.mod.automatedcapsulelab = {
 		 */
 		ArtifactList.prototype.onAfterSuccessfulFuse = function (artifact) {
 			//check if necessary ingredients are in stock
-			for (var i = 0; i < this.items.length; i++) {
+			for (var i = 0; i < this.items.length; i = i + 1) {
 				//ignore null stock
 				if (this.items[i].id === 0) {
 					continue;
 				}
 				//add new artie
 				if (this.items[i].id === artifact.id) {
-					this.items[i].stock++;
+					this.items[i].stock = this.items[i].stock + 1;
 				}
 				//remove ingredients
-				for (var j = 0; j < artifact.ingredients.length; j++) {
+				for (var j = 0; j < artifact.ingredients.length; j = j + 1) {
 					if (this.items[i].id === artifact.ingredients[j].id) {
 						this.items[i].stock = this.items[i].stock - artifact.ingredients[j].amount;
 						break;
@@ -291,11 +291,11 @@ app.mod.automatedcapsulelab = {
 		ArtifactList.prototype.resetFusable = function () {
 			var i;
 			//delete old values
-			for (i = 0; i < this.items.length; i++) {
+			for (i = 0; i < this.items.length; i = i + 1) {
 				delete this.items[i].fusable;
 			}
 			//for each artifact
-			for (i = 0; i < this.items.length; i++) {
+			for (i = 0; i < this.items.length; i = i + 1) {
 				var artifact = this.items[i];
 				//ignore if it has no id
 				if (artifact.id === 0) {
@@ -303,7 +303,7 @@ app.mod.automatedcapsulelab = {
 				}
 				var results = this.getResults(artifact.id);
 				if (results !== undefined) {
-					for (var j = 0; j < results.length; j++) {
+					for (var j = 0; j < results.length; j = j + 1) {
 						var fusable = Math.floor(artifact.stock / app.util.countInArray(results[j], results));
 						if (!fusable) {
 							fusable = 0;
@@ -340,7 +340,7 @@ app.mod.automatedcapsulelab = {
 				//add submit info
 				$("input[type='submit']:first").val('Fuse ' + artifact.name);
 				//fill form, prepare ingredients
-				for (var i = 0; i < artifact.ingredients.length; i++) {
+				for (var i = 0; i < artifact.ingredients.length; i = i + 1) {
 					var ingredient = artifactList.get(artifact.ingredients[i].id);
 					ingredients.push(ingredient);
 					$('select[name="g' + (i + 1) + '"]').val(ingredient.id);
@@ -386,7 +386,7 @@ app.mod.automatedcapsulelab = {
 		}
 		
 		artifactList = new ArtifactList(gc.getValue('a-automatedcapsulelab-definitions'));
-		for (i = 0; i < stocks.length; i++) {
+		for (i = 0; i < stocks.length; i = i + 1) {
 			artifactList.setStock(stocks[i].id, stocks[i].stock);
 		}
 		artifactList.resetFusable();
@@ -397,7 +397,7 @@ app.mod.automatedcapsulelab = {
 			var fusedArtifact = artifactList.get(previousArtifactId);
 			artifactList.onAfterSuccessfulFuse(fusedArtifact);
 			var stock = [];
-			for (i = 0; i < artifactList.items.length; i++) {
+			for (i = 0; i < artifactList.items.length; i = i + 1) {
 				stock.push({
 					id: artifactList.items[i].id,
 					stock: artifactList.items[i].stock

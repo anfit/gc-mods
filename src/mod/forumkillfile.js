@@ -31,7 +31,7 @@ app.mod.forumkillfile = {
 	 */
 	plugin: function () {
 		var shitlist = gc.getValue('a-forumkillfile-list').replace(/ /g, '').split(',');
-		for (var i = 0; i < shitlist.length; i++) {
+		for (var i = 0; i < shitlist.length; i = i + 1) {
 			var name = shitlist[i];
 			if (!name) {
 				continue;

@@ -15,11 +15,13 @@ var console = (function () {
 	 */
 
 	function join(collection, separator) {
+		var string, i;
+		
 		if (collection.join) {
 			return collection.join(separator);
 		}
-		var string = '';
-		for (var i = 0; i < collection.length; i++) {
+		string = '';
+		for (i = 0; i < collection.length; i = i + 1) {
 			string += collection[i];
 			if (i + 1 < collection.length) {
 				collection += separator;
@@ -34,8 +36,9 @@ var console = (function () {
 	 */
 
 	function log(messages, timeout, level) {
-		var entry = join(messages, ', ');
-		var entryDom = level !== 'log' ? $('<div>[' + level + '] ' + entry + '</ div>') : $('<div> ' + entry + '</ div>');
+		var entry, entryDom;
+		entry = join(messages, ', ');
+		entryDom = level !== 'log' ? $('<div>[' + level + '] ' + entry + '</ div>') : $('<div> ' + entry + '</ div>');
 		$('#a-logappender').prepend(entryDom);
 		entryDom.fadeOut(timeout);
 		if (unsafeWindow.console && jQuery.browser.mozilla) {

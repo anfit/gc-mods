@@ -93,7 +93,7 @@ app.mod.presetbuilder = {
 					console.error('[Preset builder] ' + name + ': ' + msg);
 				};
 				
-				for (var i = 0; i < save.length; i++) {
+				for (var i = 0; i < save.length; i = i + 1) {
 					gc.xhr({
 						url: 'i.cfm?&f=com_ship2&shiptype=' + save[i].id,
 						data: 'amount=' + save[i].amount,
@@ -122,7 +122,7 @@ app.mod.presetbuilder = {
 					power: 0
 				};
 				var savedStacks = [];
-				for (var i = 0; i < save.length; i++) {
+				for (var i = 0; i < save.length; i = i + 1) {
 					var stack = jQuery.extend(true, {}, allShips[save[i].id]);
 					stack.amount = save[i].amount;
 					stack.turns = Math.ceil(save[i].amount / stack.build);

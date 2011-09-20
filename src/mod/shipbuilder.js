@@ -162,7 +162,7 @@ app.mod.shipbuilder = {
 					});
 				});
 				totals = {};
-				for (var i = 0; i < stacks.length; i++) {
+				for (var i = 0; i < stacks.length; i = i + 1) {
 					if (!stacks[i]) {
 						continue;
 					}
@@ -315,14 +315,14 @@ app.mod.shipbuilder = {
 				if (!save) {
 					save = [];
 				}
-				for (i = 0; i < save.length; i++) {
+				for (i = 0; i < save.length; i = i + 1) {
 					var el = $("#a-shipbuilder-ship-" + save[i].id + " td.a-shipbuilder-input").next();
 					changeAmount(el, function (v) {
 						return save[i].amount;
 					});
 				}
 			} else {
-				for (i = 0; i < stacks.length; i++) {
+				for (i = 0; i < stacks.length; i = i + 1) {
 					if (stacks[i] && stacks[i].amount) {
 						save.push({
 							id: i,
@@ -356,7 +356,7 @@ app.mod.shipbuilder = {
 					save = [];
 				}
 				var savedStacks = [];
-				for (var i = 0; i < save.length; i++) {
+				for (var i = 0; i < save.length; i = i + 1) {
 					var stack = jQuery.extend(true, {}, allShips[save[i].id]);
 					stack.amount = save[i].amount;
 					stack.turns = Math.ceil(save[i].amount / stack.build);
@@ -398,7 +398,7 @@ app.mod.shipbuilder = {
 		*/
 		$("#a-shipbuilder-submit-wrap").click(function () {
 			var el = $(this);
-			for (var i = 0; i < stacks.length; i++) {
+			for (var i = 0; i < stacks.length; i = i + 1) {
 				if (stacks[i] && stacks[i].amount && stacks[i].id) {
 					gc.xhr({
 						extra: stacks[i],
