@@ -1,1 +1,1 @@
-A new message system + minor bugs and fixes.
+Minor usability mods: messages related to errors and problems reported. Two new tweaks.
