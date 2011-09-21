@@ -438,6 +438,66 @@ app.mod.shipbuilder = {
 			}, 2000);
 		});
 		
+		var refreshExistingFleet = function () {
+			gc.xhr({
+				//extra: stacks,
+				url: 'i.cfm?f=com_disband',
+				method: 'GET',
+				onSuccess: function (response) {
+					var i;
+					//clear archaiv data
+					for (i = 0; i < stacks.length; i = i + 1) {
+						if (stacks[i]) {
+							stacks[i].existing = 0;
+						}
+					}
+					//var stacks = this.extra;
+					//unsafeWindow.console.log($("input[name^='dis']",response));
+					$("input[name^='dis']", response).each(function () {
+						var el = $(this);
+						var disband = el.attr("name");
+						var name = $.trim(el.parent().prev().prev().text());
+						var existing = el.parent().next().text().replace(/[^\.\d]/g, '');
+						var id = 0;
+						for (i = 0; i < allShips.length; i = i + 1) {
+							if (allShips[i] && allShips[i].name === name) {
+								id = i;
+								break;
+							}
+						}
+						//a ship as its taken from cache
+						var ship = jQuery.extend(true, {}, allShips[id]);
+						var amount = 0;
+						//if stack exists in builds and isn't a historical entry, add existing and recalculate values
+						if (stacks[id] && stacks[id].amount) {
+							amount = stacks[id].amount;
+						}
+						//otherwise stack is new and we have to create it
+						else {
+							stacks[id] = jQuery.extend(true, {}, allShips[id]);
+						}
+						//either way we paint stack with new data
+						stacks[id].existing = existing;
+						stacks[id].disband = disband;
+						//and multiply relevant values by amount
+						stacks[id].turns = Math.ceil(amount / ship.build);
+						stacks[id].cost = ship.cost * amount;
+						stacks[id].upkeep = ship.upkeep * (amount + existing);
+						stacks[id].weapon = ship.weapon * (amount + existing);
+						stacks[id].hull = ship.hull * (amount + existing);
+						stacks[id].power = ship.power * (amount + existing);
+						stacks[id].scanner = ship.scanner * (amount + existing);
+					});
+					//delete disbanded stacks
+					for (i = 0; i < stacks.length; i = i + 1) {
+						if (stacks[i] && (!stacks[i].amount && !stacks[i].existing)) {
+							delete stacks[i];
+						}
+					}
+					renderStacks();
+				}
+			});
+		};
 		//after init get data from the disband page
 		refreshExistingFleet();
 		$("#a-shipbuilder-refresh-stacks").click(refreshExistingFleet);
