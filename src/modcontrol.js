@@ -186,6 +186,9 @@ var ModControl = function (config) {
 	
 	//message on after update installed
 	if (this.getValue('a-last-successful-update') !== app.version) {
+		
+		this.setValue("a-allships",'');
+		
 		console.log("Anfit GC Mods " + app.version + ": " + app.releaseNotes);
 		var self = this;
 		this.xhr({
