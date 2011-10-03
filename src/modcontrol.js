@@ -50,9 +50,10 @@ var ModControl = function (config) {
 		this.empireName = $.trim(empireNode.text());
 		this.userName = serverName + '.' + this.empireName;
 
+		
+		this.setGlobalValue('serverName', serverName);
 		this.setGlobalValue('empireName', this.empireName);
 		this.setGlobalValue('userName', this.userName);
-		
 		//server
 		for (var i = 0; i < app.servers.length; i = i + 1) {
 			if (app.servers[i].name === serverName) {
