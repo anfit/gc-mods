@@ -10,8 +10,6 @@ var ModControl = function (config) {
 	}
 	this.mods = config.mods;
 	
-	this.forceDefaultSettings();
-	
 	/**
 	 * description
 	 */
@@ -173,6 +171,9 @@ var ModControl = function (config) {
 		this.loaded = true;
 	}
 
+	//default values
+	this.forceDefaultSettings();
+	
 	/*
 	 * establish properties
 	 */
