@@ -8,7 +8,16 @@
  */
 if (!this.GM_getValue || (this.GM_getValue.toString && this.GM_getValue.toString().indexOf("not supported") > -1)) {
 	this.GM_getValue = function (key, def) {
-		return localStorage[key] || def;
+		if (localStorage[key] === undefined) {
+			return def;
+		}
+		if (localStorage[key] === "false") {
+			return false;
+		}
+		if (localStorage[key] === "true") {
+			return true;
+		}
+		return localStorage[key];
 	};
 	this.GM_setValue = function (key, value) {
 		return (localStorage[key] = value);
