@@ -4,7 +4,7 @@
 // @description Extra features for SFGC (http://gc.gamestotal.com/)
 // @include http://gc.gamestotal.com/*
 // @include http://gc.gamestotal.com/
-// @icon http://gc.mmanir.net/gm/icon-1.0.0.png
+// @icon http://gc.mmanir.net/anfits-gc-mods.png
 // @namespace http://gc.mmanir.net
 // @author (c) %DATE.YEAR% Jan 'anfit' Chimiak <jan.chimiak@gmail.com>
 // @version %VERSION%
