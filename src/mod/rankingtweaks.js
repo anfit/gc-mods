@@ -219,7 +219,7 @@ app.mod.rankingtweaks = {
 			//update tags
 			gc.xhr({
 				method: 'GET',
-				url: app.modsServer + 'status/get.php?u=all&s=' + gc.server.name,
+				url: app.modsServer + '?action=get_statuses?server=' + gc.server.name,
 				onSuccess: function onloadCallback(response) {
 					gc.setValue('a-rankingtweaks-statuses-list', response);
 					gc.setValue('a-rankingtweaks-lastupdate', now.toString()); //timestamp

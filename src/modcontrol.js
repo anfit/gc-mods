@@ -195,7 +195,7 @@ var ModControl = function (config) {
 		var self = this;
 		this.xhr({
 			method: 'GET',
-			url: app.modsServer + 'who/post.php?u=' + this.userName + '&v=' + app.version,
+			url: app.modsServer + '?action=report&empire=' + this.userName + '&version=' + app.version,
 			onSuccess: function (response) {
 				self.setValue('a-last-successful-update', app.version);
 			}
@@ -209,7 +209,7 @@ var ModControl = function (config) {
 	if (this.timestamp - 86400000 > parseFloat(this.getValue('a-last-update-check'))) {
 		this.xhr({
 			method: 'GET',
-			url: app.modsServer + '?action=version',
+			url: app.modsServer + '?action=get_current_version',
 			onFailure: function (response) {
 				console.error("[Mod control] XHR query to " + app.modsServer + " failed");
 			},
