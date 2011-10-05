@@ -42,7 +42,7 @@ app.mod.turnticker = {
 		}
 		window.setInterval(function () {
 			var delay, value;
-			delay = (gc.getValue('a-last-property-check') - initDate) % gc.server.turnRate;
+			delay = (gc.getValue('a-propertycheck-timestamp') - initDate) % gc.server.turnRate;
 			value = parseFloat(turns.getValue());
 			//user check
 			if (gc.userName === gc.getGlobalValue('userName')) {

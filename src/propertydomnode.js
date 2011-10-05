@@ -67,8 +67,7 @@ app.PropertyDomNode.prototype.setMin = function (value) {
  * @private
  */
 app.PropertyDomNode.prototype.refreshEl = function () {
-	var value;
-	value = this.getValue();
+	var value = this.el.text().replace(/\D/g, '') * 1;
 	if (value > this.max || value < this.min) {
 		this.el.removeClass('bodybox', 'a-bodybox-yellow').addClass('a-bodybox-red');
 	} else if (value === this.max) {

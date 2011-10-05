@@ -51,7 +51,6 @@ app.ModControl = function (config) {
 	 * @type {boolean}
 	 */
 	this.propertiesAreAvailable = false;
-	
 	var pmEl = $("table.smallfont td.bodybox:has(a:contains('Private Messages')), table.smallfont td:has(a > font:contains('Private Messages'))");
 	if (pmEl.length) {
 		this.propertiesAreAvailable = true;
@@ -61,13 +60,12 @@ app.ModControl = function (config) {
 	var properties;
 	
 	if (this.propertiesAreAvailable && this.isNewest()) {
-		
 		properties = this.readProperties();
 		properties = this.setServer(properties, properties.serverName);
 		this.serializeProperties(properties);
 		
-		this.setGlobalValue('a-last-property-check', (new Date()).getTime());
-		this.setValue('a-last-property-check', (new Date()).getTime());	
+		this.setGlobalValue('a-propertycheck-timestamp', (new Date()).getTime());
+		this.setValue('a-propertycheck-timestamp', (new Date()).getTime());	
 		
 	} else {
 		properties = this.deserializeProperties();
@@ -176,6 +174,8 @@ app.ModControl.prototype.readProperties = function () {
 	//small fix
 	propertyElems.eq(0).parent().removeAttr('onmouseover');
 	propertyElems.eq(0).parent().removeAttr('onclick');
+	
+
 	
 	//empty properties
 	var properties = {
@@ -387,8 +387,8 @@ app.ModControl.prototype.setValue = function (key, value) {
  * @return {boolen} True if this page is fresh and most recent among all tabs 
  */
 app.ModControl.prototype.isNewest = function () {
-	if (this.getGlobalValue('a-last-property-check')) {
-		return this.timestamp - this.getGlobalValue('a-last-property-check') > 0;
+	if (this.getGlobalValue('a-propertycheck-timestamp')) {
+		return this.timestamp - this.getGlobalValue('a-propertycheck-timestamp') > 0;
 	}
 	return true;
 };
