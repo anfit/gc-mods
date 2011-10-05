@@ -37,7 +37,7 @@ app.mod.presetbuilder = {
 		var allShipsJson = gc.getValue('a-allships');
 		var allShips = [];
 		if (allShipsJson) {
-			allShips = $.secureEvalJSON(allShipsJson);
+			allShips = $.parseJSON(allShipsJson);
 			if (!allShips) {
 				allShips = [];
 			}
@@ -75,7 +75,7 @@ app.mod.presetbuilder = {
 			var save = [];
 			var saveJson = gc.getValue(id + "-value");
 			if (saveJson && saveJson !== '[]') {
-				save = $.secureEvalJSON(saveJson);
+				save = $.parseJSON(saveJson);
 				if (!save) {
 					save = [];
 				}
@@ -111,7 +111,7 @@ app.mod.presetbuilder = {
 			if (value && value !== '[]') {
 				$(this).text('build');
 				var saveJson = gc.getValue(id + "-value");
-				var save = $.secureEvalJSON(saveJson);
+				var save = $.parseJSON(saveJson);
 				if (!save) {
 					save = [];
 				}

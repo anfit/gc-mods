@@ -34,7 +34,7 @@ app.mod.shipbuilder = {
 		var allShipsJson = gc.getValue('a-allships');
 		var allShips = [];
 		if (allShipsJson) {
-			allShips = $.secureEvalJSON(allShipsJson);
+			allShips = $.parseJSON(allShipsJson);
 			if (!allShips) {
 				allShips = [];
 			}
@@ -79,7 +79,7 @@ app.mod.shipbuilder = {
 			//console.log(ship);
 		});
 		if (gc.location.match(/com_ship$/)) {
-			gc.setValue("a-shipbuilder-shipsAvailable", $.toJSON(shipsAvailable));
+			gc.setValue("a-shipbuilder-shipsAvailable", JSON.stringify(shipsAvailable));
 		}
 		if (gc.location.match(/com_ship.*shiptype/)) {
 			//working on a gc.location's copy, not a reference
@@ -115,7 +115,7 @@ app.mod.shipbuilder = {
 			allShips[id] = ship;
 		}
 
-		gc.setValue("a-allships", $.toJSON(allShips));
+		gc.setValue("a-allships", JSON.stringify(allShips));
 		var pageTitle = $("b:contains('BUILDING SHIPS')");
 		
 		//help on harvesting
@@ -311,7 +311,7 @@ app.mod.shipbuilder = {
 			var save = [];
 			var saveJson = gc.getValue(id + "-value");
 			if (saveJson && saveJson !== '[]') {
-				save = $.secureEvalJSON(saveJson);
+				save = $.parseJSON(saveJson);
 				if (!save) {
 					save = [];
 				}
@@ -335,7 +335,7 @@ app.mod.shipbuilder = {
 				}
 				var label = prompt("Enter a label for this stack preset, 10 characters at most, preferably 7");
 				if (label) {
-					gc.setValue(id + "-value", $.toJSON(save));
+					gc.setValue(id + "-value", JSON.stringify(save));
 					label = label.substring(0, 10);
 					gc.setValue(id + "-name", label);
 					$(this).text(label);
@@ -351,7 +351,7 @@ app.mod.shipbuilder = {
 			if (value && value !== '[]') {
 				$(this).text('paste');
 				var saveJson = gc.getValue(id + "-value");
-				var save = $.secureEvalJSON(saveJson);
+				var save = $.parseJSON(saveJson);
 				if (!save) {
 					save = [];
 				}

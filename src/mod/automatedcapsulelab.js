@@ -40,7 +40,7 @@ app.mod.automatedcapsulelab = {
 						stock: $.trim($("td:eq(2)", this).text())
 					});
 				});
-				gc.setValue('a-automatedcapsulelab-stocks', $.toJSON(stocks));
+				gc.setValue('a-automatedcapsulelab-stocks', JSON.stringify(stocks));
 			})();
 			return;
 		}
@@ -54,7 +54,7 @@ app.mod.automatedcapsulelab = {
 				var stocksJson = gc.getValue('a-automatedcapsulelab-stocks');
 				var stocks;
 				if (stocksJson) {
-					stocks = $.secureEvalJSON(stocksJson);
+					stocks = $.parseJSON(stocksJson);
 					if (!stocks) {
 						stocks = [];
 					}
@@ -72,7 +72,7 @@ app.mod.automatedcapsulelab = {
 					id: id,
 					stock: stock
 				});
-				gc.setValue('a-automatedcapsulelab-stocks', $.toJSON(stocks));
+				gc.setValue('a-automatedcapsulelab-stocks', JSON.stringify(stocks));
 			})();
 			return;
 		}
@@ -163,7 +163,7 @@ app.mod.automatedcapsulelab = {
 		 */
 		var ArtifactList = function (config) {
 			this.clear();
-			this.parseJson($.secureEvalJSON(config));
+			this.parseJson($.parseJSON(config));
 		};
 		
 		ArtifactList.prototype.clear = function () {
@@ -261,7 +261,7 @@ app.mod.automatedcapsulelab = {
 			var results = this.results;
 			delete this.keys;
 			delete this.results;
-			var string = $.toJSON(this);
+			var string = JSON.stringify(this);
 			this.keys = keys;
 			this.results = results;
 			return string;
@@ -368,7 +368,7 @@ app.mod.automatedcapsulelab = {
 							stock: $("td:eq(2)", this).text().replace(/\D/, '', 'g') * 1
 						});
 					});
-					gc.setValue('a-automatedcapsulelab-stocks', $.toJSON(stocks));
+					gc.setValue('a-automatedcapsulelab-stocks', JSON.stringify(stocks));
 					document.location.href = app.gameServer + 'i.cfm?f=com_project2&id=3';
 				},
 				onFailure: function (response) {
@@ -379,7 +379,7 @@ app.mod.automatedcapsulelab = {
 		}
 		var stocks;
 		if (stocksJson) {
-			stocks = $.secureEvalJSON(stocksJson);
+			stocks = $.parseJSON(stocksJson);
 			if (!stocks) {
 				stocks = [];
 			}
@@ -403,7 +403,7 @@ app.mod.automatedcapsulelab = {
 					stock: artifactList.items[i].stock
 				});
 			}
-			gc.setValue('a-automatedcapsulelab-stocks', $.toJSON(stock));
+			gc.setValue('a-automatedcapsulelab-stocks', JSON.stringify(stock));
 		}
 		//define panels: right
 		$("table.bodybox[width='310']").attr("id", "a-automatedcapsulelab-rightpanel-wrap");
