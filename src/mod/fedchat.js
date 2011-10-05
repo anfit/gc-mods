@@ -29,7 +29,7 @@ app.mod.fedchat = {
 		if (!gc.getValue('a-fedchat-lastupdate') || !gc.getValue('a-fedchat-lastupdate')) {
 			gc.setValue('a-fedchat-lastupdate', gc.timestamp);
 		}
-		if (gc.timestamp - 600000 > parseFloat(gc.getValue('a-fedchat-lastupdate')) || !gc.getValue('fedchat.html')) {
+		if (gc.timestamp - 600000 > gc.getValue('a-fedchat-lastupdate') || !gc.getValue('fedchat.html')) {
 			gc.xhr({
 				method: 'GET',
 				url: app.gameServer + 'i.cfm?f=fed_forum',

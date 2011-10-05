@@ -14,8 +14,7 @@ var ModControl = function (config) {
 	 * description
 	 */
 	this.location = document.location.href.replace(new RegExp(".*\/"), '').replace(/&\d\d\d\d&/, '');
-	this.timestamp = (new Date()).getTime().toString();
-	this.initDate = new Date();
+	this.timestamp = (new Date()).getTime();
 	/*
 	 * establish page type
 	 */
@@ -189,7 +188,7 @@ var ModControl = function (config) {
 	//message on after update installed
 	if (this.getValue('a-last-successful-update') !== app.version) {
 		
-		this.setValue("a-allships",'');
+		this.setValue("a-allships", '');
 		
 		console.log("Anfit GC Mods " + app.version + ": " + app.releaseNotes);
 		var self = this;
@@ -206,12 +205,12 @@ var ModControl = function (config) {
 	if (!this.getValue('a-last-update-check')) {
 		this.setValue('a-last-update-check', this.timestamp);
 	}
-	if (this.timestamp - 86400000 > parseFloat(this.getValue('a-last-update-check'))) {
+	if (this.timestamp - 86400000 > this.getValue('a-last-update-check')) {
 		this.xhr({
 			method: 'GET',
 			url: app.modsServer + '?action=get_current_version',
 			onFailure: function (response) {
-				console.error("[Mod control] XHR query to " + app.modsServer + " failed");
+				console.error("[Mod control] Query to " + app.modsServer + " failed");
 			},
 			onSuccess: function (response) {
 				var version = $.trim(response);
@@ -271,9 +270,9 @@ ModControl.prototype.setValue = function (key, value) {
  */
 ModControl.prototype.isNewest = function () {
 	if (this.getGlobalValue('a-last-property-check')) {
-		return this.initDate - new Date(this.getGlobalValue('a-last-property-check')) > 0;
+		return this.timestamp - (new Date(this.getGlobalValue('a-last-property-check'))).getTime() > 0;
 	}
-	return true;
+ 	return true;
 };
 /**
  * @return {Date} time the most recent gc page was opened or now
