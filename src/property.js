@@ -1,145 +1,152 @@
 /**
  * A numeric property
  * 
- * TODO this class is pointlessly roundabout, should be cleaned
+ * @param {string} id name/label of the property 
+ * @param {number} min lowest value (lower values are allowed, but will be highlighted)
+ * @param {number} max highest value (higher values are allowed, but will be highlighted) 
+ * @param {ModControl} context property's execution scope
+ * @constructor
  */
-Property = function (config) {
-	var value, prop, defaultMax = config.max,
-		defaultMin = config.min;
-	this.parent = config.parent;
-	this.id = config.id;
-	this.max = this.parent.getValue(this.id + ".max") ? this.parent.getValue(this.id + ".max") : defaultMax;
-	this.min = this.parent.getValue(this.id + ".min") ? this.parent.getValue(this.id + ".min") : defaultMin;
-	this.domDao = new PropertyDomNode(config.dom, this.max, this.min);
-	if (config.dom) {
-		this.dom = config.dom;
-	}
+Property = function (id, min, max, context) {
+	/**
+	 * default highest value (higher values are allowed, but will be highlighted) 
+	 * @type {number}
+	 */
+	this.defaultMax = max;
+	/**
+	 * default lowest value (lower values are allowed, but will be highlighted)
+	 * @type {number}
+	 */
+	this.defaultMin = min;
+	/**
+	 * context property's execution scope
+	 * @type {ModControl}
+	 */
+	this.parent = context;
+	/**
+	 * name/label of the property 
+	 * @type {string}
+	 */
+	this.id = id;
+	/**
+	 * current highest value (higher values are allowed, but will be highlighted) 
+	 * @type {number}
+	 */
+	this.max = this.parent.getValue(this.id + ".max") ? this.parent.getValue(this.id + ".max") : this.defaultMax;
+	/**
+	 * current lowest value (lower values are allowed, but will be highlighted)
+	 * @type {number}
+	 */
+	this.min = this.parent.getValue(this.id + ".min") ? this.parent.getValue(this.id + ".min") : this.defaultMin;
+
+	/**
+	 * Write-only accessor for property dom element
+	 * @type {PropertyDomNode}
+	 */
+	this.domDao = new PropertyDomNode(this.min, this.max);
+};
+
+
+/**
+ * @param {Node} el accessor's dom node
+ */
+Property.prototype.setEl = function (el) {
+	
+	this.dom = el;
 	if (this.parent.isNewest()) {
-		this.domDao.connect();
+		this.domDao.connect(el);
 	}
-	if (this.domDao.connected === true) {
-		value = this.domDao.getValue();
-	} else {
-		value = parseFloat(this.parent.getValue(this.id));
-	}
-	if (this.parent.isNewest()) {
-		this.parent.setValue(this.id, value);
-	}
-	if (this.domDao.connected === true) {
-		prop = this;
-		$(this.dom).click(function (e) {
-			var left, top, max, min;
-			e.stopPropagation();
-			left = $(this).position().left - ($(this).outerWidth()) / 2;
-			top = $(this).position().top + $(this).outerHeight();
-			var id = config.id;
-			max = prop.max;
-			min = prop.min;
-			$("body").append('<table id="change-property-' + id + '" class="a-property" style="top: ' + top + '; left: ' + left + ';"><tr><td><b>Limits for ' + id + ':</b></td><td><button id="close-' + id + '" class="a-property-close">x</input></td></tr><tr><td>max:</td><td><input type="text" id="max-' + id + '" value="' + max + '"></td></tr><tr><td>min:</td><td><input type="text" id="min-' + id + '" value="' + min + '"/></td></tr><tr><td colspan="2"><button id="restore-default-' + id + '"  class="a-property-restore">restore default values</button></td></tr></table>');
-			$('#max-' + id).change(function () {
-				prop.setMax($(this).val());
-			});
-			$('#min-' + id).change(function () {
-				prop.setMin($(this).val());
-			});
-			$('#restore-default-' + id).click(function () {
-				prop.setMin(defaultMin);
-				$('#min-' + id).val(defaultMin);
-				prop.setMax(defaultMax);
-				$('#max-' + id).val(defaultMax);
-			});
-			$("body").click(function () {
-				$('#change-property-' + id).remove();
-			});
-			$('#close-' + id).click(function () {
-				$('#change-property-' + id).remove();
-			});
-			$('#change-property-' + id).click(function (e) {
-				e.stopPropagation();
-			});
+	
+	var prop = this;
+	$(this.dom).click(function (e) {
+		var left, top, max, min;
+		e.stopPropagation();
+		left = $(this).position().left - ($(this).outerWidth()) / 2;
+		top = $(this).position().top + $(this).outerHeight();
+		var id = prop.id;
+		max = prop.max;
+		min = prop.min;
+		$("body").append('<table id="change-property-' + id + '" class="a-property" style="top: ' + top + '; left: ' + left + ';"><tr><td><b>Limits for ' + id + ':</b></td><td><button id="close-' + id + '" class="a-property-close">x</input></td></tr><tr><td>max:</td><td><input type="text" id="max-' + id + '" value="' + max + '"></td></tr><tr><td>min:</td><td><input type="text" id="min-' + id + '" value="' + min + '"/></td></tr><tr><td colspan="2"><button id="restore-default-' + id + '"  class="a-property-restore">restore default values</button></td></tr></table>');
+		$('#max-' + id).change(function () {
+			prop.setMax($(this).val());
 		});
-	}
+		$('#min-' + id).change(function () {
+			prop.setMin($(this).val());
+		});
+		$('#restore-default-' + id).click(function () {
+			prop.setMin(prop.defaultMin);
+			$('#min-' + id).val(prop.defaultMin);
+			prop.setMax(prop.defaultMax);
+			$('#max-' + id).val(prop.defaultMax);
+		});
+		$("body").click(function () {
+			$('#change-property-' + id).remove();
+		});
+		$('#close-' + id).click(function () {
+			$('#change-property-' + id).remove();
+		});
+		$('#change-property-' + id).click(function (e) {
+			e.stopPropagation();
+		});
+	});	
 };
 /**
- * @param value
+ * @param {number} value Value for this property
  */
 Property.prototype.setValue = function (value) {
-	if (this.domDao.connected === true) {
-		this.domDao.setValue(value);
-	}
-	if (this.parent.isNewest() === true) {
-		this.parent.setValue(this.id, value);
-	}
+	this.domDao.setValue(value);
 };
 /**
- * @param value
+ * @param {number} value Maximum value for this property
+ * @param {boolean=} asDefault True if this value should be assigned as default threshold
  */
-Property.prototype.setMax = function (value) {
-	if (this.domDao.connected === true) {
-		this.domDao.setMax(value);
+Property.prototype.setMax = function (value, asDefault) {
+	if (asDefault === true) {
+		this.defaultMax = value;
 	}
+	this.domDao.setMax(value);
 	this.parent.setValue(this.id + '.max', value);
 	this.max = value;
 };
 /**
- * @param value
+ * @param {number} value Minimum value for this property
+ * @param {boolean=} asDefault True if this value should be assigned as default threshold
  */
-Property.prototype.setMin = function (value) {
-	if (this.domDao.connected === true) {
-		this.domDao.setMin(value);
+Property.prototype.setMin = function (value, asDefault) {
+	if (asDefault === true) {
+		this.defaultMin = value;
 	}
+	this.domDao.setMin(value);
 	this.parent.setValue(this.id + '.min', value);
 	this.min = value;
 };
 /**
- * @return {Numeric} value
+ * @return {number} Value of this property
  */
 Property.prototype.getValue = function () {
-	var value;
-	if (
-	this.domDao.connected === true && this.parent.isNewest() === true) {
-		value = this.domDao.getValue();
-	} else {
-		value = parseFloat(this.parent.getValue(this.id));
+	return this.parent.getValue(this.id);
+};
+/**
+ * @param {number} value Value to be added to this property
+ */
+Property.prototype.addValue = function (value) {
+	this.setValue(1 * value + this.getValue());
+};
+/**
+ * @param {number} value Value to be removed from this property
+ */
+Property.prototype.subtractValue = function (value) {
+	this.setValue(-1 * value + this.getValue());
+};
+/**
+ * Forces underlying dom node to update its value
+ * @param {number=} value optional: value for this property
+ */
+Property.prototype.updateEl = function (value) {
+	if (value !== undefined){
+		this.domDao.setValue(value);
 	}
-	return parseFloat(value);
-};
-/**
- * @return value
- * @deprecated
- */
-Property.prototype.get = function () {
-	return this.getValue();
-};
-/**
- * @param value
- * @deprecated
- */
-Property.prototype.set = function (value) {
-	this.setValue(value);
-};
-/**
- * @param value
- * @return
- */
-Property.prototype.add = function (value) {
-	var newValue = this.getValue() + parseFloat(value);
-	this.setValue(newValue);
-	return newValue;
-};
-/**
- * 
- * @param value
- * @return
- */
-Property.prototype.subtract = function (value) {
-	return this.add(parseFloat(value) * -1);
-};
-/**
- * 
- */
-Property.prototype.load = function () {
-	if (!this.parent.isNewest()) {
+	else {
 		this.domDao.setValue(this.getValue());
 	}
 };

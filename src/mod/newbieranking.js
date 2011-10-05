@@ -22,7 +22,7 @@ app.mod.newbieranking = {
 		if (!gc.location.match(/rank/)) {
 			return false;
 		}
-		if (gc.power.get() >= 5000) {
+		if (gc.power.getValue() >= 5000) {
 			return false;
 		}
 		return true;

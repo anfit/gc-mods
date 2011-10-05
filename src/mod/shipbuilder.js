@@ -411,8 +411,8 @@ app.mod.shipbuilder = {
 								return this.nodeType === 3 && this.textContent.match('You bought');
 							});
 							console.log('[Ship builder] ' + msg.text());
-							gc.turns.subtract(this.extra.turns);
-							gc.cash.subtract(this.extra.cost);
+							gc.turns.subtractValue(this.extra.turns);
+							gc.cash.subtractValue(this.extra.cost);
 						},
 						onFailure: function (response) {
 							//unsafeWindow.console.error(response);

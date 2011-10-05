@@ -1,169 +1,113 @@
 /**
- * Core component
+ * Core mod component
+ * @constructor
  */
 var ModControl = function (config) {
 	
-	//config
-	if (!config || !config.mods) {
-		console.error("No mods passed in config");
-		return;
-	}
+	/**
+	 * list of mods
+	 * @type {Array}
+	 */
 	this.mods = config.mods;
 	
 	/**
-	 * description
+	 * local url of the page
+	 * @type {string}
 	 */
 	this.location = document.location.href.replace(new RegExp(".*\/"), '').replace(/&\d\d\d\d&/, '');
-	this.timestamp = (new Date()).getTime();
-	/*
-	 * establish page type
-	 */
-	var pms = $("table.smallfont td.bodybox:has(a:contains('Private Messages')), table.smallfont td:has(a > font:contains('Private Messages'))");
-	if (pms.length) {
-		pms.attr('id', 'a-privatemessages');
-		this.propertiesAreAvailable = true;
-	} else {
-		this.propertiesAreAvailable = false;
-	}
-	/*
-	 * establish user credentials
-	 */
-	var serverName;
-	var boxes;
 	
+	/**
+	 * time in miliseconds
+	 * @type {number}
+	 */
+	this.timestamp = (new Date()).getTime();
+	
+	/**
+	 * cash property accessor
+	 * @type {Property}
+	 */
+	this.cash = new Property('cash', 0, 999999999999, this);
+	
+	/**
+	 * food property accessor
+	 * @type {Property}
+	 */
+	this.food = new Property('food', 0, 2000000000, this);
+	
+	/**
+	 * turns property accessor
+	 * @type {Property}
+	 */
+	this.turns = new Property('turns', 0, 0, this);
+	
+	/**
+	 * power property accessor
+	 * @type {Property}
+	 */
+	this.power = new Property('power', 0, 1199999999, this);
+	
+	/**
+	 * true if property nodes are visible on page
+	 * @type {boolean}
+	 */
+	this.propertiesAreAvailable = false;
+	
+	var pmEl = $("table.smallfont td.bodybox:has(a:contains('Private Messages')), table.smallfont td:has(a > font:contains('Private Messages'))");
+	if (pmEl.length) {
+		this.propertiesAreAvailable = true;
+		pmEl.attr('id', 'a-privatemessages');
+	}
+	
+	var properties;
 	
 	if (this.propertiesAreAvailable && this.isNewest()) {
 		
-		var b = $("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox");
-		var cashNode = b.eq(0);
-		var foodNode = b.eq(1);
-		var powerNode = b.eq(2);
-		var turnNode = b.eq(3);
-		var serverNode = b.eq(4);
-		var empireNode = b.eq(5);	
+		properties = this.readProperties();
+		properties = this.setServer(properties, properties.serverName);
+		this.serializeProperties(properties);
 		
-		//server, empire, user
-		serverName = serverNode.attr('id', 'a-server-name').text().replace(/\W/g, '');
-		this.empireName = $.trim(empireNode.text());
-		this.userName = serverName + '.' + this.empireName;
-
-		
-		this.setGlobalValue('serverName', serverName);
-		this.setGlobalValue('empireName', this.empireName);
-		this.setGlobalValue('userName', this.userName);
-		//server
-		for (var i = 0; i < app.servers.length; i = i + 1) {
-			if (app.servers[i].name === serverName) {
-				this.server = app.servers[i];
-				break;
-			}
-		}
-		
-		//paid
-		if ($("img[src*='logo_gc1']").length) {
-			this.isPaid = false;
-		}
-		else if ($("img[src*='logo_gc2']").length) {
-			this.isPaid = true;
-		}
-		else {
-			this.isPaid = this.getValue('isPaid') ? true : false;
-		}
-		this.setValue('isPaid', this.isPaid);
-		
-		if (this.isPaid) {
-			this.server.turnRate = this.server.turnRate *  0.85;
-			this.server.turnHold = this.server.turnHold *  1.5;
-		}
-		
-		this.cash = new Property({
-			parent: this,
-			id: 'cash',
-			dom: cashNode,
-			max: 999999999999,
-			min: 0
-		});
-		this.food = new Property({
-			parent: this,
-			id: 'food',
-			dom: foodNode,
-			max: 2000000000,
-			min: 0
-		});
-		this.power = new Property({
-			parent: this,
-			id: 'power',
-			dom: powerNode,
-			max: 1199999999,
-			min: 0
-		});
-		this.turns = new Property({
-			parent: this,
-			id: 'turns',
-			dom: turnNode,
-			max: this.server.turnHold,
-			min: 0
-		});
-		
-		this.antiReload = $("#a-privatemessages a").attr('href').replace(/.*\&(\d*)\&.*/, "$1");
-		
-		
-		this.setValue('antiReload', this.antiReload);
-		
-		
-		this.setGlobalValue('a-last-property-check', (new Date()).toString());
-		this.setValue('a-last-property-check', (new Date()).toString());
+		this.setGlobalValue('a-last-property-check', (new Date()).getTime());
+		this.setValue('a-last-property-check', (new Date()).getTime());	
 		
 	} else {
-		//from cache
-		serverName = this.getGlobalValue('serverName');
-		
-		this.empireName = this.getGlobalValue('empireName');
-		this.userName = this.getGlobalValue('userName');
-		this.antiReload = this.getValue('antiReload');
-		
-		//set server
-		for (i = 0; i < app.servers.length; i = i + 1) {
-			if (app.servers[i].name === serverName) {
-				this.server = app.servers[i];
-				break;
-			}
-		}
-		
-		this.isPaid = this.getValue('isPaid');
-		if (this.isPaid) {
-			this.server.turnRate = this.server.turnRate *  0.85;
-			this.server.turnHold = this.server.turnHold *  1.5;
-		}	
-		
-		//from cache
-		this.cash = new Property({
-			parent: this,
-			id: 'cash',
-			max: 999999999999,
-			min: 0
-		});
-		this.food = new Property({
-			parent: this,
-			id: 'food',
-			max: 2000000000,
-			min: 0
-		});
-		this.power = new Property({
-			parent: this,
-			id: 'power',
-			max: 1199999999,
-			min: 0
-		});
-		this.turns = new Property({
-			parent: this,
-			id: 'turns',
-			max: this.server.turnHold,
-			min: 0
-		});
+		properties = this.deserializeProperties();
+		properties = this.setServer(properties, properties.serverName);
 	}
 	
-	if (!this.server) {
+	/**
+	 * name of the empire (GC login), e.g. Anfit
+	 * @type {string}
+	 */
+	this.empireName = properties.empireName;
+
+	/**
+	 * mods' username for this empire (server + . + empire), e.g. Normal.Anfit
+	 * @type {string}
+	 */
+	this.userName = properties.userName;
+
+	/**
+	 * name of the server, e.g. Normal
+	 * @type {string}
+	 */
+	this.server = properties.server;
+
+	/**
+	 * Whether this is a paid or a non-paid account
+	 * @type {boolean}
+	 */
+	this.isPaid = properties.paid;
+	
+	/**
+	 * An antireload value (used by GC pages to determine if a page is fresh or not)
+	 * @type {numeric}
+	 */
+	this.antiReload = properties.antiReload;
+	
+	/**
+	 * TODO remove this check
+	 */
+	if (!this.empireName) {
 		this.loaded = false;
 		return;
 	} else {
@@ -172,18 +116,6 @@ var ModControl = function (config) {
 
 	//default values
 	this.forceDefaultSettings();
-	
-	/*
-	 * establish properties
-	 */
-	if (this.server.name === 'Dm') {
-		app.gameServer += 'dm/';
-	}
-
-	if (this.propertiesAreAvailable) {
-		this.food.dom.parent().removeAttr('onmouseover');
-		this.food.dom.parent().removeAttr('onclick');
-	}
 	
 	//message on after update installed
 	if (this.getValue('a-last-successful-update') !== app.version) {
@@ -224,68 +156,245 @@ var ModControl = function (config) {
 		});
 	}
 };
+
 /**
- * Global getter. should be avoided, as globals scope different servers and accounts
- * @param {String} key
- * @return {String|Numeric|Boolean} stored value
+ * Read empire property from dom and assign dom els to accessors
+ * 
+ * @private
+ * @return {Object} Properties read from dom nodes on this page
+ */
+ModControl.prototype.readProperties = function () {
+	
+	var propertyElems = $("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox");
+	
+	//assign dom els to accessors
+	this.cash.setEl(propertyElems.eq(0));
+	this.food.setEl(propertyElems.eq(1));
+	this.power.setEl(propertyElems.eq(2));
+	this.turns.setEl(propertyElems.eq(3));
+	
+	//small fix
+	propertyElems.eq(0).parent().removeAttr('onmouseover');
+	propertyElems.eq(0).parent().removeAttr('onclick');
+	
+	//empty properties
+	var properties = {
+		cash: -1,
+		food : -1,
+		power : -1,
+		turns : -1,
+		serverName : "",
+		empireName : "",
+		userName : "",
+		server : {
+			id: -1,
+			name: "",
+			turnRate: -1,
+			turnHold: -1
+		},
+		antireload: -1,
+		paid: false
+	};
+	
+	properties.cash = propertyElems.eq(0).text().replace(/\D/g, '') * 1;
+	properties.food = propertyElems.eq(1).text().replace(/\D/g, '') * 1;
+	properties.power = propertyElems.eq(2).text().replace(/\D/g, '') * 1;
+	properties.turns = propertyElems.eq(3).text().replace(/\D/g, '') * 1;
+	properties.serverName = $.trim(propertyElems.eq(4).text());
+	properties.empireName = $.trim(propertyElems.eq(5).text());	
+	
+	properties.userName = properties.serverName + "." + properties.empireName;	
+	
+	properties.antiReload = $("a:contains('Private Messages')").attr('href').replace(/.*\&(\d*)\&.*/, "$1") * 1;
+	
+	//paid
+	if ($("img[src*='logo_gc2']").length) {
+		properties.paid = true;
+	}
+	return properties;
+};
+
+/**
+ * @return object properties
+ */
+ModControl.prototype.deserializeProperties = function () {
+	
+	//empty properties
+	var properties = {
+		cash: -1,
+		food : -1,
+		power : -1,
+		turns : -1,
+		serverName : "",
+		empireName : "",
+		userName : "",
+		server : {
+			id: -1,
+			name: "",
+			turnRate: -1,
+			turnHold: -1
+		},
+		antiReload: -1,
+		paid: false
+	};
+	
+	properties.serverName = this.getGlobalValue('serverName');
+	properties.empireName = this.getGlobalValue('empireName');	
+	properties.userName = this.getGlobalValue('userName');
+	
+	properties.cash = this.getGlobalValue(properties.userName + "." + this.cash.id);
+	properties.food = this.getGlobalValue(properties.userName + "." + this.food.id);
+	properties.power = this.getGlobalValue(properties.userName + "." + this.power.id);
+	properties.turns = this.getGlobalValue(properties.userName + "." + this.turns.id);
+	
+	properties.antiReload = this.getGlobalValue(properties.userName + ".antiReload");
+	properties.paid = this.getGlobalValue(properties.userName + ".isPaid");
+
+	return properties;
+};
+
+/**
+ * @param properties
+ * @return object properties
+ */
+ModControl.prototype.serializeProperties = function (properties) {
+	this.setGlobalValue('serverName', properties.serverName);
+	this.setGlobalValue('empireName', properties.empireName);
+	this.setGlobalValue('userName', properties.userName);
+	this.setValue('isPaid', properties.paid);
+	this.setValue('antiReload', properties.antiReload);
+	this.setValue('cash', properties.cash);
+	this.setValue('food', properties.food);
+	this.setValue('turns', properties.turns);
+	this.setValue('power', properties.power);
+};
+
+/**
+ * @param object properties
+ * @param string serverName
+ * @return object properties
+ */
+ModControl.prototype.setServer = function (properties, serverName) {
+
+	//server
+	for (var i = 0; i < app.servers.length; i = i + 1) {
+		if (app.servers[i].name === serverName) {
+			properties.server = app.servers[i];
+			break;
+		}
+	}
+	//adjust server
+	if (properties.paid) {
+		properties.server.turnRate = properties.server.turnRate * 0.85;
+		properties.server.turnHold = properties.server.turnHold * 1.5;
+	}
+	
+	//set turn max
+	this.turns.setMax(properties.server.turnHold, true);
+	
+	//adapt gameServer variable
+	if (properties.server.name === 'DM') {
+		app.gameServer += 'dm/';
+	}
+	
+	return properties;
+};
+
+/**
+ * Get value from local storage. Detects booleans and numbers cast into strings as their respective types
+ * 
+ * <ul>
+ * <li>false ==> false</li>
+ * <li>"false" ==> false</li>
+ * <li>true ==> true</li>
+ * <li>"true" ==> true</li>
+ * <li>undefined ==> undefined</li>
+ * <li>string ==> string</li>
+ * <li>number ==> number</li>
+ * <li>"number" ==> number</li>
+ * </ul>
+ *  
+ * @param {string} key Key under which a value was stored in localStorage
+ * @return {string|number|boolean|undefined} Value retrieved from local storage
  */
 ModControl.prototype.getGlobalValue = function (key) {
-	return GM_getValue(key);
+	var value = GM_getValue(key);
+	if (value === "false") {
+		return false;
+	}
+	if (value === false) {
+		return false;
+	}
+	if (value === "true") {
+		return true;
+	}
+	if (value === true) {
+		return true;
+	}
+	if (value * 1 * 0 === 0) {
+		return value * 1;
+	}
+	return value;
 };
+
 /**
- * Global setter. should be avoided, as globals scope different servers and accounts
- * @param {String} key
- * @param {String|Numeric|Boolean} value to be stored
+ * Set value to local storage. Casts large numbers to String
+ * 
+ * @param {string} key Key under which a value was stored in localStorage
+ * @param {string|number|boolean|undefined} value Value retrieved from local storage
  */
 ModControl.prototype.setGlobalValue = function (key, value) {
 	if (typeof (value) === "number" && value > 100000) {
-		GM_setValue(key, new String(value).toString());
+		GM_setValue(key, value.toString());
 	} else {
 		GM_setValue(key, value);
 	}
 };
+
 /**
- * Preferences getter. Uses server namecepace.
- * @param {String} key
- * @return {String|Numeric|Boolean} stored value
+ * Gets value from local storage. Takes userName for namespace
+ * 
+ * <ul>
+ * <li>false ==> false</li>
+ * <li>"false" ==> false</li>
+ * <li>true ==> true</li>
+ * <li>"true" ==> true</li>
+ * <li>undefined ==> undefined</li>
+ * <li>string ==> string</li>
+ * <li>number ==> number</li>
+ * <li>"number" ==> number</li>
+ * </ul>
+ * 
+ * @param {string} key Key under which a value was stored in localStorage
+ * @return {string|number|boolean|undefined} Value retrieved from local storage
  */
 ModControl.prototype.getValue = function (key) {
-	return GM_getValue(this.userName + '.' + key);
-};
-/**
- * Preferences setter. Uses server namecepace.
- * @param {String} key
- * @param {String|Numeric|Boolean} value to be stored
- */
-ModControl.prototype.setValue = function (key, value) {
-	if (typeof (value) === "number" && value > 100000) {
-		GM_setValue(this.userName + '.' + key, new String(value).toString());
-	} else {
-		GM_setValue(this.userName + '.' + key, value);
-	}
-};
-/**
- *	Checks if any other tab was more recent
- * @return {Boolean} true if this page is the last page to be opened. 
- */
-ModControl.prototype.isNewest = function () {
-	if (this.getGlobalValue('a-last-property-check')) {
-		return this.timestamp - (new Date(this.getGlobalValue('a-last-property-check'))).getTime() > 0;
-	}
- 	return true;
-};
-/**
- * @return {Date} time the most recent gc page was opened or now
- */
-ModControl.prototype.lastPropertyCheck = function () {
-	if (this.getValue('a-last-property-check')) {
-		return new Date(this.getValue('a-last-property-check'));
-	}
-	return new Date();
+	return this.getGlobalValue(this.userName + '.' + key);
 };
 
 /**
- * Go through all mods defined and set default settings if they are missing
+ * Sets value to local storage. Takes userName for namespace. Casts large numbers to String.
+ * 
+ * @param {string} key Key under which a value was stored in localStorage
+ * @param {string|number|boolean|undefined} value Value retrieved from local storage
+ */
+ModControl.prototype.setValue = function (key, value) {
+	this.setGlobalValue(this.userName + '.' + key, value);
+};
+
+/**
+ * Checks if any other page in this http session was more recent then this one
+ * @return {boolen} True if this page is fresh and most recent among all tabs 
+ */
+ModControl.prototype.isNewest = function () {
+	if (this.getGlobalValue('a-last-property-check')) {
+		return this.timestamp - this.getGlobalValue('a-last-property-check') > 0;
+	}
+	return true;
+};
+
+/**
+ * Goes through all the mods and set default setting properties in local storage if they are missing
  */
 ModControl.prototype.forceDefaultSettings = function () {
 	
@@ -316,10 +425,11 @@ ModControl.prototype.forceDefaultSettings = function () {
 };
 
 /**
- * Show a message box on top of the gc pages
- * @param {String} title
- * @param {String} message
- * @param {String} id optional, if user may have a change to remove a message permanently
+ * Shows a message box on top of the gc pages
+ * 
+ * @param {string} title Title of the message box
+ * @param {string} message Message shown in the message box
+ * @param {string=} id Optional id value assigned to a message box, if user may remove a message permanently
  */
 ModControl.prototype.showMessage = function (title, message, id) {
 	if (id) {
@@ -351,7 +461,7 @@ ModControl.prototype.showMessage = function (title, message, id) {
 };
 
 /**
- * Launch all mods
+ * Run all mods
  */
 ModControl.prototype.runMods = function () {
 	var modMarkup = '<li class="a-mod" id="${id}"><div class="a-mod-line" ><ul><li class="a-mod-submit"><input type=checkbox id="${id}-checkbox" /></li><li class="a-mod-name"><a name=${id}></a><b>${title}</b><br /></li></div></ul><div class="a-mod-line" ><i>${description}</i></div><div><ul class="a-mod-item" /></div></li>';
@@ -394,7 +504,7 @@ ModControl.prototype.runMods = function () {
 					item.value = gc.getValue(item.id);
 				}
 				switch (item.type) {
-				case 'list': {
+					case 'list': {
 						//add
 						$.tmpl(listMarkup, item).appendTo(itemsWrapper);
 						//hitch events
@@ -403,12 +513,12 @@ ModControl.prototype.runMods = function () {
 						});
 						break;
 					}
-				case 'info': {
+					case 'info': {
 						//add
 						$.tmpl(infoMarkup, item).appendTo(itemsWrapper);
 						break;
 					}
-				case 'input': {
+					case 'input': {
 						//add
 						$.tmpl(inputMarkup, item).appendTo(itemsWrapper);
 						//hitch events
@@ -417,7 +527,7 @@ ModControl.prototype.runMods = function () {
 						});
 						break;
 					}
-				case 'checkbox':
+					case 'checkbox':
 					{
 						//add
 						$.tmpl(checkBoxMarkup, item).appendTo(itemsWrapper);
@@ -429,7 +539,7 @@ ModControl.prototype.runMods = function () {
 						});
 						break;
 					}
-				default:
+					default:
 					{
 						console.error('[Options] Unrecognized option type');
 					}
@@ -461,11 +571,11 @@ ModControl.prototype.xhr = function (config) {
 		return;
 	}
 	var settings = {
-		method: 'POST',
+		method: "POST",
 		url: config.url,
 		headers: {
-			'Accept': 'application/atom+xml,application/xml,text/xml',
-			'Content-type': 'application/x-www-form-urlencoded'
+			"Accept": "application/atom+xml,application/xml,text/xml",
+			"Content-type": "application/x-www-form-urlencoded"
 		},
 		onload: function (responseDetails) {
 			var antireloadDom = $("td.bodybox a:contains('Private Messages')");

@@ -34,16 +34,15 @@ app.mod.turnticker = {
 	 * @cfg plugin function the main functionality of the mod
 	 */
 	plugin: function () {
-		var initDate = new Date().valueOf() * 1;
+		var initDate = new Date().getTime();
 		var turns = gc.turns;
 		var pageTitle = document.title;
 		if (gc.getValue('a-turnticker-showturns')) {
 			document.title = turns.getValue() + ' ' + pageTitle;
 		}
 		window.setInterval(function () {
-			var delay, value, lastPropertyCheck;
-			lastPropertyCheck = parseFloat(gc.lastPropertyCheck().valueOf());
-			delay = (lastPropertyCheck - initDate) % gc.server.turnRate;
+			var delay, value;
+			delay = (gc.getValue('a-last-property-check') - initDate) % gc.server.turnRate;
 			value = parseFloat(turns.getValue());
 			//user check
 			if (gc.userName === gc.getGlobalValue('userName')) {
@@ -85,10 +84,10 @@ app.mod.turnticker = {
 		//this function will launch itself once per second, to check if there shouldn't be an update, or two...
 		window.setInterval(function () {
 			if (gc.isNewest() === false && gc.userName === gc.getGlobalValue('userName')) {
-				gc.turns.load();
-				gc.power.load();
-				gc.food.load();
-				gc.cash.load();
+				gc.turns.updateEl();
+				gc.power.updateEl();
+				gc.food.updateEl();
+				gc.cash.updateEl();
 				$("a").each(function () {
 					var value = $(this).attr('href');
 					if (value) {
