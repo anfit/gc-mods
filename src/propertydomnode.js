@@ -6,7 +6,7 @@
  * @param {Node} el accessor's dom node
  * @constructor
  */
-var PropertyDomNode = function (min, max, el) {
+app.PropertyDomNode = function (min, max, el) {
 	/**
 	 * accessor's dom node
 	 * @type {Node}
@@ -33,7 +33,7 @@ var PropertyDomNode = function (min, max, el) {
  * Set value
  * @param {number} value 
  */
-PropertyDomNode.prototype.setValue = function (value) {
+app.PropertyDomNode.prototype.setValue = function (value) {
 	if (this.connected !== true) {
 		return;
 	}
@@ -44,7 +44,7 @@ PropertyDomNode.prototype.setValue = function (value) {
  * Set max value
  * @param {number} value 
  */
-PropertyDomNode.prototype.setMax = function (value) {
+app.PropertyDomNode.prototype.setMax = function (value) {
 	if (this.connected !== true) {
 		return;
 	}
@@ -55,7 +55,7 @@ PropertyDomNode.prototype.setMax = function (value) {
  * Set min value
  * @param {number} value 
  */
-PropertyDomNode.prototype.setMin = function (value) {
+app.PropertyDomNode.prototype.setMin = function (value) {
 	if (this.connected !== true) {
 		return;
 	}
@@ -66,7 +66,7 @@ PropertyDomNode.prototype.setMin = function (value) {
  * Set backgrounds and other style settings, to be changed whenever value or minimum/maximum threshold is changed
  * @private
  */
-PropertyDomNode.prototype.refreshEl = function () {
+app.PropertyDomNode.prototype.refreshEl = function () {
 	var value;
 	value = this.getValue();
 	if (value > this.max || value < this.min) {
@@ -83,7 +83,7 @@ PropertyDomNode.prototype.refreshEl = function () {
  * Assigns a dom node to this DAO
  * @param {Node} el accessor's dom node
  */
-PropertyDomNode.prototype.connect = function (el) {
+app.PropertyDomNode.prototype.connect = function (el) {
 	this.el = el;
 	this.connected = true;
 	this.prefix = this.el.html().replace(/-{0,1}\d.*/, '');

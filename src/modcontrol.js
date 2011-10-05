@@ -2,7 +2,7 @@
  * Core mod component
  * @constructor
  */
-var ModControl = function (config) {
+app.ModControl = function (config) {
 	
 	/**
 	 * list of mods
@@ -24,27 +24,27 @@ var ModControl = function (config) {
 	
 	/**
 	 * cash property accessor
-	 * @type {Property}
+	 * @type {app.Property}
 	 */
-	this.cash = new Property('cash', 0, 999999999999, this);
+	this.cash = new app.Property('cash', 0, 999999999999, this);
 	
 	/**
 	 * food property accessor
-	 * @type {Property}
+	 * @type {app.Property}
 	 */
-	this.food = new Property('food', 0, 2000000000, this);
+	this.food = new app.Property('food', 0, 2000000000, this);
 	
 	/**
 	 * turns property accessor
-	 * @type {Property}
+	 * @type {app.Property}
 	 */
-	this.turns = new Property('turns', 0, 0, this);
+	this.turns = new app.Property('turns', 0, 0, this);
 	
 	/**
 	 * power property accessor
-	 * @type {Property}
+	 * @type {app.Property}
 	 */
-	this.power = new Property('power', 0, 1199999999, this);
+	this.power = new app.Property('power', 0, 1199999999, this);
 	
 	/**
 	 * true if property nodes are visible on page
@@ -163,7 +163,7 @@ var ModControl = function (config) {
  * @private
  * @return {Object} Properties read from dom nodes on this page
  */
-ModControl.prototype.readProperties = function () {
+app.ModControl.prototype.readProperties = function () {
 	
 	var propertyElems = $("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox");
 	
@@ -217,7 +217,7 @@ ModControl.prototype.readProperties = function () {
 /**
  * @return object properties
  */
-ModControl.prototype.deserializeProperties = function () {
+app.ModControl.prototype.deserializeProperties = function () {
 	
 	//empty properties
 	var properties = {
@@ -257,7 +257,7 @@ ModControl.prototype.deserializeProperties = function () {
  * @param properties
  * @return object properties
  */
-ModControl.prototype.serializeProperties = function (properties) {
+app.ModControl.prototype.serializeProperties = function (properties) {
 	this.setGlobalValue('serverName', properties.serverName);
 	this.setGlobalValue('empireName', properties.empireName);
 	this.setGlobalValue('userName', properties.userName);
@@ -274,7 +274,7 @@ ModControl.prototype.serializeProperties = function (properties) {
  * @param string serverName
  * @return object properties
  */
-ModControl.prototype.setServer = function (properties, serverName) {
+app.ModControl.prototype.setServer = function (properties, serverName) {
 
 	//server
 	for (var i = 0; i < app.servers.length; i = i + 1) {
@@ -317,7 +317,7 @@ ModControl.prototype.setServer = function (properties, serverName) {
  * @param {string} key Key under which a value was stored in localStorage
  * @return {string|number|boolean|undefined} Value retrieved from local storage
  */
-ModControl.prototype.getGlobalValue = function (key) {
+app.ModControl.prototype.getGlobalValue = function (key) {
 	var value = GM_getValue(key);
 	if (value === "false") {
 		return false;
@@ -343,7 +343,7 @@ ModControl.prototype.getGlobalValue = function (key) {
  * @param {string} key Key under which a value was stored in localStorage
  * @param {string|number|boolean|undefined} value Value retrieved from local storage
  */
-ModControl.prototype.setGlobalValue = function (key, value) {
+app.ModControl.prototype.setGlobalValue = function (key, value) {
 	if (typeof (value) === "number" && value > 100000) {
 		GM_setValue(key, value.toString());
 	} else {
@@ -368,7 +368,7 @@ ModControl.prototype.setGlobalValue = function (key, value) {
  * @param {string} key Key under which a value was stored in localStorage
  * @return {string|number|boolean|undefined} Value retrieved from local storage
  */
-ModControl.prototype.getValue = function (key) {
+app.ModControl.prototype.getValue = function (key) {
 	return this.getGlobalValue(this.userName + '.' + key);
 };
 
@@ -378,7 +378,7 @@ ModControl.prototype.getValue = function (key) {
  * @param {string} key Key under which a value was stored in localStorage
  * @param {string|number|boolean|undefined} value Value retrieved from local storage
  */
-ModControl.prototype.setValue = function (key, value) {
+app.ModControl.prototype.setValue = function (key, value) {
 	this.setGlobalValue(this.userName + '.' + key, value);
 };
 
@@ -386,7 +386,7 @@ ModControl.prototype.setValue = function (key, value) {
  * Checks if any other page in this http session was more recent then this one
  * @return {boolen} True if this page is fresh and most recent among all tabs 
  */
-ModControl.prototype.isNewest = function () {
+app.ModControl.prototype.isNewest = function () {
 	if (this.getGlobalValue('a-last-property-check')) {
 		return this.timestamp - this.getGlobalValue('a-last-property-check') > 0;
 	}
@@ -396,7 +396,7 @@ ModControl.prototype.isNewest = function () {
 /**
  * Goes through all the mods and set default setting properties in local storage if they are missing
  */
-ModControl.prototype.forceDefaultSettings = function () {
+app.ModControl.prototype.forceDefaultSettings = function () {
 	
 	var gc = this;
 	//default settings
@@ -431,7 +431,7 @@ ModControl.prototype.forceDefaultSettings = function () {
  * @param {string} message Message shown in the message box
  * @param {string=} id Optional id value assigned to a message box, if user may remove a message permanently
  */
-ModControl.prototype.showMessage = function (title, message, id) {
+app.ModControl.prototype.showMessage = function (title, message, id) {
 	if (id) {
 		id = id.replace(/\W/g, '');
 	}
@@ -463,7 +463,7 @@ ModControl.prototype.showMessage = function (title, message, id) {
 /**
  * Run all mods
  */
-ModControl.prototype.runMods = function () {
+app.ModControl.prototype.runMods = function () {
 	var modMarkup = '<li class="a-mod" id="${id}"><div class="a-mod-line" ><ul><li class="a-mod-submit"><input type=checkbox id="${id}-checkbox" /></li><li class="a-mod-name"><a name=${id}></a><b>${title}</b><br /></li></div></ul><div class="a-mod-line" ><i>${description}</i></div><div><ul class="a-mod-item" /></div></li>';
 	var listMarkup = '<li class="a-mod-item-list"><ul class="a-mod-item-parts"><li class="a-mod-item-parts-body">${description}<br /><textarea id="${id}" cols="70">${value}</textarea></li></ul></li>';
 	var inputMarkup = '<li class="a-mod-item-input"><ul class="a-mod-item-parts"><li class="a-mod-item-parts-body"><span class="a-mod-item-input-desc">${description}</span><span class="a-mod-item-input-submit"><input id="${id}" value="${value}" /></span></li></ul></li>';
@@ -565,7 +565,7 @@ ModControl.prototype.runMods = function () {
  * A wrapper for GM_xmlhttpRequest, with most options predefined.
  * @param config 
  */
-ModControl.prototype.xhr = function (config) {
+app.ModControl.prototype.xhr = function (config) {
 	if (!config || !config.url) {
 		console.error("[Ajax] empty xhr request");
 		return;

@@ -4,10 +4,10 @@
  * @param {string} id name/label of the property 
  * @param {number} min lowest value (lower values are allowed, but will be highlighted)
  * @param {number} max highest value (higher values are allowed, but will be highlighted) 
- * @param {ModControl} context property's execution scope
+ * @param {app.ModControl} context property's execution scope
  * @constructor
  */
-Property = function (id, min, max, context) {
+app.Property = function (id, min, max, context) {
 	/**
 	 * default highest value (higher values are allowed, but will be highlighted) 
 	 * @type {number}
@@ -20,7 +20,7 @@ Property = function (id, min, max, context) {
 	this.defaultMin = min;
 	/**
 	 * context property's execution scope
-	 * @type {ModControl}
+	 * @type {app.ModControl}
 	 */
 	this.parent = context;
 	/**
@@ -41,16 +41,16 @@ Property = function (id, min, max, context) {
 
 	/**
 	 * Write-only accessor for property dom element
-	 * @type {PropertyDomNode}
+	 * @type {app.PropertyDomNode}
 	 */
-	this.domDao = new PropertyDomNode(this.min, this.max);
+	this.domDao = new app.PropertyDomNode(this.min, this.max);
 };
 
 
 /**
  * @param {Node} el accessor's dom node
  */
-Property.prototype.setEl = function (el) {
+app.Property.prototype.setEl = function (el) {
 	
 	this.dom = el;
 	if (this.parent.isNewest()) {
@@ -93,14 +93,14 @@ Property.prototype.setEl = function (el) {
 /**
  * @param {number} value Value for this property
  */
-Property.prototype.setValue = function (value) {
+app.Property.prototype.setValue = function (value) {
 	this.domDao.setValue(value);
 };
 /**
  * @param {number} value Maximum value for this property
  * @param {boolean=} asDefault True if this value should be assigned as default threshold
  */
-Property.prototype.setMax = function (value, asDefault) {
+app.Property.prototype.setMax = function (value, asDefault) {
 	if (asDefault === true) {
 		this.defaultMax = value;
 	}
@@ -112,7 +112,7 @@ Property.prototype.setMax = function (value, asDefault) {
  * @param {number} value Minimum value for this property
  * @param {boolean=} asDefault True if this value should be assigned as default threshold
  */
-Property.prototype.setMin = function (value, asDefault) {
+app.Property.prototype.setMin = function (value, asDefault) {
 	if (asDefault === true) {
 		this.defaultMin = value;
 	}
@@ -123,27 +123,27 @@ Property.prototype.setMin = function (value, asDefault) {
 /**
  * @return {number} Value of this property
  */
-Property.prototype.getValue = function () {
+app.Property.prototype.getValue = function () {
 	return this.parent.getValue(this.id);
 };
 /**
  * @param {number} value Value to be added to this property
  */
-Property.prototype.addValue = function (value) {
+app.Property.prototype.addValue = function (value) {
 	this.setValue(1 * value + this.getValue());
 };
 /**
  * @param {number} value Value to be removed from this property
  */
-Property.prototype.subtractValue = function (value) {
+app.Property.prototype.subtractValue = function (value) {
 	this.setValue(-1 * value + this.getValue());
 };
 /**
  * Forces underlying dom node to update its value
  * @param {number=} value optional: value for this property
  */
-Property.prototype.updateEl = function (value) {
-	if (value !== undefined){
+app.Property.prototype.updateEl = function (value) {
+	if (value !== undefined) {
 		this.domDao.setValue(value);
 	}
 	else {
