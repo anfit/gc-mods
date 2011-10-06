@@ -68,9 +68,15 @@ app.ModControl = function (config) {
 		
 		this.setGlobalValue('a-propertycheck-timestamp', (new Date()).getTime());
 		this.setValue('a-propertycheck-timestamp', (new Date()).getTime());	
-		
-	} else {
+	}
+	else if (this.propertiesAreAvailable && !this.isNewest()) {
+		properties = this.readProperties();
 		properties = this.deserializeProperties();
+		properties = this.setServer(properties, properties.serverName);
+	}
+	else {
+		properties = this.deserializeProperties();
+		console.log("props are NOT there");
 		properties = this.setServer(properties, properties.serverName);
 	}
 	
