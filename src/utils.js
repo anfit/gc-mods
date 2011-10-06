@@ -3,20 +3,18 @@
  */
 app.util = {};
 /**
- * @param mixed
- * @param mixed
+ * @param {Object} a Compared object
+ * @param {Object} a.power Compared property 
+ * @param {Object} b Compared object
+ * @param {Object} b.power Compared property 
  */
 app.util.sortByPowerDesc = function (a, b) {
 	return ((a.power > b.power) ? -1 : ((a.power < b.power) ? 1 : 0));
 };
 /**
  * Enables dragging within Greasemonkey (the core jQuery dragging does not work)
- * @param node
  * 
- * @event dragStop at document
- * @param {String} targetId id of the dragged node
- * @param {Number} top distance from top in pixels
- * @param {Number} left distance from left in pixels
+ * @param {Object} e Event object from mousedown
  */
 app.util.startDragging = function (e) {
 	var dragObj = {
@@ -39,7 +37,7 @@ app.util.startDragging = function (e) {
 	dragObj.elStartTop = parseInt(dragObj.elNode.style.top, 10);
 	dragObj.elStartRight = dragObj.elStartLeft + parseInt(dragObj.elNode.clientWidth, 10);
 	dragObj.elStartBottom = dragObj.elStartTop + parseInt(dragObj.elNode.clientHeight, 10);
-	dragObj.elNode.style.zIndex = ++dragObj.zIndex;
+	dragObj.elNode.style.zIndex = dragObj.zIndex + 1;
 
 	function dragGo(e) {
 		var x = e.clientX + window.scrollX;
