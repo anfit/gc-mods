@@ -1,5 +1,7 @@
 /**
  * Core mod component
+ * @param {Object} config Data passed to this mod 
+ * @param {Array} config.mods An array of mod configurational objects 
  * @constructor
  */
 app.ModControl = function (config) {
@@ -186,12 +188,6 @@ app.ModControl.prototype.readProperties = function () {
 		serverName : "",
 		empireName : "",
 		userName : "",
-		server : {
-			id: -1,
-			name: "",
-			turnRate: -1,
-			turnHold: -1
-		},
 		antireload: -1,
 		paid: false
 	};
@@ -215,7 +211,8 @@ app.ModControl.prototype.readProperties = function () {
 };
 
 /**
- * @return object properties
+ * @private
+ * @return {Object} properties Properties deserialized from local storage
  */
 app.ModControl.prototype.deserializeProperties = function () {
 	
@@ -228,12 +225,6 @@ app.ModControl.prototype.deserializeProperties = function () {
 		serverName : "",
 		empireName : "",
 		userName : "",
-		server : {
-			id: -1,
-			name: "",
-			turnRate: -1,
-			turnHold: -1
-		},
 		antiReload: -1,
 		paid: false
 	};
@@ -254,8 +245,8 @@ app.ModControl.prototype.deserializeProperties = function () {
 };
 
 /**
- * @param properties
- * @return object properties
+ * @param {Object} properties Properties map as created elsewhere
+ * @private
  */
 app.ModControl.prototype.serializeProperties = function (properties) {
 	this.setGlobalValue('serverName', properties.serverName);
@@ -270,19 +261,63 @@ app.ModControl.prototype.serializeProperties = function (properties) {
 };
 
 /**
- * @param object properties
- * @param string serverName
- * @return object properties
+ * Use a server name provided by a properties object to add server-related data
+ * 
+ * @param {Object} properties Properties map as created elsewhere
+ * @param {string} serverName Name for a GC server (e.g. Normal)
+ * @return {Object} properties Properties map as created elsewhere
  */
 app.ModControl.prototype.setServer = function (properties, serverName) {
 
+	//devault values 
+	properties.server = {
+		id: -1,
+		name: "",
+		turnRate: -1,
+		turnHold: -1
+	};
+
+	//known servers
+	var servers = [{
+		id: 0,
+		name: 'Normal',
+		turnRate: 900000,
+		turnHold: 180
+	}, {
+		id: 1,
+		name: 'Fast',
+		turnRate: 300000,
+		turnHold: 150
+	}, {
+		id: 2,
+		name: 'Slow',
+		turnRate: 1800000,
+		turnHold: 250
+	}, {
+		id: 3,
+		name: 'Ultra',
+		turnRate: 120000,
+		turnHold: 100
+	}, {
+		id: 4,
+		name: 'RT',
+		turnRate: 7800,
+		turnHold: 30
+	}, {
+		id: 5,
+		name: 'DM',
+		turnRate: 3000,
+		turnHold: 120
+	}];
+	
 	//server
-	for (var i = 0; i < app.servers.length; i = i + 1) {
-		if (app.servers[i].name === serverName) {
-			properties.server = app.servers[i];
+	for (var i = 0; i < servers.length; i = i + 1) {
+		if (servers[i].name === serverName) {
+			properties.server = servers[i];
 			break;
 		}
 	}
+	
 	//adjust server
 	if (properties.paid) {
 		properties.server.turnRate = properties.server.turnRate * 0.85;
@@ -563,7 +598,17 @@ app.ModControl.prototype.runMods = function () {
 
 /**
  * A wrapper for GM_xmlhttpRequest, with most options predefined.
- * @param config 
+ * 
+ * @param {Object} config Arguments map 
+ * @param {string} config.url Href of a receiver servelet
+ * @param {function} onFailure Function called if request failed
+ * @param {function} onSuccess Function called if request succeded 
+ * @param {string} successCondition String used as an xpath selector 
+ * by jquery to find a dom node in request result. If that's non-empty,
+ *  the whole request was a success
+ * @param {string} data Passed to server in a POST request
+ * @param {string} method Request type: POST or GET
+ * @param {string} extra Additional value to be visible in scope of the callback functions
  */
 app.ModControl.prototype.xhr = function (config) {
 	if (!config || !config.url) {
@@ -591,7 +636,7 @@ app.ModControl.prototype.xhr = function (config) {
 			}
 			if (responseDetails.status != 200) {
 				if (config.onFailure) {
-					config.onSuccess.call(this, responseDetails.responseText);
+					config.onFailure.call(this, responseDetails.responseText);
 				}
 				return;
 			}

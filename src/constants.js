@@ -12,37 +12,6 @@ app.version = '%VERSION%';
 app.releaseNotes = '(%DATE.DAY%): %RELEASE%';
 app.gameServer = 'http://gc.gamestotal.com/';
 app.modsServer = 'http://gc.mmanir.net/';
-app.servers = [{
-	id: 0,
-	name: 'Normal',
-	turnRate: 900000,
-	turnHold: 180
-}, {
-	id: 1,
-	name: 'Fast',
-	turnRate: 300000,
-	turnHold: 150
-}, {
-	id: 2,
-	name: 'Slow',
-	turnRate: 1800000,
-	turnHold: 250
-}, {
-	id: 3,
-	name: 'Ultra',
-	turnRate: 120000,
-	turnHold: 100
-}, {
-	id: 4,
-	name: 'RT',
-	turnRate: 7800,
-	turnHold: 30
-}, {
-	id: 5,
-	name: 'DM',
-	turnRate: 3000,
-	turnHold: 120
-}];
 /**
  * mods namespace
  */
