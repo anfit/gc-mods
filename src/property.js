@@ -46,7 +46,6 @@ app.Property = function (id, min, max, context) {
 	this.domDao = new app.PropertyDomNode(this.min, this.max);
 };
 
-
 /**
  * @param {Node} el accessor's dom node
  */
@@ -90,12 +89,15 @@ app.Property.prototype.setEl = function (el) {
 		});
 	});	
 };
+
 /**
  * @param {number} value Value for this property
  */
 app.Property.prototype.setValue = function (value) {
+	this.parent.setValue(this.id, value);
 	this.domDao.setValue(value);
 };
+
 /**
  * @param {number} value Maximum value for this property
  * @param {boolean=} asDefault True if this value should be assigned as default threshold
@@ -108,6 +110,7 @@ app.Property.prototype.setMax = function (value, asDefault) {
 	this.parent.setValue(this.id + '.max', value);
 	this.max = value;
 };
+
 /**
  * @param {number} value Minimum value for this property
  * @param {boolean=} asDefault True if this value should be assigned as default threshold
@@ -120,24 +123,28 @@ app.Property.prototype.setMin = function (value, asDefault) {
 	this.parent.setValue(this.id + '.min', value);
 	this.min = value;
 };
+
 /**
  * @return {number} Value of this property
  */
 app.Property.prototype.getValue = function () {
 	return this.parent.getValue(this.id);
 };
+
 /**
  * @param {number} value Value to be added to this property
  */
 app.Property.prototype.addValue = function (value) {
 	this.setValue(1 * value + this.getValue());
 };
+
 /**
  * @param {number} value Value to be removed from this property
  */
 app.Property.prototype.subtractValue = function (value) {
 	this.setValue(-1 * value + this.getValue());
 };
+
 /**
  * Forces underlying dom node to update its value
  * @param {number=} value optional: value for this property
