@@ -126,6 +126,7 @@ app.mod.presetbuilder = {
 					var stack = jQuery.extend(true, {}, allShips[save[i].id]);
 					stack.amount = save[i].amount;
 					stack.turns = Math.ceil(save[i].amount / stack.build);
+					stack.power = stack.power * stack.amount;
 					totals.turns += stack.turns;
 					totals.power += stack.power;
 					savedStacks.push(stack);
