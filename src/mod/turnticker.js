@@ -25,23 +25,15 @@ app.mod.turnticker = {
 		if (!gc.getValue('a-turnticker')) {
 			return false;
 		}
-		if (gc.isPropertyPage()) {
-			return true;
-		}
-		return false;
+		return true;
 	},
 	/**
 	 * @cfg plugin function the main functionality of the mod
 	 */
 	plugin: function () {
 		var initTimestamp = new Date().getTime();
-		var pageTitle = document.title;
-		if (gc.getValue('a-turnticker-showturns')) {
-			document.title = gc.turns.getValue() + ' ' + pageTitle;
-		}
 		window.setInterval(function () {
-			var delay;
-			delay = (gc.getValue('a-propertycheck-timestamp') - initTimestamp) % gc.server.turnRate;
+			var delay = (gc.getValue('a-propertycheck-timestamp') - initTimestamp) % gc.server.turnRate;
 			//user check
 			if (gc.userName === gc.getGlobalValue('userName')) {
 				$("#a-server-name").removeClass('a-bodybox-red').addClass('bodybox');
@@ -56,22 +48,10 @@ app.mod.turnticker = {
 				if (gc.isNewest()) {
 					gc.turns.addValue(1);
 				}
-				else {
-					gc.turns.updateEl(gc.turns.getValue() + 1);
-				}
-				if (gc.getValue('a-turnticker-showturns')) {
-					document.title = gc.turns.getValue() + ' ' + pageTitle;
-				}
 				if (gc.turns.getValue() < gc.turns.max) {
 					window.setTimeout(function () {
 						if (gc.isNewest()) {
 							gc.turns.addValue(1);
-						}
-						else {
-							gc.turns.updateEl(gc.turns.getValue() + 1);
-						}
-						if (gc.getValue('a-turnticker-showturns')) {
-							document.title = gc.turns.getValue() + ' ' + pageTitle;
 						}
 					}, (gc.server.turnRate - delay));
 				}
@@ -80,19 +60,22 @@ app.mod.turnticker = {
 					if (gc.isNewest()) {
 						gc.turns.addValue(1);
 					}
-					else {
-						gc.turns.updateEl(gc.turns.getValue() + 1);
-					}
-					if (gc.getValue('a-turnticker-showturns')) {
-						document.title = gc.turns.getValue() + ' ' + pageTitle;
-					}
 				}, delay);
 			}
 		}, gc.server.turnRate);
 		
 		var blink = true;
+		var pageTitle = document.title;
+		if (gc.getValue('a-turnticker-showturns')) {
+			document.title = gc.turns.getValue() + ' ' + pageTitle;
+		}
 		//this function will launch itself once per second, to check if there shouldn't be an update, or two...
 		window.setInterval(function () {
+
+			if (gc.getValue('a-turnticker-showturns')) {
+				document.title = gc.turns.getValue() + ' ' + pageTitle;
+			}
+			
 			if (gc.isNewest() === false && gc.userName === gc.getGlobalValue('userName')) {
 				gc.turns.updateEl();
 				gc.power.updateEl();
@@ -120,7 +103,7 @@ app.mod.turnticker = {
 				
 			}
 			
-			if (gc.getValue('a-turnticker-showmaxedturns') && parseFloat(gc.turns.getValue()) === gc.turns.max) {
+			if (gc.getValue('a-turnticker-showmaxedturns') && gc.turns.getValue() === gc.turns.max) {
 				if (blink) {
 					document.title = gc.turns.getValue() + ' ' + pageTitle;
 					blink = false;
