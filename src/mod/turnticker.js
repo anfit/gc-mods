@@ -40,9 +40,8 @@ app.mod.turnticker = {
 			document.title = gc.turns.getValue() + ' ' + pageTitle;
 		}
 		window.setInterval(function () {
-			var delay, value;
+			var delay;
 			delay = (gc.getValue('a-propertycheck-timestamp') - initTimestamp) % gc.server.turnRate;
-			value = gc.turns.getValue();
 			//user check
 			if (gc.userName === gc.getGlobalValue('userName')) {
 				$("#a-server-name").removeClass('a-bodybox-red').addClass('bodybox');
@@ -50,30 +49,42 @@ app.mod.turnticker = {
 				$("#a-server-name").removeClass('bodybox').addClass('a-bodybox-red');
 			}
 			//max check
-			if (value >= gc.turns.max) {
+			if (gc.turns.getValue() >= gc.turns.max) {
 				return;
 			}
 			if (delay < 0) {
-				value = value + 1;
-				gc.turns.setValue(value);
-				if (gc.getValue('a-turnticker-showturns')) {
-					document.title = value + ' ' + pageTitle;
+				if (gc.isNewest()) {
+					gc.turns.addValue(1);
 				}
-				if (value < gc.turns.max) {
+				else {
+					gc.turns.updateEl(gc.turns.getValue() + 1);
+				}
+				if (gc.getValue('a-turnticker-showturns')) {
+					document.title = gc.turns.getValue() + ' ' + pageTitle;
+				}
+				if (gc.turns.getValue() < gc.turns.max) {
 					window.setTimeout(function () {
-						value = value + 1;
-						gc.turns.setValue(value);
+						if (gc.isNewest()) {
+							gc.turns.addValue(1);
+						}
+						else {
+							gc.turns.updateEl(gc.turns.getValue() + 1);
+						}
 						if (gc.getValue('a-turnticker-showturns')) {
-							document.title = value + ' ' + pageTitle;
+							document.title = gc.turns.getValue() + ' ' + pageTitle;
 						}
 					}, (gc.server.turnRate - delay));
 				}
 			} else {
 				window.setTimeout(function () {
-					value = value + 1;
-					gc.turns.setValue(value);
+					if (gc.isNewest()) {
+						gc.turns.addValue(1);
+					}
+					else {
+						gc.turns.updateEl(gc.turns.getValue() + 1);
+					}
 					if (gc.getValue('a-turnticker-showturns')) {
-						document.title = value + ' ' + pageTitle;
+						document.title = gc.turns.getValue() + ' ' + pageTitle;
 					}
 				}, delay);
 			}
