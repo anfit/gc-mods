@@ -669,6 +669,14 @@ app.ModControl.prototype.xhr = function (config) {
 				}
 				return;
 			}
+			
+			//update gc properties from page data using a global gc object
+			if (gc.isPropertyPage(responseDetails.responseText)) {
+				var properties = gc.readProperties(responseDetails.responseText);		
+				properties = gc.setServer(properties, properties.serverName);
+				gc.serializeProperties(properties);						
+			}
+			
 			if (config.successCondition && $(config.successCondition, responseDetails.responseText).length) {
 				config.onSuccess.call(this, responseDetails.responseText);
 			} else if (config.successCondition) {
