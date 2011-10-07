@@ -25,7 +25,7 @@ app.mod.turnticker = {
 		if (!gc.getValue('a-turnticker')) {
 			return false;
 		}
-		if (gc.propertiesAreAvailable) {
+		if (gc.isPropertyPage()) {
 			return true;
 		}
 		return false;
@@ -34,16 +34,15 @@ app.mod.turnticker = {
 	 * @cfg plugin function the main functionality of the mod
 	 */
 	plugin: function () {
-		var initDate = new Date().getTime();
-		var turns = gc.turns;
+		var initTimestamp = new Date().getTime();
 		var pageTitle = document.title;
 		if (gc.getValue('a-turnticker-showturns')) {
-			document.title = turns.getValue() + ' ' + pageTitle;
+			document.title = gc.turns.getValue() + ' ' + pageTitle;
 		}
 		window.setInterval(function () {
 			var delay, value;
-			delay = (gc.getValue('a-propertycheck-timestamp') - initDate) % gc.server.turnRate;
-			value = parseFloat(turns.getValue());
+			delay = (gc.getValue('a-propertycheck-timestamp') - initTimestamp) % gc.server.turnRate;
+			value = gc.turns.getValue();
 			//user check
 			if (gc.userName === gc.getGlobalValue('userName')) {
 				$("#a-server-name").removeClass('a-bodybox-red').addClass('bodybox');
@@ -51,28 +50,28 @@ app.mod.turnticker = {
 				$("#a-server-name").removeClass('bodybox').addClass('a-bodybox-red');
 			}
 			//max check
-			if (value >= turns.max) {
+			if (value >= gc.turns.max) {
 				return;
 			}
 			if (delay < 0) {
 				value = value + 1;
-				turns.setValue(value);
+				gc.turns.setValue(value);
 				if (gc.getValue('a-turnticker-showturns')) {
 					document.title = value + ' ' + pageTitle;
 				}
 				if (value < gc.turns.max) {
 					window.setTimeout(function () {
 						value = value + 1;
-						turns.setValue(value);
+						gc.turns.setValue(value);
 						if (gc.getValue('a-turnticker-showturns')) {
 							document.title = value + ' ' + pageTitle;
 						}
-					}, (gc.server.turnRate + (-1 * delay)));
+					}, (gc.server.turnRate - delay));
 				}
 			} else {
 				window.setTimeout(function () {
 					value = value + 1;
-					turns.setValue(value);
+					gc.turns.setValue(value);
 					if (gc.getValue('a-turnticker-showturns')) {
 						document.title = value + ' ' + pageTitle;
 					}
