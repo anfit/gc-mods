@@ -48,35 +48,25 @@ app.ModControl = function (config) {
 	 */
 	this.power = new app.Property('power', 0, 1199999999, this);
 	
-	/**
-	 * true if property nodes are visible on page
-	 * @type {boolean}
-	 */
-	this.propertiesAreAvailable = false;
-	var pmEl = $("table.smallfont td.bodybox:has(a:contains('Private Messages')), table.smallfont td:has(a > font:contains('Private Messages'))");
-	if (pmEl.length) {
-		this.propertiesAreAvailable = true;
-		pmEl.attr('id', 'a-privatemessages');
-	}
-	
 	var properties;
 	
-	if (this.propertiesAreAvailable && this.isNewest()) {
+	if (this.isPropertyPage() && this.isNewest()) {
 		properties = this.readProperties();
+		this.assignAccessorEls();
 		properties = this.setServer(properties, properties.serverName);
 		this.serializeProperties(properties);
 		
 		this.setGlobalValue('a-propertycheck-timestamp', (new Date()).getTime());
 		this.setValue('a-propertycheck-timestamp', (new Date()).getTime());	
 	}
-	else if (this.propertiesAreAvailable && !this.isNewest()) {
+	else if (this.isPropertyPage() && !this.isNewest()) {
 		properties = this.readProperties();
+		this.assignAccessorEls();
 		properties = this.deserializeProperties();
 		properties = this.setServer(properties, properties.serverName);
 	}
 	else {
 		properties = this.deserializeProperties();
-		console.log("props are NOT there");
 		properties = this.setServer(properties, properties.serverName);
 	}
 	
@@ -164,26 +154,39 @@ app.ModControl = function (config) {
 };
 
 /**
- * Read empire property from dom and assign dom els to accessors
+ * Whether this page shows property values or not
  * 
- * @private
+ * @param {Node=} scope Dom node within which property nodes should be looked for
+ * @return {boolean} Whether props are on the page or not
+ */
+app.ModControl.prototype.isPropertyPage = function (scope) {
+	
+	if (scope === undefined) {
+		scope = $("body");
+	}
+	
+	var pmEl = $("table.smallfont td.bodybox:has(a:contains('Private Messages')), table.smallfont td:has(a > font:contains('Private Messages'))", scope);
+	if (pmEl.length) {
+		pmEl.attr('id', 'a-privatemessages');
+		return true;
+	}
+	return false;
+};
+
+
+/**
+ * Read empire property from dom
+ * 
+ * @param {Node=} scope Dom node within which property nodes should be looked for
  * @return {Object} Properties read from dom nodes on this page
  */
-app.ModControl.prototype.readProperties = function () {
+app.ModControl.prototype.readProperties = function (scope) {
 	
-	var propertyElems = $("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox");
+	if (scope === undefined) {
+		scope = $("body");
+	}
 	
-	//assign dom els to accessors
-	this.cash.setEl(propertyElems.eq(0));
-	this.food.setEl(propertyElems.eq(1));
-	this.power.setEl(propertyElems.eq(2));
-	this.turns.setEl(propertyElems.eq(3));
-	
-	//small fix
-	propertyElems.eq(0).parent().removeAttr('onmouseover');
-	propertyElems.eq(0).parent().removeAttr('onclick');
-	
-
+	var propertyElems = $("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox", scope);
 	
 	//empty properties
 	var properties = {
@@ -214,6 +217,26 @@ app.ModControl.prototype.readProperties = function () {
 		properties.paid = true;
 	}
 	return properties;
+};
+
+/**
+ * Assign dom els to accessors
+ * 
+ * @private
+ * @return {Object} Properties read from dom nodes on this page
+ */
+app.ModControl.prototype.assignAccessorEls = function () {
+	var propertyElems = $("td.bodybox:contains('$'),td.bodybox:contains('$') ~ td.bodybox");
+	
+	//assign dom els to accessors
+	this.cash.setEl(propertyElems.eq(0));
+	this.food.setEl(propertyElems.eq(1));
+	this.power.setEl(propertyElems.eq(2));
+	this.turns.setEl(propertyElems.eq(3));
+	
+	//small fix
+	propertyElems.eq(0).parent().removeAttr('onmouseover');
+	propertyElems.eq(0).parent().removeAttr('onclick');
 };
 
 /**
@@ -258,12 +281,12 @@ app.ModControl.prototype.serializeProperties = function (properties) {
 	this.setGlobalValue('serverName', properties.serverName);
 	this.setGlobalValue('empireName', properties.empireName);
 	this.setGlobalValue('userName', properties.userName);
-	this.setValue('isPaid', properties.paid);
-	this.setValue('antiReload', properties.antiReload);
-	this.setValue('cash', properties.cash);
-	this.setValue('food', properties.food);
-	this.setValue('turns', properties.turns);
-	this.setValue('power', properties.power);
+	this.setGlobalValue(properties.userName + '.' + 'isPaid', properties.paid);
+	this.setGlobalValue(properties.userName + '.' + 'antiReload', properties.antiReload);
+	this.setGlobalValue(properties.userName + '.' + 'cash', properties.cash);
+	this.setGlobalValue(properties.userName + '.' + 'food', properties.food);
+	this.setGlobalValue(properties.userName + '.' + 'turns', properties.turns);
+	this.setGlobalValue(properties.userName + '.' + 'power', properties.power);
 };
 
 /**
