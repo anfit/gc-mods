@@ -11,7 +11,7 @@ app.mod.planetplunderer = {
 		text: 'Adds direct plunder buttons to planet list. Support Stephen so he can update GC oh so often. Or be a cheap bastard and use this tweak... And, no, you cannot plunder somebody else\'s planets, I have checked >:)'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-planetplunderer')) {
@@ -27,7 +27,7 @@ app.mod.planetplunderer = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		var table = $("table.table_back[width='100%'] table[width='100%']");

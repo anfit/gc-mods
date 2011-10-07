@@ -7,7 +7,7 @@ app.mod.fedchat = {
 	title: 'Fed chat instead of Chat',
 	description: 'Replaces the usual chat on main GC pages (on the right) with fed discussion board.',
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-fedchat')) {
@@ -22,7 +22,7 @@ app.mod.fedchat = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		var chatPanel = $("table.bodybox[width='105'] tbody tr td:first");

@@ -11,7 +11,7 @@ app.mod.markettweaks = {
 		text: 'Type in a price total and is calculates the amount; click on the topmost offer to fill in the purchase form with that amount; ctrl-click on the topmost offer to buy it.'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-markettweaks')) {
@@ -23,7 +23,7 @@ app.mod.markettweaks = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		$("input[name^='total']").removeAttr("onfocus");

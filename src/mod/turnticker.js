@@ -19,7 +19,7 @@ app.mod.turnticker = {
 		description: 'Show maxed-out turns in tab titles'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-turnticker')) {
@@ -28,7 +28,7 @@ app.mod.turnticker = {
 		return true;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		var initTimestamp = new Date().getTime();

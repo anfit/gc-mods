@@ -7,7 +7,7 @@ app.mod.clusterbuilder = {
 	title: 'Cluster builder',
 	description: 'Build your C1s and C2s really fast. You must have researched respective colony levels first, of course...',
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-clusterbuilder')) {
@@ -19,7 +19,7 @@ app.mod.clusterbuilder = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		var button = $("input[value='Plunder Colony']");

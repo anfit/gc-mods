@@ -12,7 +12,7 @@ app.mod.chathighlighter = {
 		description: 'One entry per line, marked phrase separated from a hexadecimal color with a semi-colon:'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-chathighlighter')) {
@@ -27,7 +27,7 @@ app.mod.chathighlighter = {
 		return true;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		function highlightInner($el, phrase, colour) {

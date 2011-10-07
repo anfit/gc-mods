@@ -12,7 +12,7 @@ app.mod.forumkillfile = {
 		description: 'Enter name of people you want to ignore, comma-separated (in one line)'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-forumkillfile')) {
@@ -27,7 +27,7 @@ app.mod.forumkillfile = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		var shitlist = gc.getValue('a-forumkillfile-list').replace(/ /g, '').split(',');

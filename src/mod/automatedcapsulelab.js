@@ -12,7 +12,7 @@ app.mod.automatedcapsulelab = {
 		description: 'Show all artifacts, not only those you can fuse'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-automatedcapsulelab')) {
@@ -27,7 +27,7 @@ app.mod.automatedcapsulelab = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		//artifacts page 

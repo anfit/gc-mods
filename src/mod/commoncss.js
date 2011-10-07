@@ -11,7 +11,7 @@ app.mod.commoncss = {
 		text: 'You really should not disable this part, but if you want to take the eye candy off, feel free to do so.'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-commoncss')) {
@@ -20,7 +20,7 @@ app.mod.commoncss = {
 		return true;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		$(".a-button").hover(

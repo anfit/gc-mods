@@ -11,7 +11,7 @@ app.mod.disbandertweaks = {
 		text: 'You can also disband stacks entire from the manage fleet page if you have that mod enabled.'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-disbandertweaks')) {
@@ -23,7 +23,7 @@ app.mod.disbandertweaks = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		//info

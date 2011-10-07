@@ -13,7 +13,7 @@ app.mod.tabbedpms = {
 		description: 'Jump to new PMs automagically (in new tab each)?'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-tabbedpms')) {
@@ -25,7 +25,7 @@ app.mod.tabbedpms = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		//on new pms --> open inbox

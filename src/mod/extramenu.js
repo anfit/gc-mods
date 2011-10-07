@@ -16,7 +16,7 @@ app.mod.extramenu = {
 		text: 'SFGC links include a randomized antireload entry. Sometimes its imporant, sometimes not (e.g. market requires you to have a correct antireload value in your queries). In the settings above replace SFGC\'s antireload (four digits in some links) with "antireload".'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-extramenu')) {
@@ -31,7 +31,7 @@ app.mod.extramenu = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		var links = [];

@@ -11,7 +11,7 @@ app.mod.fedpms = {
 		text: 'This mods adds a special message box below on the page listing members of the fed you are in.'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-fedpms')) {
@@ -23,7 +23,7 @@ app.mod.fedpms = {
 		return false;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		if (gc.location.match(/#post/)) {

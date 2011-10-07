@@ -13,7 +13,7 @@ app.mod.newbieranking = {
 		description: 'Show empires with power rating this high or lower. If no empires above newbie protection, but below this value exist, then the usual "Nothing listed here" message will be shown...'
 	}],
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-newbieranking')) {
@@ -28,7 +28,7 @@ app.mod.newbieranking = {
 		return true;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		$("a[href$='rank2']").attr('href', 'i.cfm?f=rank2&nx=' + gc.getValue('a-newbieranking-threshold'));

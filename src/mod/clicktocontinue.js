@@ -7,7 +7,7 @@ app.mod.clicktocontinue = {
 	title: 'Click to continue',
 	description: 'Some pages sprout a "Click to continue" message. This tweak does that click for you.',
 	/**
-	 * @cfg filter function a function which returns true only when this mod can be launched
+	 * Returns true only when this mod can be launched
 	 */
 	filter: function () {
 		if (!gc.getValue('a-clicktocontinue')) {
@@ -16,7 +16,7 @@ app.mod.clicktocontinue = {
 		return true;
 	},
 	/**
-	 * @cfg plugin function the main functionality of the mod
+	 * Mod's body function
 	 */
 	plugin: function () {
 		var click = $("a:contains('Click here to continue.')");
