@@ -407,7 +407,7 @@ app.mod.automatedcapsulelab = {
 			$("#a-automatedcapsulelab-ingredients-body").show();
 			$("#a-automatedcapsulelab-ingredients-body tr:gt(0)").remove();
 			//stateful
-			gc.setValue('a-automatedcapsulelab-last', artifactId.stringify());
+			gc.setValue('a-automatedcapsulelab-last', artifactId);
 			//add submit info
 			$("input[type='submit']:first").val('Fuse ' + artifact.name);
 			//fill form, prepare ingredients
