@@ -2,13 +2,10 @@
  * Global object containing global properties and objects
  */
 (function (window) {
-	/*
-	 * TODO At present gc is a magic global variable used by mods and by non-constructor 
-	 * methods of app.ModControl alike to refer to the instance of app.ModControl. 
-	 * gc is a singleton, so it should be rewritten as such, possibly merging it 
-	 * with the app global singleton
-	 */
 	//create mod control and run on-init logic
+	/**
+	 * @type {app.ModControl}
+	 */
 	window.gc = new app.ModControl({
 		mods : [
 			app.mod.automatedcapsulelab,
