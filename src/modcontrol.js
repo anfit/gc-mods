@@ -56,8 +56,8 @@ app.ModControl = function (config) {
 		properties = this.setServer(properties, properties.serverName);
 		this.serializeProperties(properties);
 		
-		this.setGlobalValue('a-propertycheck-timestamp', (new Date()).getTime());
-		this.setValue('a-propertycheck-timestamp', (new Date()).getTime());	
+		this.setGlobalValue('a-propertycheck-timestamp', this.timestamp);
+		this.setValue('a-propertycheck-timestamp', this.timestamp);	
 	}
 	else if (this.isPropertyPage() && !this.isNewest()) {
 		properties = this.readProperties();
@@ -210,7 +210,7 @@ app.ModControl.prototype.readProperties = function (scope) {
 	
 	properties.userName = properties.serverName + "." + properties.empireName;	
 	
-	properties.antiReload = $("a:contains('Private Messages')").attr('href').replace(/.*\&(\d*)\&.*/, "$1") * 1;
+	properties.antiReload = $("a:contains('Private Messages')", scope).attr('href').replace(/.*\&(\d*)\&.*/, "$1") * 1;
 	
 	//paid
 	if ($("img[src*='logo_gc2']").length) {
@@ -452,7 +452,7 @@ app.ModControl.prototype.setValue = function (key, value) {
  */
 app.ModControl.prototype.isNewest = function () {
 	if (this.getGlobalValue('a-propertycheck-timestamp')) {
-		return this.timestamp - this.getGlobalValue('a-propertycheck-timestamp') > 0;
+		return this.timestamp - this.getGlobalValue('a-propertycheck-timestamp') >= 0;
 	}
 	return true;
 };
