@@ -1,1 +1,21 @@
-Chrome fix, modserver API change
+jsdoc for mod snippets
+Turn ticker adapted to new accessor API
+Fixed a bug in gc.isNewest() to work always, not only on the first try
+Turn ticker to use right property API
+Fixed stack total pr in presets
+Added property update to each xhr query
+Changed to a global object
+Separated property el assignment and harvesting, moved property existance check to a separate method
+Changes to properties are saved automatically
+Fixed a typo in capsule lab
+jsdoc clean-up in init
+jsdoc clean-up in capsule lab
+Support for an unlikely occasion of a non-fresh page.
+jsdoc comments
+Server data moved to the method where it is used.
+a-last-property-check >> a-propertycheck-timestamp, small propertydomnode fix
+Moved ModControl, Property and PropertyDomNode to app namespace
+Refactored from jquery-json to jquery's implementation of parseJSON and native JSON.stringify. Lib removed.
+Mod control refactoring - cleaner APIs, code comments changed to valid jsdoc.
+Timestamp refactoring
+icon fix 
