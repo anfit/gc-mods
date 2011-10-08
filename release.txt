@@ -15,7 +15,7 @@ jsdoc comments
 Server data moved to the method where it is used.
 a-last-property-check >> a-propertycheck-timestamp, small propertydomnode fix
 Moved ModControl, Property and PropertyDomNode to app namespace
-Refactored from jquery-json to jquery's implementation of parseJSON and native JSON.stringify. Lib removed.
+Refactored from jquery-json to jquery implementation of parseJSON and native JSON.stringify. Lib removed.
 Mod control refactoring - cleaner APIs, code comments changed to valid jsdoc.
 Timestamp refactoring
 icon fix 
