@@ -118,7 +118,7 @@ app.ModControl = function (config) {
 		
 		this.setValue("a-allships", '');
 		
-		console.log("Anfit GC Mods " + app.version + ": " + app.releaseNotes);
+		this.showMessage("Anfit GC Mods " + app.version, app.releaseNotes.replace("\n"), "a-release-" + app.version);
 		var self = this;
 		this.xhr({
 			method: 'GET',
