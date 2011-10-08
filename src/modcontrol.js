@@ -430,10 +430,22 @@ app.ModControl.prototype.setGlobalValue = function (key, value) {
  * </ul>
  * 
  * @param {string} key Key under which a value was stored in localStorage
+ * @param {string=} mode String defining query type (NORMAL, AS_JSON_ARRAY, AS_JSON_OBJECT)
  * @return {string|number|boolean|undefined} Value retrieved from local storage
  */
-app.ModControl.prototype.getValue = function (key) {
-	return this.getGlobalValue(this.userName + '.' + key);
+app.ModControl.prototype.getValue = function (key, mode) {
+	var value = this.getGlobalValue(this.userName + '.' + key);
+	if (mode === 'AS_JSON_ARRAY') {
+		var resultArray = [];
+		if (value) {
+			resultArray = $.parseJSON(value);
+			if (!resultArray) {
+				resultArray = [];
+			}
+		}
+		return resultArray;
+	}
+	return value;
 };
 
 /**
