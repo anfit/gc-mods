@@ -379,24 +379,52 @@ app.ModControl.prototype.setServer = function (properties, serverName) {
  * </ul>
  *  
  * @param {string} key Key under which a value was stored in localStorage
+ * @param {string=} mode String defining query type (NORMAL, JSON_AS_ARRAY, JSON_AS_OBJECT) 
  * @return {string|number|boolean|undefined} Value retrieved from local storage
  */
-app.ModControl.prototype.getGlobalValue = function (key) {
+app.ModControl.prototype.getGlobalValue = function (key, mode) {
 	var value = GM_getValue(key);
+	//parse value as a boolean
 	if (value === "false") {
 		return false;
 	}
+	//parse value as a boolean
 	if (value === false) {
 		return false;
 	}
+	//parse value as a boolean
 	if (value === "true") {
 		return true;
 	}
+	//parse value as a boolean
 	if (value === true) {
 		return true;
 	}
+	//parse value as a number
 	if (value * 1 * 0 === 0) {
 		return value * 1;
+	}
+	//parse value as array
+	if (mode === 'JSON_AS_ARRAY') {
+		var resultArray = [];
+		if (value) {
+			resultArray = $.parseJSON(value);
+			if (!resultArray) {
+				resultArray = [];
+			}
+		}
+		return resultArray;
+	}
+	//parse value as object
+	if (mode === 'JSON_AS_OBJECT') {
+		var resultObject = {};
+		if (value) {
+			resultObject = $.parseJSON(value);
+			if (!resultObject) {
+				resultObject = {};
+			}
+		}
+		return resultObject;
 	}
 	return value;
 };
@@ -434,30 +462,7 @@ app.ModControl.prototype.setGlobalValue = function (key, value) {
  * @return {string|number|boolean|undefined} Value retrieved from local storage
  */
 app.ModControl.prototype.getValue = function (key, mode) {
-	var value = this.getGlobalValue(this.userName + '.' + key);
-	//parse value as array
-	if (mode === 'JSON_AS_ARRAY') {
-		var resultArray = [];
-		if (value) {
-			resultArray = $.parseJSON(value);
-			if (!resultArray) {
-				resultArray = [];
-			}
-		}
-		return resultArray;
-	}
-	//parse value as object
-	if (mode === 'JSON_AS_OBJECT') {
-		var resultObject = {};
-		if (value) {
-			resultObject = $.parseJSON(value);
-			if (!resultObject) {
-				resultObject = {};
-			}
-		}
-		return resultObject;
-	}
-	return value;
+	return this.getGlobalValue(this.userName + '.' + key, mode);
 };
 
 /**
