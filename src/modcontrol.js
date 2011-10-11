@@ -101,6 +101,18 @@ app.ModControl = function (config) {
 	this.antiReload = properties.antiReload;
 	
 	/**
+	 * Whether empire is authenticated against the mod server or not
+	 * @type {boolean}
+	 */
+	this.authenticated = properties.authenticated;
+	
+	/**
+	 * Text of the authentication token, as entered in options
+	 * @type {string}
+	 */
+	this.authToken = properties.authToken;
+	
+	/**
 	 * TODO remove this check
 	 */
 	if (!this.empireName) {
@@ -214,6 +226,10 @@ app.ModControl.prototype.readProperties = function (scope) {
 	if ($("img[src*='logo_gc2']").length) {
 		properties.paid = true;
 	}
+	
+	properties.authToken = this.getGlobalValue(properties.userName + '.a-authentication-token');
+	properties.authenticated = properties.authToken ?  true : false;
+	
 	return properties;
 };
 
@@ -268,6 +284,9 @@ app.ModControl.prototype.deserializeProperties = function () {
 	properties.antiReload = this.getGlobalValue(properties.userName + ".antiReload");
 	properties.paid = this.getGlobalValue(properties.userName + ".isPaid");
 
+	properties.authToken = this.getGlobalValue(properties.userName + '.a-authentication-token');
+	properties.authenticated = properties.authToken ?  true : false;
+	
 	return properties;
 };
 
@@ -568,14 +587,30 @@ app.ModControl.prototype.runMods = function () {
 			token = '';
 		}
 		$("#a-authentication-token").val(token);
-		if (!token) {
+		if (!gc.authenticated) {
 			$("#a-authentication-token").parent().css("background-color", "ff0000");
 			$("#a-authentication-token").parent().children().filter("b").css("color", "00ffff");
 		}
 		$("#a-authentication-token").change(function () {
-			gc.setValue('a-authentication-token', $(this).val());
-			//TODO
-			//validity check
+			var token = $(this).val();
+			gc.xhr({
+				url: app.modsServer + '?action=verify_token&token=' + token,
+				onSuccess: function (responseJson) {
+					var response = $.parseJSON(responseJson);
+					
+					if (response.success) {
+						gc.setValue('a-authentication-token', token);
+						$("#a-authentication-token").parent().css("background-color", "000000");
+						$("#a-authentication-token").parent().children().filter("b").css("color", "ffffff");
+					}
+					else {
+						alert(response.msg);
+					}
+				},
+				onFailure: function (responseJson) {
+					alert('Failed to connect to ' + app.modsServer + '. Server might be down or busy, please try again later. If problem persists, please report a bug!');
+				}
+			});
 		});
 	}
 	$.each(this.mods, function (index, mod) {
@@ -679,6 +714,7 @@ app.ModControl.prototype.xhr = function (config) {
 			"Content-type": "application/x-www-form-urlencoded"
 		},
 		onload: function (responseDetails) {
+			
 			var antireloadDom = $("td.bodybox a:contains('Private Messages')");
 			var antireload;
 			if (antireloadDom.length) {
@@ -696,9 +732,12 @@ app.ModControl.prototype.xhr = function (config) {
 				}
 				return;
 			}
-			
+				
 			//update gc properties from page data using a global gc object
-			if (gc.isPropertyPage(responseDetails.responseText)) {
+			if (responseDetails.responseText.indexOf('{') == 0 && $.isPlainObject($.parseJSON(responseDetails.responseText))) {
+				//special handling of json results
+			}
+			else if (gc.isPropertyPage(responseDetails.responseText)) {
 				var properties = gc.readProperties(responseDetails.responseText);		
 				properties = gc.setServer(properties, properties.serverName);
 				gc.serializeProperties(properties);						
