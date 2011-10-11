@@ -292,13 +292,8 @@ app.mod.shipbuilder = {
 		$(".a-shipbuilder-save").click(function () {
 			var i;
 			var id = $(this).attr('id');
-			var save = [];
-			var saveJson = gc.getValue(id + "-value");
-			if (saveJson && saveJson !== '[]') {
-				save = $.parseJSON(saveJson);
-				if (!save) {
-					save = [];
-				}
+			var save = gc.getValue(id + '-value', 'JSON_AS_ARRAY');
+			if (save.length) {
 				for (i = 0; i < save.length; i = i + 1) {
 					var el = $("#a-shipbuilder-ship-" + save[i].id + " td.a-shipbuilder-input").next();
 					changeAmount(el, function (v) {
@@ -334,11 +329,7 @@ app.mod.shipbuilder = {
 			var value = gc.getValue(id + "-value");
 			if (value && value !== '[]') {
 				$(this).text('paste');
-				var saveJson = gc.getValue(id + "-value");
-				var save = $.parseJSON(saveJson);
-				if (!save) {
-					save = [];
-				}
+				var save = gc.getValue(id + "-value", 'JSON_AS_ARRAY');
 				var savedStacks = [];
 				for (var i = 0; i < save.length; i = i + 1) {
 					var stack = jQuery.extend(true, {}, allShips[save[i].id]);

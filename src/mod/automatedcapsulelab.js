@@ -51,14 +51,7 @@ app.mod.automatedcapsulelab = {
 				var id = $("td a:first", row).attr("href").replace(/.*id=/, '').replace(/\D/, '', 'g') * 1;
 				var stock = $("td:eq(2)", row).text().replace(/\D/, '', 'g') * 1;
 				//get current
-				var stocksJson = gc.getValue('a-automatedcapsulelab-stocks');
-				var stocks;
-				if (stocksJson) {
-					stocks = $.parseJSON(stocksJson);
-					if (!stocks) {
-						stocks = [];
-					}
-				}
+				var stocks = gc.getValue('a-automatedcapsulelab-stocks', 'JSON_AS_ARRAY');
 				//remove old, if it exists
 				for (var i = 0; i < stocks.length; i = i + 1) {
 					if (stocks[i].id === id) {
@@ -422,9 +415,8 @@ app.mod.automatedcapsulelab = {
 			//show effect
 			$("#a-artifact-effect").html(artifact.effect);
 		};
-		//var artifactData = gc.getValue('artifacts.xml');
-		var stocksJson = gc.getValue('a-automatedcapsulelab-stocks');
-		if (!stocksJson) { //brand new world, let's get some data first...
+		//false if its undefined
+		if (!gc.getValue('a-automatedcapsulelab-stocks')) { //brand new world, let's get some data first...
 			console.log("[Automated capsule lab] Artifacts stock is not cached. Re-caching. Please wait until the page reloads.");
 			//get stocks with an xhr call from the artifacts page
 			gc.xhr({
@@ -448,13 +440,7 @@ app.mod.automatedcapsulelab = {
 			});
 			return;
 		}
-		var stocks;
-		if (stocksJson) {
-			stocks = $.parseJSON(stocksJson);
-			if (!stocks) {
-				stocks = [];
-			}
-		}
+		var stocks = gc.getValue('a-automatedcapsulelab-stocks', 'JSON_AS_ARRAY');
 		
 		artifactList = new ArtifactList(gc.getValue('a-automatedcapsulelab-definitions'));
 		for (i = 0; i < stocks.length; i = i + 1) {

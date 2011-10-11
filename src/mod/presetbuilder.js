@@ -34,14 +34,7 @@ app.mod.presetbuilder = {
 	plugin: function () {
 		$("body").append('<div id="a-presetbuilder-wrap" class="draggable" title="These presets can be edited from the Build Ships page"><b>Presets: </b><br/><table class="a-table" width="100%" id="a-presetbuilder-saves"><tbody><tr class="table_row2"><td id="a-ship-save-a" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-b" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-c" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-d" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-e" class="a-presetbuilder-save a-button">&nbsp;</td></tr><tr class="table_row2"><td id="a-ship-save-f" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-g" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-h" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-i" class="a-presetbuilder-save a-button">&nbsp;</td><td id="a-ship-save-j" class="a-presetbuilder-save a-button">&nbsp;</td></tr></tbody></table></div><div id="a-presetbuilder-save-infobox" style="display: none;"><table width="100%"><tbody><tr></tr></tbody></table></div>');
 		//get all ships. note: the ships array is indexed by shipid, which means that entries are nullable;
-		var allShipsJson = gc.getValue('a-allships');
-		var allShips = [];
-		if (allShipsJson) {
-			allShips = $.parseJSON(allShipsJson);
-			if (!allShips) {
-				allShips = [];
-			}
-		}
+		var allShips = gc.getValue('a-allships', 'JSON_AS_ARRAY');
 		
 		//help on usage
 		var usageHelpTitle = 'How to use the preset builder';
@@ -72,13 +65,8 @@ app.mod.presetbuilder = {
 		});
 		$(".a-presetbuilder-save").click(function () {
 			var id = $(this).attr('id');
-			var save = [];
-			var saveJson = gc.getValue(id + "-value");
-			if (saveJson && saveJson !== '[]') {
-				save = $.parseJSON(saveJson);
-				if (!save) {
-					save = [];
-				}
+			var save = gc.getValue(id + "-value", 'JSON_AS_ARRAY');
+			if (save.length) {
 				
 				var onSuccess =  function (response) {
 					var msg = $("td:contains('You bought ')", response).contents().filter(function () {
@@ -110,11 +98,7 @@ app.mod.presetbuilder = {
 			var value = gc.getValue(id + "-value");
 			if (value && value !== '[]') {
 				$(this).text('build');
-				var saveJson = gc.getValue(id + "-value");
-				var save = $.parseJSON(saveJson);
-				if (!save) {
-					save = [];
-				}
+				var save = gc.getValue(id + "-value", 'JSON_AS_ARRAY');
 				var totals = {
 					name: "total", 
 					amount: '',
