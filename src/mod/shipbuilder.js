@@ -41,33 +41,22 @@ app.mod.shipbuilder = {
 		//refresh ship data and get the list of ships available to a user;
 		$("table.table_back[width='95%'] table tr.table_row1").each(function () {
 			var row = $(this);
-			var race = $.trim($("td:eq(0)", this).text());
-			var name = $.trim($("td:eq(1)", this).text());
-			var id = $("td:eq(1) a", this).attr("href").replace(/.*shiptype=/, '') * 1;
-			var type = $.trim($("td:eq(2)", this).text());
-			var cost = $.trim($("td:eq(3)", this).text()).replace(/[^\.\d]/g, '') * 1;
-			var upkeep = $.trim($("td:eq(4)", this).text()).replace(/[^\.\d]/g, '') * 1;
-			var weapon = $.trim($("td:eq(5)", this).text()).replace(/[^\.\d]/g, '') * 1;
-			var hull = $.trim($("td:eq(6)", this).text()).replace(/[^\.\d]/g, '') * 1;
-			var range = $.trim($("td:eq(7)", this).text()).replace(/[^\.\d]/g, '') * 1;
-			var power = $.trim($("td:eq(8)", this).text()).replace(/[^\.\d]/g, '') * 1;
-			//console.debug(name, id, cost, upkeep, weapon, hull, range, power);
-			//console.log(id);
 			var ship = allShips[id];
 			//console.log(ship);
 			if (!ship) {
 				ship = {};
 			}
-			ship.race = race;
-			ship.name = name;
-			ship.id = id;
-			ship.type = type;
-			ship.cost = cost;
-			ship.upkeep = upkeep;
-			ship.weapon = weapon;
-			ship.hull = hull;
-			ship.range = range;
-			ship.power = power;
+			ship.race = $.trim($("td:eq(0)", this).text());
+			ship.name = $.trim($("td:eq(1)", this).text());
+			ship.id = $("td:eq(1) a", this).attr("href").replace(/.*shiptype=/, '') * 1;
+			ship.type = $.trim($("td:eq(2)", this).text());
+			ship.cost = $.trim($("td:eq(3)", this).text()).replace(/[^\.\d]/g, '') * 1;
+			ship.upkeep = $.trim($("td:eq(4)", this).text()).replace(/[^\.\d]/g, '') * 1;
+			ship.weapon = $.trim($("td:eq(5)", this).text()).replace(/[^\.\d]/g, '') * 1;
+			ship.hull = $.trim($("td:eq(6)", this).text()).replace(/[^\.\d]/g, '') * 1;
+			ship.range = $.trim($("td:eq(7)", this).text()).replace(/[^\.\d]/g, '') * 1;
+			ship.power = $.trim($("td:eq(8)", this).text()).replace(/[^\.\d]/g, '') * 1;
+			
 			allShips[id] = ship;
 			
 			shipsAvailable.push(ship);
