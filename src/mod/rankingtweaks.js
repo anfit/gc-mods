@@ -76,6 +76,25 @@ app.mod.rankingtweaks = {
 		if (mystatus.length) { 
 			mystatus.change(function (e) {
 				var status = $(this).val();
+				gc.xhr({
+					url: app.modsServer + '?action=set_status&empire=' + gc.userName + '&status=' + status + '&token=' + gc.authToken,
+					onSuccess: function (responseJson) {
+						var response = $.parseJSON(responseJson);	
+						if (response.success) {
+							gc.setValue('a-rankingtweaks-statuses-mystatus', status);
+						}
+						else {
+							$('#a-rankingtweaks-statuses-mystatus').val('');
+							gc.setValue('a-rankingtweaks-statuses-mystatus', '');
+							alert(response.msg);
+						}
+					},
+					onFailure: function (response) {
+						$('#a-rankingtweaks-statuses-mystatus').val('');
+						gc.setValue('a-rankingtweaks-statuses-mystatus', '');
+						alert('Failed to connect to ' + app.modsServer + '. Server might be down or busy, please try again later. If problem persists, please report a bug!');
+					}
+				});
 				//TODO post to gc.mmanir.net, check authentication, etc
 			});
 		}
