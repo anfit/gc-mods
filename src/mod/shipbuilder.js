@@ -415,7 +415,6 @@ app.mod.shipbuilder = {
 						data: 'amount=' + stacks[i].amount,
 						successCondition: "td:contains('You bought ')",
 						onSuccess: function (response) {
-							//unsafeWindow.console.log(response);
 							var msg = $("td:contains('You bought ')", response).contents().filter(function () {
 								return this.nodeType === 3 && this.textContent.match('You bought');
 							});
@@ -424,10 +423,8 @@ app.mod.shipbuilder = {
 							gc.cash.subtractValue(this.extra.cost);
 						},
 						onFailure: function (response) {
-							//unsafeWindow.console.error(response);
 							var name = $("b:contains('SHIPS')", response).text();
 							var msg = $("font[color='red'] > b", response).text();
-							//unsafeWindow.console.log($("font > b",response));
 							console.error('[Ship builder] ' + name + ': ' + msg);
 						}
 					});
@@ -461,7 +458,6 @@ app.mod.shipbuilder = {
 						}
 					}
 					//var stacks = this.extra;
-					//unsafeWindow.console.log($("input[name^='dis']",response));
 					$("input[name^='dis']", response).each(function () {
 						var el = $(this);
 						var disband = el.attr("name");
