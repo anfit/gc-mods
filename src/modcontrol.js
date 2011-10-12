@@ -593,9 +593,11 @@ app.ModControl.prototype.runMods = function () {
 		}
 		$("#a-authentication-token").change(function () {
 			var token = $(this).val();
+			$(this).addClass('a-loading');
 			gc.xhr({
 				url: app.modsServer + '?action=verify_token&token=' + token,
 				onSuccess: function (responseJson) {
+					$('#a-authentication-token').removeClass('a-loading');
 					var response = $.parseJSON(responseJson);
 					
 					if (response.success) {
@@ -610,6 +612,7 @@ app.ModControl.prototype.runMods = function () {
 					}
 				},
 				onFailure: function (responseJson) {
+					$('#a-authentication-token').removeClass('a-loading');
 					alert('Failed to connect to ' + app.modsServer + '. Server might be down or busy, please try again later. If problem persists, please report a bug!');
 				}
 			});
