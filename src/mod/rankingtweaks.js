@@ -106,7 +106,7 @@ app.mod.rankingtweaks = {
 			//forceUpdate.attr('type', 'submit');
 			//jquery cannot change input type, workaround
 			document.getElementById('a-rankingtweaks-statuses-forceupdate').type = 'submit';
-			forceUpdate.val('Force update');
+			forceUpdate.val('Force status update');
 			forceUpdate.click(function (e) {
 				gc.setValue('a-rankingtweaks-lastupdate', (new Date(0)).toString());
 			});
@@ -128,15 +128,17 @@ app.mod.rankingtweaks = {
 	 * Mod's body function
 	 */
 	plugin: function () {
-		var all;
-		if (!gc.getValue('a-rankingtweaks-statuses-list')) {
-			gc.setValue('a-rankingtweaks-statuses-list', '\n');
-		}
+		var statuses;
 		//statuses
 		if (gc.getValue('a-rankingtweaks-statuses')) {
-			all = gc.getValue('a-rankingtweaks-statuses-list').split('\n');
-			var nicks = all[0].split(" ");
-			var tags = all[1].split(",");
+			statuses = gc.getValue('a-rankingtweaks-statuses-list', 'JSON_AS_OBJECT');
+		}
+		else {
+			gc.setValue('a-rankingtweaks-statuses-list', '{"empires":[],"statuses":[]}');
+			statuses = {
+				empires: [],
+				statuses: []
+			};
 		}
 		//labels
 		if (gc.getValue('a-rankingtweaks-labels')) {
@@ -162,8 +164,8 @@ app.mod.rankingtweaks = {
 			var fedNode = $("div.a-rankingtweaks-fedtag", nameCell);
 			//status
 			if (gc.getValue('a-rankingtweaks-statuses')) {
-				if ($.inArray(name, nicks) !== -1 && tags[nicks.indexOf(name)]) {
-					var status = tags[nicks.indexOf(name)];
+				if ($.inArray(name, statuses.empires) !== -1 && statuses.statuses[statuses.empires.indexOf(name)]) {
+					var status = statuses.statuses[statuses.empires.indexOf(name)];
 					statusNode.text(status).removeClass("a-hidden");
 				}
 			}
@@ -242,9 +244,12 @@ app.mod.rankingtweaks = {
 			gc.xhr({
 				method: 'GET',
 				url: app.modsServer + '?action=get_statuses&server=' + gc.server.name,
-				onSuccess: function onloadCallback(response) {
+				onSuccess: function (response) {
 					gc.setValue('a-rankingtweaks-statuses-list', response);
 					gc.setValue('a-rankingtweaks-lastupdate', now.toString()); //timestamp
+				},
+				onFailure: function (response) {
+					console.log(response);
 				}
 			});
 		}
