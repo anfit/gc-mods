@@ -600,6 +600,8 @@ app.ModControl.prototype.runMods = function () {
 					
 					if (response.success) {
 						gc.setValue('a-authentication-token', token);
+						gc.authenticated = true;
+						gc.authToken = token;
 						$("#a-authentication-token").parent().css("background-color", "000000");
 						$("#a-authentication-token").parent().children().filter("b").css("color", "ffffff");
 					}
