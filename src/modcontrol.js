@@ -125,10 +125,11 @@ app.ModControl = function (config) {
 	//default values
 	this.forceDefaultSettings();
 	
+	this.showMessage("Anfit GC Mods " + app.version, app.releaseNotes, "a-release-" + app.version);
+	
 	//message on after update installed
 	if (this.getValue('a-last-successful-update') !== app.version) {
 		
-		this.showMessage("Anfit GC Mods " + app.version, app.releaseNotes.replace("\n"), "a-release-" + app.version);
 		var self = this;
 		this.xhr({
 			method: 'GET',
