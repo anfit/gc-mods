@@ -417,6 +417,10 @@ app.ModControl.prototype.getGlobalValue = function (key, mode) {
 	if (value === true) {
 		return true;
 	}
+	//parse white space
+	if (value * 1 === 0 && typeof value === "string" && value.match("\n|\t| ")) {
+		return value;
+	}
 	//parse value as a number
 	if (value * 1 * 0 === 0) {
 		return value * 1;
