@@ -27,13 +27,15 @@ app.mod.shipbuilder = {
 	 */
 	plugin: function () {
 		
+		var harvestShipData, refreshExistingFleet;
+		
 		/**
 		 * Read ship data from dom
 		 * 
 		 * @param {Node=} scope Dom node within which ship data should be looked for
 		 * @return {Object} Ship data read from dom nodes on this page / within scope
 		 */
-		var harvestShipData = function (scope) {
+		harvestShipData = function (scope) {
 			if (scope === undefined) {
 				scope = $("body");
 			}
@@ -185,10 +187,13 @@ app.mod.shipbuilder = {
 						continue;
 					}
 					for (var j in stacks[i]) {
-						if (!totals[j]) {
-							totals[j] = 0;
+						if (stacks[i].hasOwnProperty(j)) {
+
+							if (!totals[j]) {
+								totals[j] = 0;
+							}
+							totals[j] += stacks[i][j];
 						}
-						totals[j] += stacks[i][j];
 					}
 				}
 				$.tmpl(stackTotalsMarkup, totals).appendTo("#a-shipbuilder-stacks-wrap tbody");
@@ -444,7 +449,7 @@ app.mod.shipbuilder = {
 			}, 2000);
 		});
 		
-		var refreshExistingFleet = function () {
+		refreshExistingFleet = function () {
 			gc.xhr({
 				//extra: stacks,
 				url: 'i.cfm?f=com_disband',
