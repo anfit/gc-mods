@@ -335,6 +335,7 @@ app.mod.shipbuilder = {
 			if (save.length) {
 				for (i = 0; i < save.length; i = i + 1) {
 					var el = $("#a-shipbuilder-ship-" + save[i].id + " td.a-shipbuilder-input").next();
+					//regarding the jslint warning: i'm explicitely using the dangerous functionality, each function passes a different amount
 					changeAmount(el, function (v) {
 						return save[i].amount;
 					});
