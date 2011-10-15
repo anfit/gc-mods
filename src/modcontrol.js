@@ -155,7 +155,7 @@ app.ModControl = function (config) {
 				var version = $.trim(response);
 				if (version !== app.version) {
 					if (confirm('There is an update available for Anfit\'s GC Mods (' + version + ') available.\nWould you like to go to the install page now?')) {
-						GM_openInTab(app.modsServer);
+						gc.openInTab(app.modsServer);
 					}
 				}
 				gc.setValue('a-last-update-check', gc.timestamp);
@@ -645,14 +645,15 @@ app.ModControl.prototype.runMods = function () {
 			$('#' + mod.id + '-checkbox').prop("checked", gc.getValue(mod.id));
 			var itemsWrapper = $("#" + mod.id + " ul.a-mod-item");
 			//iterate through subitems, if they exist
-			mod.items && $.each(mod.items, function (index, item) {
-				//no id, no value
-				if (item.id) {
-					//set value
-					item.value = gc.getValue(item.id);
-				}
-				switch (item.type) {
-					case 'list': {
+			if (mod.items) {
+				$.each(mod.items, function (index, item) {
+					//no id, no value
+					if (item.id) {
+						//set value
+						item.value = gc.getValue(item.id);
+					}
+					switch (item.type) {
+					case 'list': 
 						//add
 						$.tmpl(listMarkup, item).appendTo(itemsWrapper);
 						//hitch events
@@ -660,13 +661,11 @@ app.ModControl.prototype.runMods = function () {
 							gc.setValue(item.id, $('#' + item.id).val());
 						});
 						break;
-					}
-					case 'info': {
+					case 'info': 
 						//add
 						$.tmpl(infoMarkup, item).appendTo(itemsWrapper);
 						break;
-					}
-					case 'input': {
+					case 'input': 
 						//add
 						$.tmpl(inputMarkup, item).appendTo(itemsWrapper);
 						//hitch events
@@ -674,9 +673,7 @@ app.ModControl.prototype.runMods = function () {
 							gc.setValue(item.id, $('#' + item.id).val());
 						});
 						break;
-					}
 					case 'checkbox':
-					{
 						//add
 						$.tmpl(checkBoxMarkup, item).appendTo(itemsWrapper);
 						//set value
@@ -686,13 +683,12 @@ app.ModControl.prototype.runMods = function () {
 							gc.setValue(item.id, $('#' + item.id).prop('checked'));
 						});
 						break;
-					}
 					default:
-					{
 						console.error('[Options] Unrecognized option type');
+						break;
 					}
-				}
-			});
+				});
+			}
 			//add event handlers
 			//submit
 			$('#' + mod.id + '-checkbox').click(function () {
@@ -748,7 +744,7 @@ app.ModControl.prototype.xhr = function (config) {
 					gc.setValue('antiReload', antireload);
 				}
 			}
-			if (responseDetails.status != 200) {
+			if (responseDetails.status !== 200) {
 				if (config.onFailure) {
 					config.onFailure.call(this, responseDetails.responseText);
 				}
@@ -756,7 +752,7 @@ app.ModControl.prototype.xhr = function (config) {
 			}
 				
 			//update gc properties from page data using a global gc object
-			if (responseDetails.responseText.indexOf('{') == 0 && $.isPlainObject($.parseJSON(responseDetails.responseText))) {
+			if (responseDetails.responseText.indexOf('{') === 0 && $.isPlainObject($.parseJSON(responseDetails.responseText))) {
 				//special handling of json results
 			}
 			else if (gc.isPropertyPage(responseDetails.responseText)) {
