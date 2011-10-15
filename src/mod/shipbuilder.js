@@ -362,9 +362,8 @@ app.mod.shipbuilder = {
 				}
 			}
 		});
-		$(".a-shipbuilder-save").hover(
-
-		function (e) {
+		
+		var onMouseOver = function (e) {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
 			if (value && value !== '[]') {
@@ -384,7 +383,9 @@ app.mod.shipbuilder = {
 			} else if (totals.power > 0) {
 				$(this).text('save');
 			}
-		}, function () {
+		};
+		
+		var onMouseOut = function () {
 			var id = $(this).attr('id');
 			var value = gc.getValue(id + "-value");
 			if (value && value !== '[]') {
@@ -395,7 +396,9 @@ app.mod.shipbuilder = {
 			} else {
 				$(this).html('&nbsp;');
 			}
-		});
+		};
+		
+		$(".a-shipbuilder-save").hover(onMouseOver, onMouseOut);
 /**
 			//unlock
 		
@@ -413,6 +416,28 @@ app.mod.shipbuilder = {
 		*/
 		$("#a-shipbuilder-submit-wrap").click(function () {
 			var el = $(this);
+			
+			/**
+			 * @param {string} response text returned from server
+			 */
+			var onSuccess = function (response) {
+				var msg = $("td:contains('You bought ')", response).contents().filter(function () {
+					return this.nodeType === 3 && this.textContent.match('You bought');
+				});
+				console.log('[Ship builder] ' + msg.text());
+				gc.turns.subtractValue(this.extra.turns);
+				gc.cash.subtractValue(this.extra.cost);
+			}; 
+			
+			/**
+			 * @param {string} response text returned from server
+			 */
+			var onFailure = function (response) {
+				var name = $("b:contains('SHIPS')", response).text();
+				var msg = $("font[color='red'] > b", response).text();
+				console.error('[Ship builder] ' + name + ': ' + msg);
+			};
+			
 			for (var i = 0; i < stacks.length; i = i + 1) {
 				if (stacks[i] && stacks[i].amount && stacks[i].id) {
 					gc.xhr({
@@ -420,19 +445,8 @@ app.mod.shipbuilder = {
 						url: 'i.cfm?&f=com_ship2&shiptype=' + stacks[i].id,
 						data: 'amount=' + stacks[i].amount,
 						successCondition: "td:contains('You bought ')",
-						onSuccess: function (response) {
-							var msg = $("td:contains('You bought ')", response).contents().filter(function () {
-								return this.nodeType === 3 && this.textContent.match('You bought');
-							});
-							console.log('[Ship builder] ' + msg.text());
-							gc.turns.subtractValue(this.extra.turns);
-							gc.cash.subtractValue(this.extra.cost);
-						},
-						onFailure: function (response) {
-							var name = $("b:contains('SHIPS')", response).text();
-							var msg = $("font[color='red'] > b", response).text();
-							console.error('[Ship builder] ' + name + ': ' + msg);
-						}
+						onSuccess: onSuccess,
+						onFailure: onFailure
 					});
 				}
 			}
