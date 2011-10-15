@@ -22,7 +22,7 @@ app.mod.battlesmarkup = {
 	 * Mod's body function
 	 */
 	plugin: function () {
-		var regexp = /^\s*([\w \.\(\)\-]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s*$/gi;
+		var regexp = /^\s*([\-\w \.\(\)]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s*$/gi;
 		var template = '<ul class="a-battlesmarkup-ship"><li class="a-battlesmarkup-ship-name">$1</li><li class="a-battlesmarkup-ship-amount">$2</li><li class="a-battlesmarkup-ship-lost">$3</li><li class="a-battlesmarkup-ship-remaining">$4</li></ul>';
 		var cells = $("table.table_back[width='500'] table tr td:odd");
 		var buf = 0;
