@@ -451,6 +451,18 @@ app.ModControl.prototype.getGlobalValue = function (key, mode) {
 	return value;
 };
 
+
+/**
+ * Open a link in new tab - a wrapper for a Greasemonkey function
+ * 
+ * @param {string} href Link to be opened in new tab
+ */
+app.ModControl.prototype.openInTab = function (href) {
+	GM_openInTab(href);
+};
+
+
+
 /**
  * Set value to local storage. Casts large numbers to String
  * 

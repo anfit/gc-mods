@@ -30,7 +30,7 @@ app.mod.tabbedpms = {
 	plugin: function () {
 		//on new pms --> open inbox
 		if ($("td[background*='blink']").length && !gc.location.match(/.*f=pm/)) {
-			GM_openInTab(app.gameServer + "i.cfm?f=pm");
+			gc.openInTab(app.gameServer + "i.cfm?f=pm");
 		}
 		//on inbox
 		if (gc.location.match(/.*f=pm$/)) {
@@ -47,7 +47,7 @@ app.mod.tabbedpms = {
 					if (newPms.length > 1) {
 						newPms.each(function () {
 							var newpmlink = $(this).first().parent().siblings().eq(3).children().first().attr("href");
-							GM_openInTab(app.gameServer + newpmlink);
+							gc.openInTab(app.gameServer + newpmlink);
 						});
 					}
 					else {
