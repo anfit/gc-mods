@@ -132,6 +132,9 @@ app.mod.shipbuilder = {
 			if (b && b.order) {
 			    oB = b.order;
 			}
+			if (typeof oA === "number" && typeof oB === "number") {
+				return oA > oB;
+			}
 			return (oA + "").localeCompare((oB + ""));
 		});
 		
@@ -215,11 +218,11 @@ app.mod.shipbuilder = {
 				}
 				$.tmpl(stackTotalsMarkup, totals).appendTo("#a-shipbuilder-stacks-wrap tbody");
 //TODO JCh 2012-01-19 this criteria change after new turns arrive and should be then reevaluated				
-				if (totals.turns > 0 && totals.turns <= gc.turns.getValue() && totals.cost <= gc.cash.getValue()) {
+//				if (totals.turns > 0 && totals.turns <= gc.turns.getValue() && totals.cost <= gc.cash.getValue()) {
 //					$("#a-shipbuilder-submit-wrap").fadeIn('slow');
-				} else {
+//				} else {
 //					$("#a-shipbuilder-submit-wrap").fadeOut('fast');
-				}
+//				}
 			};
 		var changeAmount = function (el, changer) {
 				var input = el.siblings(".a-shipbuilder-input").children().first();

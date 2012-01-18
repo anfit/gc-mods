@@ -2,7 +2,7 @@
 	<tbody>
 		<tr align="center" class="table_row1">
 			<td class="a-button" id="a-shipbuilder-submit"
-				title="Build the stacks above">Submit</td>
+				title="Build the stacks above">Build all</td>
 		</tr>
 	</tbody>
 </table>
@@ -82,7 +82,7 @@
 	<tbody>
 		<tr align="center" class="table_row1">
 			<td class="a-button" id="a-shipbuilder-submit"
-				title="Build the stacks above">Submit</td>
+				title="Build the stacks above">Build all</td>
 		</tr>
 	</tbody>
 </table>
