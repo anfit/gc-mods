@@ -758,7 +758,11 @@ app.ModControl.prototype.xhr = function (config) {
 			else if (gc.isPropertyPage(responseDetails.responseText)) {
 				var properties = gc.readProperties(responseDetails.responseText);		
 				properties = gc.setServer(properties, properties.serverName);
-				gc.serializeProperties(properties);						
+				gc.serializeProperties(properties);		
+				gc.turns.updateEl();
+				gc.power.updateEl();
+				gc.cash.updateEl();
+				gc.food.updateEl();
 			}
 			
 			if (config.successCondition && $(config.successCondition, responseDetails.responseText).length) {
