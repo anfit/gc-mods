@@ -9,6 +9,11 @@ app.mod.shipbuilder = {
 	items: [{
 		type: 'info',
 		text: 'This mod replaces the old fleet builder mod. Old functionalities are still there: a doubleclick removes a saved preset. The main new thing is that this mods acquires ship data dynamically, whenever you visit a build page of a particular ship. If some of the data (e.g. build rates) are wrong, just visit the apropriate ship page. Also: you can use this to manage existing fleets...'
+	}, {
+		type: 'checkbox',
+		defaultValue: true,
+		id: 'a-shipbuilder-resetafterbuild',
+		description: 'Reset form after successful build'
 	}],
 	/**
 	 * Returns true only when this mod can be launched
@@ -27,7 +32,7 @@ app.mod.shipbuilder = {
 	 */
 	plugin: function () {
 		
-		var harvestShipData, refreshExistingFleet;
+		var harvestShipData, refreshExistingFleet, RESET_AFTER_BUILD, OPTIMIZE_UPKEEP;
 		
 		/**
 		 * Read ship data from dom
@@ -108,7 +113,6 @@ app.mod.shipbuilder = {
 				gc.xhr({
 					url: 'i.cfm?f=com_ship2&shiptype=' + id,
 					onSuccess: function (response) {
-						console.log(id);
 						allShips[id] = harvestShipData(response);
 						gc.setValue("a-allships", JSON.stringify(allShips));
 						console.log('Harvested data of ' + ship.name + '.');
@@ -224,37 +228,64 @@ app.mod.shipbuilder = {
 //					$("#a-shipbuilder-submit-wrap").fadeOut('fast');
 //				}
 			};
+			
+		//RESET_AFTER_BUILD
+        RESET_AFTER_BUILD = gc.getValue("a-shipbuilder-resetafterbuild") === true ? true : false;
+		$("#a-shipbuilder-resetafterbuild").prop("checked", RESET_AFTER_BUILD);			
+
+		$("#a-shipbuilder-resetafterbuild").click(function () {
+			RESET_AFTER_BUILD = !RESET_AFTER_BUILD;
+			gc.setValue("a-shipbuilder-resetafterbuild", RESET_AFTER_BUILD);
+		});	
+		
+		//OPTIMIZE_UPKEEP
+		OPTIMIZE_UPKEEP = gc.getValue("a-shipbuilder-optimize") === true ? true : false;
+		$("#a-shipbuilder-optimize").prop("checked", OPTIMIZE_UPKEEP);			
+
+		$("#a-shipbuilder-optimize").click(function () {
+			OPTIMIZE_UPKEEP = !OPTIMIZE_UPKEEP;
+			gc.setValue("a-shipbuilder-optimize", OPTIMIZE_UPKEEP);
+		});	
+		
 		var changeAmount = function (el, changer) {
-				var input = el.siblings(".a-shipbuilder-input").children().first();
-				var currentAmount = input.val().replace(/\D/, '', 'g') * 1;
-				var amount = changer(currentAmount);
-				input.val(amount ? amount : '');
-				var sid = el.parent().attr("sid");
-				var existing = 0;
-				var ship = jQuery.extend(true, {}, allShips[sid]);
-				if (stacks[sid] && stacks[sid].existing) {
-					ship.existing = stacks[sid].existing;
-					ship.disband = stacks[sid].disband;
-					existing = stacks[sid].existing * 1;
-				}
-				if (!(amount + existing)) {
-					delete stacks[sid];
-				} else {
-					stacks[sid] = ship;
-					stacks[sid].amount = amount;
-					stacks[sid].turns = Math.ceil(amount / ship.build);
-					stacks[sid].cost = ship.cost * amount;
-					stacks[sid].upkeep = ship.upkeep * (amount + existing);
-					stacks[sid].weapon = ship.weapon * (amount + existing);
-					stacks[sid].hull = ship.hull * (amount + existing);
-					stacks[sid].power = ship.power * (amount + existing);
-					stacks[sid].scanner = ship.scanner * (amount + existing);
-				}
-				renderStacks();
-				
-				el.siblings(".a-shipbuilder-stackpower").text(stacks[sid].power);
-				
-			};
+			
+			var input = el.siblings(".a-shipbuilder-input").children().first();
+			var currentAmount = input.val().replace(/\D/, '', 'g') * 1;
+			var amount = changer(currentAmount);
+			var sid = el.parent().attr("sid");
+			
+			//nothing to do
+			if (!amount && !stacks[sid]) {
+				return;
+			}
+			
+			input.val(amount ? amount : '');
+			var existing = 0;
+			var ship = jQuery.extend(true, {}, allShips[sid]);
+			if (stacks[sid] && stacks[sid].existing) {
+				ship.existing = stacks[sid].existing;
+				ship.disband = stacks[sid].disband;
+				existing = stacks[sid].existing * 1;
+			}
+			
+			if (stacks[sid] && !(amount + existing)) {
+				delete stacks[sid];
+			} else {
+				stacks[sid] = ship;
+				stacks[sid].amount = amount;
+				stacks[sid].turns = Math.ceil(amount / ship.build);
+				stacks[sid].cost = ship.cost * amount;
+				stacks[sid].upkeep = ship.upkeep * (amount + existing);
+				stacks[sid].weapon = ship.weapon * (amount + existing);
+				stacks[sid].hull = ship.hull * (amount + existing);
+				stacks[sid].power = ship.power * (amount + existing);
+				stacks[sid].scanner = ship.scanner * (amount + existing);
+			}
+			renderStacks();
+			
+			el.siblings(".a-shipbuilder-stackpower").text(stacks[sid].power);
+		};
+			
 		$(".a-shipbuilder-addone").click(function () {
 			changeAmount($(this), function (v) {
 				return v + 1;
@@ -448,9 +479,16 @@ app.mod.shipbuilder = {
 			});
 
 		*/
-		$("#a-shipbuilder-submit-wrap").click(function () {
+		$(".a-shipbuilder-submit-wrap").click(function () {
 			var el = $(this);
 			
+			var turns = 0, i, stackCount = 0;
+			for (i = 0; i < stacks.length; i = i + 1) {
+				if (stacks[i] && stacks[i].amount && stacks[i].id) {
+					turns += stacks[i].turns * 1;
+					stackCount = stackCount + 1;
+				}
+			}
 			/**
 			 * @param {string} response text returned from server
 			 */
@@ -461,6 +499,27 @@ app.mod.shipbuilder = {
 				console.log('[Ship builder] ' + msg.text());
 				gc.turns.subtractValue(this.extra.turns);
 				gc.cash.subtractValue(this.extra.cost);
+				stackCount = stackCount - 1;
+				
+				//clear form if all stacks were build
+				if (RESET_AFTER_BUILD && stackCount === 0) {
+
+					console.log('Resetting building form');
+					//clear all
+					//FIXME JCh 2012-01-19 fix code duplication
+					$("td.a-shipbuilder-input input").each(function () {
+						
+						var e = $(this).parent().next();
+						changeAmount(e, function (v) {
+							return 0;
+						});
+					});
+				}
+
+				//refresh stacks if all stacks were build
+				if (stackCount === 0) {
+					refreshExistingFleet();
+				}
 			}; 
 			
 			/**
@@ -472,7 +531,12 @@ app.mod.shipbuilder = {
 				console.error('[Ship builder] ' + name + ': ' + msg);
 			};
 			
-			for (var i = 0; i < stacks.length; i = i + 1) {
+			if (turns > gc.turns.getValue()) {
+				console.log('Not enough turns to build all stacks');
+				return;
+			}
+			
+			for (i = 0; i < stacks.length; i = i + 1) {
 				if (stacks[i] && stacks[i].amount && stacks[i].id) {
 					gc.xhr({
 						extra: stacks[i],
@@ -484,18 +548,6 @@ app.mod.shipbuilder = {
 					});
 				}
 			}
-			//clear all values
-			$("td.a-shipbuilder-input input").each(function () {
-				var el = $(this).parent().next();
-				changeAmount(el, function (v) {
-					return 0;
-				});
-			});
-			el.fadeOut('fast');
-			setTimeout(function () {
-				el.fadeIn('slow');
-				refreshExistingFleet();
-			}, 2000);
 		});
 		
 		refreshExistingFleet = function () {

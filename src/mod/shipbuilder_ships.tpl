@@ -1,4 +1,4 @@
-<table width="70px" class="a-table" id="a-shipbuilder-submit-wrap">
+<table width="70px" class="a-table a-shipbuilder-submit-wrap">
 	<tbody>
 		<tr align="center" class="table_row1">
 			<td class="a-button" id="a-shipbuilder-submit"
@@ -78,11 +78,27 @@
 </table>
 <br />
 <br />
-<table width="70px" class="a-table" id="a-shipbuilder-submit-wrap">
+<table width="70px" class="a-table a-shipbuilder-submit-wrap">
 	<tbody>
 		<tr align="center" class="table_row1">
 			<td class="a-button" id="a-shipbuilder-submit"
 				title="Build the stacks above">Build all</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<br />
+<table class="a-table" id="a-shipbuilder-options" width="100%">
+	<tbody>
+		<tr align="left" class="table_row0">
+			<td>
+				<input type="checkbox" id="a-shipbuilder-resetafterbuild" />Reset form after build
+			</td>
+		</tr>
+		<tr align="left" class="table_row0">
+			<td>
+				<input type="checkbox" id="a-shipbuilder-optimize" />Optimize requests to minimize upkeep (not implemented yet)
+			</td>
 		</tr>
 	</tbody>
 </table>
