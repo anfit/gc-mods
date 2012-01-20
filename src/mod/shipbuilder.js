@@ -362,13 +362,22 @@ app.mod.shipbuilder = {
 				});
 			});
 		});
+		$(".a-shipbuilder-resetorder").click(function () {
+			for (var i = 0; i < allShips.length; i = i + 1) {
+				if (allShips[i] && allShips[i].order) {
+					delete allShips[i].order;
+				}
+			}
+			gc.setValue("a-allships", JSON.stringify(allShips));
+			console.log("Order was reset, please refresh page.");
+		});
 		$("td.a-shipbuilder-order input").change(function () {
 			var el = $(this).parent();
 			var sid = el.parent().attr("sid");
 			var ship = allShips[sid];
 			if (ship) {
 				ship.order = $(this).val();
-				gc.setValue("a-allships", JSON.stringify(allShips));
+				
 			}
 		});
 		$("td.a-shipbuilder-input input").change(function () {
