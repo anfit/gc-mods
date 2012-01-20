@@ -22,12 +22,16 @@ app.mod.clusterbuilder = {
 	 * Mod's body function
 	 */
 	plugin: function () {
+		
 		var button = $("input[value='Plunder Colony']");
-		button.after('<br /><span class="table_row1 a-clusterbuilder-button a-button" id="a-clusterbuilder-createc1">Create a C1 (Strafez)</span>&nbsp;&nbsp;<span class="table_row1 a-clusterbuilder-button a-button" id="a-clusterbuilder-createc2">Create a C2 (Strafez)</span>');
+		button.after("%CLUSTERBUILDER%");
 		$("#a-clusterbuilder-createc1").click(function (e) {
+			
+			var planetType = $("#a-clusterbuilder-mineral option:selected").val();
+			
 			gc.xhr({
 				url: app.gameServer + 'i.cfm?&' + gc.getValue('antiReload') + '&f=com_colupgrade&tid=20&con=1',
-				data: 'goodid=6',
+				data: 'goodid=' + planetType,
 				onFailure: function (response) {
 					console.error("[Cluster builder] XHR query to create a C1 cluster failed.");
 				},
@@ -38,9 +42,11 @@ app.mod.clusterbuilder = {
 			});
 		});
 		$("#a-clusterbuilder-createc2").click(function (e) {
+			var planetType = $("#a-clusterbuilder-mineral option:selected").val();
+			
 			gc.xhr({
 				url: app.gameServer + 'i.cfm?&' + gc.getValue('antiReload') + '&f=com_colupgrade&tid=21&con=1',
-				data: 'goodid=6',
+				data: 'goodid=' + planetType,
 				onFailure: function (response) {
 					console.error("[Cluster builder] XHR query to create a C2 cluster failed.");
 				},
