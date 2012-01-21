@@ -136,10 +136,10 @@ app.mod.shipbuilder = {
 			if (b && b.order) {
 			    oB = b.order;
 			}
-			if (typeof oA === "number" && typeof oB === "number") {
-				return oA > oB;
+			if (typeof oA === "string" || typeof oB === "string") {
+				return (oA + "").localeCompare((oB + ""));
 			}
-			return (oA + "").localeCompare((oB + ""));
+			return oA - oB;
 		});
 		
 		
