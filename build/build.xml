@@ -2,6 +2,8 @@
 <!DOCTYPE project>
 <project name="gc-mods dist builder" default="default" basedir=".">
 	
+	<property file="build.properties"/>
+	
 	<!-- get version -->
 	<loadfile property="app.version" srcFile="../version.txt">
 		<filterchain>
@@ -41,21 +43,15 @@
 			description="target script filename" />
 	<property name="build.css" value="merged.css" description="merged css filename" />
 
-	<!-- required by yui compressor task -->
-	<path id="yuicompressor.classpath">
-		<fileset dir="${build.dir}/lib">
-			<include name="yuiAnt.jar" />
-			<include name="yuicompressor-2.4.2.jar" />
-		</fileset>
-	</path>
-
-
 	<!-- manager -->
 	<target name="default">
 		<antcall target="init" />
 		<antcall target="merge-all" />
 		<antcall target="minify-all" />
 		<antcall target="clean" />
+		<antcall target="deploy_to_firefox" />
+		<antcall target="deploy_to_chrome" />
+		
 	</target>
 
 	<!-- setup build environment -->
@@ -119,6 +115,14 @@
 	<!-- minify javascript and css files -->
 	<target name="minify-all" description="Minifiy sets of files">
 
+		<!-- required by yui compressor task -->
+		<path id="yuicompressor.classpath">
+			<fileset dir="${build.dir}/lib">
+				<include name="yuiAnt.jar" />
+				<include name="yuicompressor-2.4.2.jar" />
+			</fileset>
+		</path>
+		
 		<taskdef name="yuicompress"
 			classname="com.yahoo.platform.yui.compressor.YUICompressTask">
 			<classpath>
@@ -146,6 +150,9 @@
 	<!-- replace variables, merge into a single file -->
 	<target name="clean">
 	
+		
+		
+		
 		<concat destfile="${build.dir}/${build.file}">
 			<filelist dir="${src.dir}">
 				<file name="header.txt" />
@@ -243,13 +250,21 @@
 		<replace file="${build.dir}/${build.devfile}" token="%SHIPBUILDER_STACK%" value="${shipbuilder_stack}" />
 		<replace file="${build.dir}/${build.devfile}" token="%SHIPBUILDER_STACKLIST%" value="${shipbuilder_stacklist}" />
 		<replace file="${build.dir}/${build.devfile}" token="%CLUSTERBUILDER%" value="${clusterbuilder}" />
-							
-		<copy file="${build.dir}/${build.devfile}" toFile="c:\Users\User\AppData\Roaming\Mozilla\Firefox\Profiles\d9cgxy3w.default\gm_scripts\anfits_gc_mods\anfits_gc_mods.user.js" overwrite="true" />
-		<move file="${build.dir}/${build.file}" toDir="../dist" />
-		<move file="${build.dir}/${build.devfile}" toDir="../dist" />
-
+	
+		<move file="${build.dir}/${build.file}" toDir="${gcmods.settings.path_to_dist_folder}" />
+		<move file="${build.dir}/${build.devfile}" toDir="${gcmods.settings.path_to_dist_folder}" />
 		<delete dir="${build.merged}" />
 		<delete dir="${build.minified}" />
 		<delete file="${build.dir}/${build.file}" />
+	</target>
+	
+	<!-- autodeploy to firefox -->
+	<target name="deploy_to_firefox" if="${gcmods.settings.path_to_file_installed_in_firefox}">
+		<copy file="${gcmods.settings.path_to_dist_folder}/${build.devfile}" toFile="${gcmods.settings.path_to_file_installed_in_firefox}" overwrite="true" />
+	</target>
+	
+	<!-- autodeploy to chrome -->
+	<target name="deploy_to_chrome" if="${gcmods.settings.path_to_file_installed_in_chrome}">
+		<copy file="${gcmods.settings.path_to_dist_folder}/${build.devfile}" toFile="${gcmods.settings.path_to_file_installed_in_chrome}" overwrite="true" />
 	</target>
 </project>
