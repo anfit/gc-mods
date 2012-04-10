@@ -5,7 +5,7 @@ app.mod.clicktocontinue = {
 	id: 'a-clicktocontinue',
 	defaultValue: true,
 	title: 'Click to continue',
-	description: 'Some pages sprout a "Click to continue" message. This tweak does that click for you.',
+	description: 'Some pages show a "Click to continue" message. This mod clicks there automatically.',
 	/**
 	 * Returns true only when this mod can be launched
 	 */
@@ -19,9 +19,9 @@ app.mod.clicktocontinue = {
 	 * Mod's body function
 	 */
 	plugin: function () {
-		var click = $("a:contains('Click here to continue.')");
-		if (click.length) {
-			click[0].click();
+		var el = $("a:contains('Click here to continue.')");
+		if (el.length) {
+			el[0].click();
 		}
 	}
 };

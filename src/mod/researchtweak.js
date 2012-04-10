@@ -13,7 +13,7 @@ app.mod.researchtweak = {
 		if (!gc.getValue('a-researchtweak')) {
 			return false;
 		}
-		if (gc.location.match(/com_research/)) {
+		if (gc.location.indexOf('com_research') !== -1) {
 			return true;
 		}
 		return false;

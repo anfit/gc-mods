@@ -59,7 +59,7 @@ app.mod.chathighlighter = {
 				}
 			};
 		highlight();
-		if (gc.location.match(/i_chat.cfm/)) {
+		if (gc.location.indexOf('i_chat.cfm') !== -1) {
 			window.setInterval(highlight, 10000);
 		}
 	}

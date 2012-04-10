@@ -19,7 +19,7 @@ app.mod.newbieranking = {
 		if (!gc.getValue('a-newbieranking')) {
 			return false;
 		}
-		if (!gc.location.match(/rank/)) {
+		if (!gc.location.indexOf('rank') !== -1) {
 			return false;
 		}
 		if (gc.power.getValue() >= 5000) {

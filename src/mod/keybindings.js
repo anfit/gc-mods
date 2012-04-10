@@ -21,7 +21,7 @@ app.mod.keybindings = {
 		if (!gc.getValue('a-keybindings-list')) {
 			return false;
 		}
-		if (gc.location.match(/i.cfm/)) {
+		if (gc.location.indexOf('i.cfm') !== -1) {
 			return true;
 		}
 		return false;

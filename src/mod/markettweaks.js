@@ -17,7 +17,7 @@ app.mod.markettweaks = {
 		if (!gc.getValue('a-markettweaks')) {
 			return false;
 		}
-		if (gc.location.match(/market2/)) {
+		if (gc.location.indexOf('market2') !== -1) {
 			return true;
 		}
 		return false;

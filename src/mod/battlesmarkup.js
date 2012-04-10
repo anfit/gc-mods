@@ -13,7 +13,7 @@ app.mod.battlesmarkup = {
 		if (!gc.getValue('a-battlesmarkup')) {
 			return false;
 		}
-		if (gc.location.match(/fed_forum/)) {
+		if (gc.location.indexOf('fed_forum') !== -1) {
 			return true;
 		}
 		return false;

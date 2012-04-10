@@ -19,7 +19,7 @@ app.mod.tabbedpms = {
 		if (!gc.getValue('a-tabbedpms')) {
 			return false;
 		}
-		if (gc.location.match(/i.cfm/)) {
+		if (gc.location.indexOf('i.cfm') !== -1) {
 			return true;
 		}
 		return false;

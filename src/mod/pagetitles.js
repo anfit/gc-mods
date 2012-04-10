@@ -217,7 +217,7 @@ app.mod.pagetitles = {
 		//default value for local tags is ''
 		var local = '';
 		//ships are handled separately
-		if (gc.location.match(/com_ship2/)) {
+		if (gc.location.indexOf('com_ship2') !== -1) {
 			local = 'Build: ';
 			var cells = $("td[width='40%']:first");
 			if (cells.length) {
@@ -226,7 +226,7 @@ app.mod.pagetitles = {
 				name = 'Build';
 			}
 		} else {
-			if (gc.location.match(/com_market2/)) {
+			if (gc.location.indexOf('com_market2') !== -1) {
 				local = 'Market: ';
 			}
 			for (var i = 0; i < pages.length; i = i + 1) {

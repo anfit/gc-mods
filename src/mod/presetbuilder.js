@@ -17,13 +17,13 @@ app.mod.presetbuilder = {
 		if (!gc.getValue('a-presetbuilder')) {
 			return false;
 		}
-		if (gc.location.match(/rank/)) {
+		if (gc.location.indexOf('rank') !== -1) {
 			return true;
 		}
-		if (gc.location.match(/com_explore/)) {
+		if (gc.location.indexOf('com_explore') !== -1) {
 			return true;
 		}
-		if (gc.location.match(/com_attack/)) {
+		if (gc.location.indexOf('com_attack') !== -1) {
 			return true;
 		}
 		return false;

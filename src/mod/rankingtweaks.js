@@ -119,7 +119,7 @@ app.mod.rankingtweaks = {
 		if (!gc.getValue('a-rankingtweaks')) {
 			return false;
 		}
-		if (gc.location.match(/rank/)) {
+		if (gc.location.indexOf('rank') !== -1) {
 			return true;
 		}
 		return false;

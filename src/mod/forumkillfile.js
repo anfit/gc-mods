@@ -21,7 +21,7 @@ app.mod.forumkillfile = {
 		if (!gc.getValue('a-forumkillfile-list')) {
 			return false;
 		}
-		if (gc.location.match(/hef/)) {
+		if (gc.location.indexOf('hef') !== -1) {
 			return true;
 		}
 		return false;

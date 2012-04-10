@@ -13,7 +13,7 @@ app.mod.fedchat = {
 		if (!gc.getValue('a-fedchat')) {
 			return false;
 		}
-		if (gc.location.match(/fed_forum/)) {
+		if (gc.location.indexOf('fed_forum') !== -1) {
 			return false;
 		}
 		if ($("table.bodybox[width='105'] tbody tr td")[0]) {

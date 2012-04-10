@@ -21,7 +21,7 @@ app.mod.automatedcapsulelab = {
 		if (gc.location.match(/i.cfm.*f.com_project2.id.3$/) && $("select").length) {
 			return true;
 		}
-		if (gc.location.match(/com_market_use/)) {
+		if (gc.location.indexOf('com_market_use') !== -1) {
 			return true;
 		}
 		return false;

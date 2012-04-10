@@ -22,7 +22,7 @@ app.mod.shipbuilder = {
 		if (!gc.getValue('a-shipbuilder')) {
 			return false;
 		}
-		if (gc.location.match(/com_ship/)) {
+		if (gc.location.indexOf('com_ship') !== -1) {
 			return true;
 		}
 		return false;

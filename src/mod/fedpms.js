@@ -17,7 +17,7 @@ app.mod.fedpms = {
 		if (!gc.getValue('a-fedpms')) {
 			return false;
 		}
-		if (gc.location.match(/fed_member/) || gc.location.match(/#post/)) {
+		if (gc.location.indexOf('fed_member') !== -1 || gc.location.match(/#post/)) {
 			return true;
 		}
 		return false;
