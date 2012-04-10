@@ -40,6 +40,10 @@
 	}
 	//append css
 	$("head:first").append("<style type=\"text/css\">%CSS%</style>");
+	
+	if (gc.isPropertyPage()) {
+		$("body").addClass('no-blue-image');
+	}
 	//run mods
 	gc.runMods();
 })(window);
