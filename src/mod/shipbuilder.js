@@ -415,6 +415,7 @@ app.mod.shipbuilder = {
 					});
 				}
 			} else {
+				save = [];
 				for (i = 0; i < stacks.length; i = i + 1) {
 					if (stacks[i] && stacks[i].amount) {
 						save.push({
