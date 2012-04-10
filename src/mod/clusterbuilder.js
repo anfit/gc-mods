@@ -24,7 +24,7 @@ app.mod.clusterbuilder = {
 	plugin: function () {
 		
 		var button = $("input[value='Plunder Colony']");
-		button.after("%CLUSTERBUILDER%");
+		button.after("%clusterbuilder.tpl%");
 		$("#a-clusterbuilder-createc1").click(function (e) {
 			
 			var planetType = $("#a-clusterbuilder-mineral option:selected").val();

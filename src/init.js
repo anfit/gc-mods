@@ -39,7 +39,7 @@
 		return;
 	}
 	//append css
-	$("head:first").append("<style type=\"text/css\">%CSS%</style>");
+	$("head:first").append("<style type=\"text/css\">%merged.css%</style>");
 	
 	if (gc.isPropertyPage()) {
 		$("body").addClass('no-blue-image');

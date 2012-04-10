@@ -177,12 +177,12 @@ app.mod.shipbuilder = {
 		});
 		
 		pageTitle.siblings("b ~ a, b ~ table").remove();
-		pageTitle.next().next().after("%SHIPBUILDER_SHIPS%");
-		var shipMarkup = "%SHIPBUILDER_SHIP%";
+		pageTitle.next().next().after("%shipbuilder_ships.tpl%");
+		var shipMarkup = "%shipbuilder_ship.tpl%";
 		$.tmpl(shipMarkup, shipsAvailable).appendTo("#a-shipbuilder-ships-wrap tbody");
 		var stacks = [];
-		var stackMarkup = "%SHIPBUILDER_STACK%";
-		var stackTotalsMarkup = "%SHIPBUILDER_STACKLIST%";
+		var stackMarkup = "%shipbuilder_stack.tpl%";
+		var stackTotalsMarkup = "%shipbuilder_stacklist.tpl%";
 		var totals = {};
 		var renderStacks = function () {
 				var sortedStacks = jQuery.extend(true, [], stacks);

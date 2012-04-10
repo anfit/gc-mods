@@ -41,7 +41,6 @@
 		description="target script filename" />
 	<property name="build.devfile" value="anfits-gc-mods-${app.version}-dev.user.js"
 			description="target script filename" />
-	<property name="build.css" value="merged.css" description="merged css filename" />
 
 	<!-- manager -->
 	<target name="default">
@@ -103,7 +102,7 @@
 				<file name="init.js" />	
 			</filelist>
 		</concat>
-		<concat destfile="${build.merged}/${build.css}">
+		<concat destfile="${build.merged}/merged.css">
 			<fileset dir="${src.dir}">
 				<include name="lib/**.css" />
 				<include name="mod/**.css" />
@@ -142,7 +141,7 @@
 		<yuicompress warn="false" munge="no"
 			preserveallsemicolons="true" outputfolder="${build.minified}">
 			<fileset dir="${build.merged}">
-				<include name="${build.css}" />
+				<include name="merged.css" />
 			</fileset>
 		</yuicompress>
 	</target>
@@ -150,8 +149,16 @@
 	<!-- replace variables, merge into a single file -->
 	<target name="clean">
 	
-		
-		
+		<!-- required by foreach task -->
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		  <classpath>
+			<path>
+				<fileset dir="${build.dir}/lib">
+					<include name="ant-contrib-1.0b3.jar" />
+				</fileset>
+			</path>
+		  </classpath>
+		</taskdef>
 		
 		<concat destfile="${build.dir}/${build.file}">
 			<filelist dir="${src.dir}">
@@ -161,7 +168,6 @@
 				<file name="${build.file}" />
 			</filelist>
 		</concat>
-
 		
 		<concat destfile="${build.dir}/${build.devfile}">
 			<filelist dir="${src.dir}">
@@ -172,85 +178,28 @@
 			</filelist>
 		</concat>
 		
-		<replace file="${build.minified}/${build.css}" token='"' value='\"' />
-		
-		<loadfile property="css" srcFile="${build.minified}/${build.css}">
-			<filterchain>
-				<tokenfilter>
-				    <replacestring from="&quot;" to="\&quot;"/>
-				</tokenfilter>
-			    <striplinebreaks />
-			</filterchain>
-		</loadfile>
-
-		<loadfile property="shipbuilder_ships" srcFile="${src.dir}/mod/shipbuilder_ships.tpl">
-			<filterchain>
-				<tokenfilter>
-				    <replacestring from="&quot;" to="\&quot;"/>
-				</tokenfilter>		
-			    <striplinebreaks />
-			</filterchain>
-		</loadfile>
-		
-		<loadfile property="shipbuilder_ship" srcFile="${src.dir}/mod/shipbuilder_ship.tpl">
-			<filterchain>
-				<tokenfilter>
-				    <replacestring from="&quot;" to="\&quot;"/>
-				</tokenfilter>		
-			    <striplinebreaks />
-			</filterchain>
-		</loadfile>
-		
-		<loadfile property="shipbuilder_stack" srcFile="${src.dir}/mod/shipbuilder_stack.tpl">
-			<filterchain>
-				<tokenfilter>
-				    <replacestring from="&quot;" to="\&quot;"/>
-				</tokenfilter>		
-			    <striplinebreaks />
-			</filterchain>
-		</loadfile>
-
-		<loadfile property="shipbuilder_stacklist" srcFile="${src.dir}/mod/shipbuilder_stacklist.tpl">
-			<filterchain>
-				<tokenfilter>
-				    <replacestring from="&quot;" to="\&quot;"/>
-				</tokenfilter>		
-			    <striplinebreaks />
-			</filterchain>
-		</loadfile>
-
-		<loadfile property="clusterbuilder" srcFile="${src.dir}/mod/clusterbuilder.tpl">
-			<filterchain>
-				<tokenfilter>
-				    <replacestring from="&quot;" to="\&quot;"/>
-				</tokenfilter>		
-			    <striplinebreaks />
-			</filterchain>
-		</loadfile>
 		
 		<replace file="${build.dir}/${build.file}" token="%VERSION%" value="${app.version}" />
 		<replace file="${build.dir}/${build.file}" token="%RELEASE%" value="${app.release}" />
 		<replace file="${build.dir}/${build.file}" token="%DATE.YEAR%" value="${date.year}" />
 		<replace file="${build.dir}/${build.file}" token="%DATE.DAY%" value="${date.day}" />
-		<replace file="${build.dir}/${build.file}" token="%CSS%" value="${css}" />
-		<replace file="${build.dir}/${build.file}" token="%SHIPBUILDER_SHIPS%" value="${shipbuilder_ships}" />
-		<replace file="${build.dir}/${build.file}" token="%SHIPBUILDER_SHIP%" value="${shipbuilder_ship}" />
-		<replace file="${build.dir}/${build.file}" token="%SHIPBUILDER_STACK%" value="${shipbuilder_stack}" />
-		<replace file="${build.dir}/${build.file}" token="%SHIPBUILDER_STACKLIST%" value="${shipbuilder_stacklist}" />
-		<replace file="${build.dir}/${build.file}" token="%CLUSTERBUILDER%" value="${clusterbuilder}" />
-						
 		
 		<replace file="${build.dir}/${build.devfile}" token="%VERSION%" value="${app.version}" />
 		<replace file="${build.dir}/${build.devfile}" token="%RELEASE%" value="${app.release}" />
 		<replace file="${build.dir}/${build.devfile}" token="%DATE.YEAR%" value="${date.year}" />
 		<replace file="${build.dir}/${build.devfile}" token="%DATE.DAY%" value="${date.day}" />
-		<replace file="${build.dir}/${build.devfile}" token="%CSS%" value="${css}" />
-		<replace file="${build.dir}/${build.devfile}" token="%SHIPBUILDER_SHIPS%" value="${shipbuilder_ships}" />
-		<replace file="${build.dir}/${build.devfile}" token="%SHIPBUILDER_SHIP%" value="${shipbuilder_ship}" />
-		<replace file="${build.dir}/${build.devfile}" token="%SHIPBUILDER_STACK%" value="${shipbuilder_stack}" />
-		<replace file="${build.dir}/${build.devfile}" token="%SHIPBUILDER_STACKLIST%" value="${shipbuilder_stacklist}" />
-		<replace file="${build.dir}/${build.devfile}" token="%CLUSTERBUILDER%" value="${clusterbuilder}" />
-	
+		
+		<foreach param="file" target="load_template">
+			<path>
+				<fileset dir="${src.dir}/mod">
+					<include name="*.tpl" />
+				</fileset>
+				<fileset dir="${build.minified}">
+					<filename name="merged.css" />
+				</fileset>
+			</path>
+		</foreach>
+		
 		<move file="${build.dir}/${build.file}" toDir="${gcmods.settings.path_to_dist_folder}" />
 		<move file="${build.dir}/${build.devfile}" toDir="${gcmods.settings.path_to_dist_folder}" />
 		<delete dir="${build.merged}" />
@@ -260,10 +209,42 @@
 		<echo message="${gcmods.settings.autodeploy_to_firefox}"/>
 	</target>
 	
+	<target name="load_template">
+		<basename property="template_file" file="${file}" />
+		<echo message="${template_file}"/>
+		<if>
+	        <available file="${src.dir}/mod/${template_file}"/>
+	        <then>
+	        	<loadfile property="template_body" srcFile="${src.dir}/mod/${template_file}">
+    				<filterchain>
+    					<tokenfilter>
+    					    <replacestring from="&quot;" to="\&quot;"/>
+    					</tokenfilter>		
+    				    <striplinebreaks />
+    				</filterchain>
+    			</loadfile>
+	        </then>
+	        <else>
+	        	<loadfile property="template_body" srcFile="${build.minified}/${template_file}">
+    				<filterchain>
+    					<tokenfilter>
+    					    <replacestring from="&quot;" to="\&quot;"/>
+    					</tokenfilter>		
+    				    <striplinebreaks />
+    				</filterchain>
+    			</loadfile>
+	        </else>
+	    </if>
+		
+		<replace file="${build.dir}/${build.file}" token="%${template_file}%" value="${template_body}" />
+		<replace file="${build.dir}/${build.devfile}" token="%${template_file}%" value="${template_body}" />
+		
+		<sleep milliseconds="1000"/>
+		<echo message="${template_body}"/>
+	</target> 
+	
 	<!-- autodeploy to firefox -->
 	<target name="deploy_to_firefox">
-		<echo message="${gcmods.settings.path_to_dist_folder}"/>
-		<echo message="${gcmods.settings.path_to_file_installed_in_firefox}"/>
 		<copy file="${gcmods.settings.path_to_dist_folder}/${build.devfile}" toFile="${gcmods.settings.path_to_file_installed_in_firefox}" overwrite="true" />
 	</target>
 	
