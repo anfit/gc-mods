@@ -2,7 +2,7 @@
 <!DOCTYPE project>
 <project name="gc-mods dist builder" default="default" basedir=".">
 	
-	<property file="build.properties"/>
+    <loadproperties srcFile="build.properties"/>
 	
 	<!-- get version -->
 	<loadfile property="app.version" srcFile="../version.txt">
@@ -256,15 +256,19 @@
 		<delete dir="${build.merged}" />
 		<delete dir="${build.minified}" />
 		<delete file="${build.dir}/${build.file}" />
+		
+		<echo message="${gcmods.settings.autodeploy_to_firefox}"/>
 	</target>
 	
 	<!-- autodeploy to firefox -->
-	<target name="deploy_to_firefox" if="${gcmods.settings.path_to_file_installed_in_firefox}">
+	<target name="deploy_to_firefox">
+		<echo message="${gcmods.settings.path_to_dist_folder}"/>
+		<echo message="${gcmods.settings.path_to_file_installed_in_firefox}"/>
 		<copy file="${gcmods.settings.path_to_dist_folder}/${build.devfile}" toFile="${gcmods.settings.path_to_file_installed_in_firefox}" overwrite="true" />
 	</target>
 	
 	<!-- autodeploy to chrome -->
-	<target name="deploy_to_chrome" if="${gcmods.settings.path_to_file_installed_in_chrome}">
+	<target name="deploy_to_chrome" if="${gcmods.settings.autodeploy_to_chrome}">
 		<copy file="${gcmods.settings.path_to_dist_folder}/${build.devfile}" toFile="${gcmods.settings.path_to_file_installed_in_chrome}" overwrite="true" />
 	</target>
 </project>
