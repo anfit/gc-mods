@@ -599,10 +599,7 @@ app.ModControl.prototype.runMods = function () {
 	
 	if (gc.location.match(/i.cfm.f.option($|#.*)/)) {
 		$("table.bodybox[width='550'] > tbody > tr > td").attr('id', 'a-options-wrap').append('<div id="a-about"><div><b>Welcome, ' + gc.empireName + '!</b></div><div class="a-separator"/><div>Thank you for trying Anfit\'s Mods for Spacefed GC v.' + app.version + '. All mods are listed below with short explanations. Also, some of the mods require additional configuration they can be switched on.<div class="a-separator"/><div>My mods cannot affect gameplay, they are just UI (User Interface) tweaks, to make this game slightly more playable.</div><div class="a-separator"/><div>To enable more advanced tweaks which interact with other players please enter your gc.mmanir.net authentication token.</div><div class="a-separator"/><div><i>What? Authentication token? What is it? Why?</i></div><div class="a-separator"/><div>Some more advanced mods share data between players. You always know when and how. The best example of this are status tags: you set your status text, all other users of Anfit\'s Mods can see it in the ranking lists, you can see theirs.</div><div>This is possible only through another server located at gc.mmanir.net (one I\'m hosting). To authenticate with this server you have to: </div><div><ol><li>Create an account and login at <a href="http://gc.mmanir.net" target="blank">gc.mmanir.net</a>.</li><li>Retrieve an authentication token (it\'s provided just after login page).</li><li>Copy the authentication token here.</li></ol></div><div><b>Enter your authentication token here</b>: <input id="a-authentication-token" type="text" size="32" /></div><div class="a-separator"/><div>If you have problems, questions or ideas while using Anfit\'s GC Mods contact me (<a href="http://gc.mmanir.net/">Anfit</a>) at <a href="mailto:jan.chimiak@gmail.com?subject=[GC Mods]">jan.chimiak@gmail.com</a> or send me a <a href="javascript:cmsgu(\'i.cfm?popup=msguser&uid=213512\');">private message</a> at GC/normal.</div><div>');
-		var token = gc.getValue('a-authentication-token');
-		if (!token) {
-			token = '';
-		}
+		var token = gc.getValue('a-authentication-token') || '';
 		$("#a-authentication-token").val(token);
 		if (!gc.authenticated) {
 			$("#a-authentication-token").parent().css("background-color", "ff0000");
@@ -630,7 +627,7 @@ app.ModControl.prototype.runMods = function () {
 				},
 				onFailure: function (responseJson) {
 					$('#a-authentication-token').removeClass('a-loading');
-					alert('Failed to connect to ' + app.modsServer + '. Server might be down or busy, please try again later. If problem persists, please report a bug!');
+					alert('Failed to connect to ' + app.modsServer + '. Server might be down or busy, please try again later. If problem persists, please report this problem at jan.chimiak@gmail.com!');
 				}
 			});
 		});
