@@ -28,7 +28,8 @@
 			app.mod.presetbuilder,
 			app.mod.rankingtweaks,
 			app.mod.newbieranking,
-			app.mod.shipbuilder,		
+			app.mod.shipbuilder,
+			app.mod.stylehandler,
 			app.mod.tabbedpms,		
 			app.mod.turnticker,		
 			app.mod.commoncss     
@@ -41,9 +42,6 @@
 	//append css
 	$("head:first").append("<style type=\"text/css\">%merged.css%</style>");
 	
-	if (gc.isPropertyPage()) {
-		$("body").addClass('no-blue-image');
-	}
 	//run mods
 	gc.runMods();
 })(window);

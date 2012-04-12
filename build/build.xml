@@ -12,18 +12,6 @@
 		</filterchain>
 	</loadfile>
 	
-	<!-- get release notes -->
-	<loadfile property="app.release" srcFile="../release.html">
-		<filterchain>
-			<striplinebreaks/>
-			<trim/>
-			<ignoreblank/>
-			<tokenfilter>
-			    <replaceregex pattern="\x27" replace="\\\\'" flags="gi"/>
-			</tokenfilter>
-		</filterchain>
-	</loadfile>	
-	
 	<!-- get timestamp -->
 	<tstamp>
 		<format property="date.year" pattern="yyyy" />
@@ -44,26 +32,14 @@
 
 	<!-- manager -->
 	<target name="default">
-		<antcall target="init" />
-		<antcall target="merge-all" />
-		<antcall target="minify-all" />
 		<antcall target="clean" />
 		<antcall target="deploy_to_firefox" />
 		<antcall target="deploy_to_chrome" />
-		
 	</target>
-
-	<!-- setup build environment -->
-	<target name="init">
-		<tstamp />
-		<mkdir dir="${build.merged}" />
-		<mkdir dir="${build.minified}" />
-	</target>
-
 
 	<!-- merge javascript and css files -->
 	<target name="merge-all">
-
+		<mkdir dir="${build.merged}" />
 		<concat destfile="${build.merged}/${build.file}">
 			<filelist dir="${src.dir}">
 				<file name="lib/jquery-1.6.4.js" />
@@ -75,30 +51,11 @@
 				<file name="propertydomnode.js" />
 				<file name="property.js" />
 				<file name="modcontrol.js" />	
-				<file name="mod/automatedcapsulelab.js" />	
-				<file name="mod/battlesmarkup.js" />	
-				<file name="mod/chathighlighter.js" />
-				<file name="mod/clicktocontinue.js" />		
-				<file name="mod/clusterbuilder.js" />	
-				<file name="mod/credits.js" />
-				<file name="mod/disbandertweaks.js" />	
-				<file name="mod/extramenu.js" />
-				<file name="mod/fedchat.js" />
-				<file name="mod/fedpms.js" />	
-				<file name="mod/forumkillfile.js" />
-				<file name="mod/infratweak.js" />	
-				<file name="mod/researchtweak.js" />	
-				<file name="mod/keybindings.js" />
-				<file name="mod/markettweaks.js" />		
-				<file name="mod/newbieranking.js" />
-				<file name="mod/pagetitles.js" />	
-				<file name="mod/planetplunderer.js" />
-				<file name="mod/presetbuilder.js" />
-				<file name="mod/rankingtweaks.js" />
-				<file name="mod/shipbuilder.js" />		
-				<file name="mod/tabbedpms.js" />		
-				<file name="mod/turnticker.js" />		
-				<file name="mod/commoncss.js" />		
+			</filelist>
+			<fileset dir="${src.dir}">
+				<include name="mod/*.js" />
+			</fileset>			
+			<filelist dir="${src.dir}">
 				<file name="init.js" />	
 			</filelist>
 		</concat>
@@ -112,8 +69,10 @@
 	</target>
 
 	<!-- minify javascript and css files -->
-	<target name="minify-all" description="Minifiy sets of files">
-
+	<target name="minify-all" description="Minifiy sets of files" depends="merge-all">
+		
+		<mkdir dir="${build.minified}" />
+		
 		<!-- required by yui compressor task -->
 		<path id="yuicompressor.classpath">
 			<fileset dir="${build.dir}/lib">
@@ -147,7 +106,7 @@
 	</target>
 
 	<!-- replace variables, merge into a single file -->
-	<target name="clean">
+	<target name="clean" depends="minify-all">
 	
 		<!-- required by foreach task -->
 		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
@@ -178,15 +137,27 @@
 			</filelist>
 		</concat>
 		
-		
 		<replace file="${build.dir}/${build.file}" token="%VERSION%" value="${app.version}" />
-		<replace file="${build.dir}/${build.file}" token="%RELEASE%" value="${app.release}" />
-		<replace file="${build.dir}/${build.file}" token="%DATE.YEAR%" value="${date.year}" />
-		<replace file="${build.dir}/${build.file}" token="%DATE.DAY%" value="${date.day}" />
-		
 		<replace file="${build.dir}/${build.devfile}" token="%VERSION%" value="${app.version}" />
+		
+		<!-- get release notes -->
+		<loadfile property="app.release" srcFile="../release.html">
+			<filterchain>
+				<striplinebreaks/>
+				<trim/>
+				<ignoreblank/>
+				<tokenfilter>
+				    <replaceregex pattern="\x27" replace="\\\\'" flags="gi"/>
+				</tokenfilter>
+			</filterchain>
+		</loadfile>	
+		<replace file="${build.dir}/${build.file}" token="%RELEASE%" value="${app.release}" />
 		<replace file="${build.dir}/${build.devfile}" token="%RELEASE%" value="${app.release}" />
+		
+		<replace file="${build.dir}/${build.file}" token="%DATE.YEAR%" value="${date.year}" />
 		<replace file="${build.dir}/${build.devfile}" token="%DATE.YEAR%" value="${date.year}" />
+		
+		<replace file="${build.dir}/${build.file}" token="%DATE.DAY%" value="${date.day}" />
 		<replace file="${build.dir}/${build.devfile}" token="%DATE.DAY%" value="${date.day}" />
 		
 		<foreach param="file" target="load_template">
@@ -194,11 +165,20 @@
 				<fileset dir="${src.dir}/mod">
 					<include name="*.tpl" />
 				</fileset>
-				<fileset dir="${build.minified}">
-					<filename name="merged.css" />
-				</fileset>
 			</path>
 		</foreach>
+		
+    	<loadfile property="merged.css" srcFile="${build.minified}/merged.css">
+			<filterchain>
+				<tokenfilter>
+				    <replacestring from="&quot;" to="\&quot;"/>
+				</tokenfilter>		
+			    <striplinebreaks />
+			</filterchain>
+		</loadfile>
+		<replace file="${build.dir}/${build.file}" token="%merged.css%" value="${merged.css}" />
+		<replace file="${build.dir}/${build.devfile}" token="%merged.css%" value="${merged.css}" />
+			
 		
 		<move file="${build.dir}/${build.file}" toDir="${gcmods.settings.path_to_dist_folder}" />
 		<move file="${build.dir}/${build.devfile}" toDir="${gcmods.settings.path_to_dist_folder}" />
@@ -212,35 +192,18 @@
 	<target name="load_template">
 		<basename property="template_file" file="${file}" />
 		<echo message="${template_file}"/>
-		<if>
-	        <available file="${src.dir}/mod/${template_file}"/>
-	        <then>
-	        	<loadfile property="template_body" srcFile="${src.dir}/mod/${template_file}">
-    				<filterchain>
-    					<tokenfilter>
-    					    <replacestring from="&quot;" to="\&quot;"/>
-    					</tokenfilter>		
-    				    <striplinebreaks />
-    				</filterchain>
-    			</loadfile>
-	        </then>
-	        <else>
-	        	<loadfile property="template_body" srcFile="${build.minified}/${template_file}">
-    				<filterchain>
-    					<tokenfilter>
-    					    <replacestring from="&quot;" to="\&quot;"/>
-    					</tokenfilter>		
-    				    <striplinebreaks />
-    				</filterchain>
-    			</loadfile>
-	        </else>
-	    </if>
-		
+		<loadfile property="template_body" srcFile="${src.dir}/mod/${template_file}">
+			<filterchain>
+				<tokenfilter>
+				    <replacestring from="&quot;" to="\&quot;"/>
+				</tokenfilter>		
+			    <striplinebreaks />
+			</filterchain>
+		</loadfile>
 		<replace file="${build.dir}/${build.file}" token="%${template_file}%" value="${template_body}" />
 		<replace file="${build.dir}/${build.devfile}" token="%${template_file}%" value="${template_body}" />
 		
 		<sleep milliseconds="1000"/>
-		<echo message="${template_body}"/>
 	</target> 
 	
 	<!-- autodeploy to firefox -->
